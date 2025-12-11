@@ -984,6 +984,22 @@ class ModelSerializationTests {
     }
 
     @Test
+    fun testDynamicReshardingConfigViewEncodeDecode() {
+        val data = loadMockJson("DynamicReshardingConfigView.json")
+        assertNotNull(data, "Mock file DynamicReshardingConfigView.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.DynamicReshardingConfigView.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.DynamicReshardingConfigView.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.DynamicReshardingConfigView.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for DynamicReshardingConfigView: ${e.message}")
+        }
+    }
+
+    @Test
     fun testEpochIdEncodeDecode() {
         val data = loadMockJson("EpochId.json")
         assertNotNull(data, "Mock file EpochId.json does not exist!")
