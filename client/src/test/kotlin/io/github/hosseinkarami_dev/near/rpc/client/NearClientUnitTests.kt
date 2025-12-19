@@ -26,6 +26,33 @@ class NearClientUnitTests {
     }
 
     @Test
+    fun testExperimentalCallFunction() = runTest {
+        val data = loadMockJson("JsonRpcRequestForExperimentalCallFunction.json")
+        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalCallFunction.json does not exist!")
+
+
+        val mockEngine = MockEngine { req ->
+            when (req.url.fullPath) {
+                else -> respond(data, headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())))
+            }
+        }
+
+        val client = HttpClient(mockEngine) {
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+        }
+
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+
+        try {
+            val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalCallFunction.serializer(), data)
+            val response = nearClient.experimentalCallFunction(requestObj.params)
+            assertNotNull(response)
+        } catch (e: Exception) {
+            fail("Test for ExperimentalCallFunction failed: ${e.message}")
+        }
+    }
+
+    @Test
     fun testExperimentalChanges() = runTest {
         val data = loadMockJson("JsonRpcRequestForExperimentalChanges.json")
         assertNotNull(data, "Mock file JsonRpcRequestForExperimentalChanges.json does not exist!")
@@ -346,6 +373,195 @@ class NearClientUnitTests {
             assertNotNull(response)
         } catch (e: Exception) {
             fail("Test for ExperimentalValidatorsOrdered failed: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testExperimentalViewAccessKey() = runTest {
+        val data = loadMockJson("JsonRpcRequestForExperimentalViewAccessKey.json")
+        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalViewAccessKey.json does not exist!")
+
+
+        val mockEngine = MockEngine { req ->
+            when (req.url.fullPath) {
+                else -> respond(data, headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())))
+            }
+        }
+
+        val client = HttpClient(mockEngine) {
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+        }
+
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+
+        try {
+            val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewAccessKey.serializer(), data)
+            val response = nearClient.experimentalViewAccessKey(requestObj.params)
+            assertNotNull(response)
+        } catch (e: Exception) {
+            fail("Test for ExperimentalViewAccessKey failed: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testExperimentalViewAccessKeyList() = runTest {
+        val data = loadMockJson("JsonRpcRequestForExperimentalViewAccessKeyList.json")
+        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalViewAccessKeyList.json does not exist!")
+
+
+        val mockEngine = MockEngine { req ->
+            when (req.url.fullPath) {
+                else -> respond(data, headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())))
+            }
+        }
+
+        val client = HttpClient(mockEngine) {
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+        }
+
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+
+        try {
+            val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewAccessKeyList.serializer(), data)
+            val response = nearClient.experimentalViewAccessKeyList(requestObj.params)
+            assertNotNull(response)
+        } catch (e: Exception) {
+            fail("Test for ExperimentalViewAccessKeyList failed: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testExperimentalViewAccount() = runTest {
+        val data = loadMockJson("JsonRpcRequestForExperimentalViewAccount.json")
+        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalViewAccount.json does not exist!")
+
+
+        val mockEngine = MockEngine { req ->
+            when (req.url.fullPath) {
+                else -> respond(data, headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())))
+            }
+        }
+
+        val client = HttpClient(mockEngine) {
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+        }
+
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+
+        try {
+            val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewAccount.serializer(), data)
+            val response = nearClient.experimentalViewAccount(requestObj.params)
+            assertNotNull(response)
+        } catch (e: Exception) {
+            fail("Test for ExperimentalViewAccount failed: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testExperimentalViewCode() = runTest {
+        val data = loadMockJson("JsonRpcRequestForExperimentalViewCode.json")
+        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalViewCode.json does not exist!")
+
+
+        val mockEngine = MockEngine { req ->
+            when (req.url.fullPath) {
+                else -> respond(data, headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())))
+            }
+        }
+
+        val client = HttpClient(mockEngine) {
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+        }
+
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+
+        try {
+            val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewCode.serializer(), data)
+            val response = nearClient.experimentalViewCode(requestObj.params)
+            assertNotNull(response)
+        } catch (e: Exception) {
+            fail("Test for ExperimentalViewCode failed: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testExperimentalViewGasKey() = runTest {
+        val data = loadMockJson("JsonRpcRequestForExperimentalViewGasKey.json")
+        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalViewGasKey.json does not exist!")
+
+
+        val mockEngine = MockEngine { req ->
+            when (req.url.fullPath) {
+                else -> respond(data, headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())))
+            }
+        }
+
+        val client = HttpClient(mockEngine) {
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+        }
+
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+
+        try {
+            val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewGasKey.serializer(), data)
+            val response = nearClient.experimentalViewGasKey(requestObj.params)
+            assertNotNull(response)
+        } catch (e: Exception) {
+            fail("Test for ExperimentalViewGasKey failed: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testExperimentalViewGasKeyList() = runTest {
+        val data = loadMockJson("JsonRpcRequestForExperimentalViewGasKeyList.json")
+        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalViewGasKeyList.json does not exist!")
+
+
+        val mockEngine = MockEngine { req ->
+            when (req.url.fullPath) {
+                else -> respond(data, headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())))
+            }
+        }
+
+        val client = HttpClient(mockEngine) {
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+        }
+
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+
+        try {
+            val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewGasKeyList.serializer(), data)
+            val response = nearClient.experimentalViewGasKeyList(requestObj.params)
+            assertNotNull(response)
+        } catch (e: Exception) {
+            fail("Test for ExperimentalViewGasKeyList failed: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testExperimentalViewState() = runTest {
+        val data = loadMockJson("JsonRpcRequestForExperimentalViewState.json")
+        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalViewState.json does not exist!")
+
+
+        val mockEngine = MockEngine { req ->
+            when (req.url.fullPath) {
+                else -> respond(data, headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())))
+            }
+        }
+
+        val client = HttpClient(mockEngine) {
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+        }
+
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+
+        try {
+            val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewState.serializer(), data)
+            val response = nearClient.experimentalViewState(requestObj.params)
+            assertNotNull(response)
+        } catch (e: Exception) {
+            fail("Test for ExperimentalViewState failed: ${e.message}")
         }
     }
 
