@@ -334,6 +334,8 @@ public sealed class RpcQueryError {
        */
       @SerialName("block_height")
       public val blockHeight: ULong,
+      @SerialName("error")
+      public val error: FunctionCallError,
       @SerialName("vm_error")
       public val vmError: String,
     )

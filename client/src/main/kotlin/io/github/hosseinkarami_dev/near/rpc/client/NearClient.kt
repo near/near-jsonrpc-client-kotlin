@@ -10,6 +10,7 @@ import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForBroadcastTxC
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForChanges
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForChunk
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForClientConfig
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalCallFunction
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalChanges
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalChangesInBlock
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalCongestionLevel
@@ -22,6 +23,13 @@ import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimental
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalSplitStorageInfo
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalTxStatus
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalValidatorsOrdered
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewAccessKey
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewAccessKeyList
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewAccount
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewCode
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewGasKey
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewGasKeyList
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewState
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForGasPrice
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForGenesisConfig
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForHealth
@@ -40,6 +48,7 @@ import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForCryptoHashA
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForGenesisConfigAndGenesisConfigError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForNullableRpcHealthResponseAndRpcStatusError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcBlockResponseAndRpcBlockError
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcCallFunctionResponseAndRpcCallFunctionError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcChunkResponseAndRpcChunkError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcClientConfigResponseAndRpcClientConfigError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcCongestionLevelResponseAndRpcChunkError
@@ -57,10 +66,20 @@ import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcStateCha
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcStatusResponseAndRpcStatusError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcValidatorResponseAndRpcValidatorError
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcViewAccessKeyListResponseAndRpcViewAccessKeyListError
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcViewAccessKeyResponseAndRpcViewAccessKeyError
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcViewAccountResponseAndRpcViewAccountError
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcViewCodeResponseAndRpcViewCodeError
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcViewGasKeyListResponseAndRpcViewGasKeyListError
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcViewGasKeyResponseAndRpcViewGasKeyError
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcViewStateResponseAndRpcViewStateError
 import io.github.hosseinkarami_dev.near.rpc.models.RangeOfUint64
 import io.github.hosseinkarami_dev.near.rpc.models.RpcBlockError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcBlockRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcBlockResponse
+import io.github.hosseinkarami_dev.near.rpc.models.RpcCallFunctionError
+import io.github.hosseinkarami_dev.near.rpc.models.RpcCallFunctionRequest
+import io.github.hosseinkarami_dev.near.rpc.models.RpcCallFunctionResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcChunkError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcChunkRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcChunkResponse
@@ -111,6 +130,27 @@ import io.github.hosseinkarami_dev.near.rpc.models.RpcValidatorError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcValidatorRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcValidatorResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcValidatorsOrderedRequest
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyError
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListError
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListRequest
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListResponse
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyRequest
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyResponse
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccountError
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccountRequest
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccountResponse
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewCodeError
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewCodeRequest
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewCodeResponse
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyError
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyListError
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyListRequest
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyListResponse
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyRequest
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyResponse
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewStateError
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewStateRequest
+import io.github.hosseinkarami_dev.near.rpc.models.RpcViewStateResponse
 import io.github.hosseinkarami_dev.near.rpc.models.ValidatorStakeView
 import io.ktor.client.HttpClient
 import io.ktor.client.request.post
@@ -135,6 +175,77 @@ public class NearClient(
   private val json: Json = Json { ignoreUnknownKeys = true },
 ) {
   private fun nextId(): String = UUID.randomUUID().toString()
+
+  /**
+   * Calls a view function on a contract and returns the result.
+   *
+   * @see path: /EXPERIMENTAL_call_function (method: post) — operationId: EXPERIMENTAL_call_function
+   *
+   * @param rpcCallFunctionRequest Request parameters: `io.github.hosseinkarami_dev.near.rpc.models.RpcCallFunctionRequest` (required).
+   * @return Response: `RpcResponse<RpcCallFunctionResponse>`.
+   */
+  public suspend fun experimentalCallFunction(rpcCallFunctionRequest: RpcCallFunctionRequest): RpcResponse<RpcCallFunctionResponse> {
+    val request = JsonRpcRequestForExperimentalCallFunction(
+      id = nextId(),
+      jsonrpc = "2.0",
+      method = JsonRpcRequestForExperimentalCallFunction.Method.EXPERIMENTAL_CALL_FUNCTION,
+      params = rpcCallFunctionRequest
+    )
+
+    try {
+        val httpResponse = httpClient.post(baseUrl) {
+            contentType(ContentType.Application.Json)
+            setBody(json.encodeToString(JsonRpcRequestForExperimentalCallFunction.serializer(), request))
+        }
+
+        val status = httpResponse.status.value
+        val respBody = httpResponse.bodyAsText()
+
+        if (status in 500..599) {
+            try {
+                val root = json.parseToJsonElement(respBody).jsonObject
+                if (root.containsKey("error")) {
+                    val rpcErr = json.decodeFromString(RpcCallFunctionError.serializer(), root["error"].toString())
+                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
+                }
+                val resultEl = root["result"]
+                if (resultEl?.jsonObject?.containsKey("error") == true) {
+                    val errJson = resultEl!!.jsonObject["error"].toString()
+                    val rpcErr = runCatching { json.decodeFromString(RpcCallFunctionError.serializer(), errJson) }.getOrNull()
+                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
+                }
+            } catch (_: Exception) { /* ignore parse error */ }
+            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
+        }
+
+        try {
+            val decoded = json.decodeFromString(JsonRpcResponseForRpcCallFunctionResponseAndRpcCallFunctionError.serializer(), respBody)
+            return when (decoded) {
+                is JsonRpcResponseForRpcCallFunctionResponseAndRpcCallFunctionError.Result -> RpcResponse.Success(decoded.result)
+                is JsonRpcResponseForRpcCallFunctionResponseAndRpcCallFunctionError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
+            }
+        } catch (serEx: Exception) {
+            try {
+                val root = json.parseToJsonElement(respBody).jsonObject
+                val resultEl = root["result"]
+                if (resultEl?.jsonObject?.containsKey("error") == true) {
+                    val errJson = resultEl.jsonObject["error"].toString()
+                    val rpcErr = runCatching { json.decodeFromString(RpcCallFunctionError.serializer(), errJson) }.getOrNull()
+                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
+                }
+            } catch (_: Exception) { /* ignore parse error */ }
+            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
+        }
+    } catch (e: Throwable) {
+        val mapped = when (e) {
+            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
+            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
+            is java.io.IOException -> ErrorResult.Network(e)
+            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
+        }
+        return RpcResponse.Failure(mapped)
+    }
+  }
 
   /**
    * [Deprecated] Returns changes for a given account, contract or contract code for given block height or hash. Consider using changes instead.
@@ -991,6 +1102,503 @@ public class NearClient(
                 if (resultEl?.jsonObject?.containsKey("error") == true) {
                     val errJson = resultEl.jsonObject["error"].toString()
                     val rpcErr = runCatching { json.decodeFromString(RpcValidatorError.serializer(), errJson) }.getOrNull()
+                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
+                }
+            } catch (_: Exception) { /* ignore parse error */ }
+            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
+        }
+    } catch (e: Throwable) {
+        val mapped = when (e) {
+            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
+            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
+            is java.io.IOException -> ErrorResult.Network(e)
+            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
+        }
+        return RpcResponse.Failure(mapped)
+    }
+  }
+
+  /**
+   * Returns information about a single access key for given account.
+   *
+   * @see path: /EXPERIMENTAL_view_access_key (method: post) — operationId: EXPERIMENTAL_view_access_key
+   *
+   * @param rpcViewAccessKeyRequest Request parameters: `io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyRequest` (required).
+   * @return Response: `RpcResponse<RpcViewAccessKeyResponse>`.
+   */
+  public suspend fun experimentalViewAccessKey(rpcViewAccessKeyRequest: RpcViewAccessKeyRequest): RpcResponse<RpcViewAccessKeyResponse> {
+    val request = JsonRpcRequestForExperimentalViewAccessKey(
+      id = nextId(),
+      jsonrpc = "2.0",
+      method = JsonRpcRequestForExperimentalViewAccessKey.Method.EXPERIMENTAL_VIEW_ACCESS_KEY,
+      params = rpcViewAccessKeyRequest
+    )
+
+    try {
+        val httpResponse = httpClient.post(baseUrl) {
+            contentType(ContentType.Application.Json)
+            setBody(json.encodeToString(JsonRpcRequestForExperimentalViewAccessKey.serializer(), request))
+        }
+
+        val status = httpResponse.status.value
+        val respBody = httpResponse.bodyAsText()
+
+        if (status in 500..599) {
+            try {
+                val root = json.parseToJsonElement(respBody).jsonObject
+                if (root.containsKey("error")) {
+                    val rpcErr = json.decodeFromString(RpcViewAccessKeyError.serializer(), root["error"].toString())
+                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
+                }
+                val resultEl = root["result"]
+                if (resultEl?.jsonObject?.containsKey("error") == true) {
+                    val errJson = resultEl!!.jsonObject["error"].toString()
+                    val rpcErr = runCatching { json.decodeFromString(RpcViewAccessKeyError.serializer(), errJson) }.getOrNull()
+                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
+                }
+            } catch (_: Exception) { /* ignore parse error */ }
+            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
+        }
+
+        try {
+            val decoded = json.decodeFromString(JsonRpcResponseForRpcViewAccessKeyResponseAndRpcViewAccessKeyError.serializer(), respBody)
+            return when (decoded) {
+                is JsonRpcResponseForRpcViewAccessKeyResponseAndRpcViewAccessKeyError.Result -> RpcResponse.Success(decoded.result)
+                is JsonRpcResponseForRpcViewAccessKeyResponseAndRpcViewAccessKeyError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
+            }
+        } catch (serEx: Exception) {
+            try {
+                val root = json.parseToJsonElement(respBody).jsonObject
+                val resultEl = root["result"]
+                if (resultEl?.jsonObject?.containsKey("error") == true) {
+                    val errJson = resultEl.jsonObject["error"].toString()
+                    val rpcErr = runCatching { json.decodeFromString(RpcViewAccessKeyError.serializer(), errJson) }.getOrNull()
+                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
+                }
+            } catch (_: Exception) { /* ignore parse error */ }
+            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
+        }
+    } catch (e: Throwable) {
+        val mapped = when (e) {
+            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
+            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
+            is java.io.IOException -> ErrorResult.Network(e)
+            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
+        }
+        return RpcResponse.Failure(mapped)
+    }
+  }
+
+  /**
+   * Returns all access keys for a given account.
+   *
+   * @see path: /EXPERIMENTAL_view_access_key_list (method: post) — operationId: EXPERIMENTAL_view_access_key_list
+   *
+   * @param rpcViewAccessKeyListRequest Request parameters: `io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListRequest` (required).
+   * @return Response: `RpcResponse<RpcViewAccessKeyListResponse>`.
+   */
+  public suspend fun experimentalViewAccessKeyList(rpcViewAccessKeyListRequest: RpcViewAccessKeyListRequest): RpcResponse<RpcViewAccessKeyListResponse> {
+    val request = JsonRpcRequestForExperimentalViewAccessKeyList(
+      id = nextId(),
+      jsonrpc = "2.0",
+      method = JsonRpcRequestForExperimentalViewAccessKeyList.Method.EXPERIMENTAL_VIEW_ACCESS_KEY_LIST,
+      params = rpcViewAccessKeyListRequest
+    )
+
+    try {
+        val httpResponse = httpClient.post(baseUrl) {
+            contentType(ContentType.Application.Json)
+            setBody(json.encodeToString(JsonRpcRequestForExperimentalViewAccessKeyList.serializer(), request))
+        }
+
+        val status = httpResponse.status.value
+        val respBody = httpResponse.bodyAsText()
+
+        if (status in 500..599) {
+            try {
+                val root = json.parseToJsonElement(respBody).jsonObject
+                if (root.containsKey("error")) {
+                    val rpcErr = json.decodeFromString(RpcViewAccessKeyListError.serializer(), root["error"].toString())
+                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
+                }
+                val resultEl = root["result"]
+                if (resultEl?.jsonObject?.containsKey("error") == true) {
+                    val errJson = resultEl!!.jsonObject["error"].toString()
+                    val rpcErr = runCatching { json.decodeFromString(RpcViewAccessKeyListError.serializer(), errJson) }.getOrNull()
+                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
+                }
+            } catch (_: Exception) { /* ignore parse error */ }
+            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
+        }
+
+        try {
+            val decoded = json.decodeFromString(JsonRpcResponseForRpcViewAccessKeyListResponseAndRpcViewAccessKeyListError.serializer(), respBody)
+            return when (decoded) {
+                is JsonRpcResponseForRpcViewAccessKeyListResponseAndRpcViewAccessKeyListError.Result -> RpcResponse.Success(decoded.result)
+                is JsonRpcResponseForRpcViewAccessKeyListResponseAndRpcViewAccessKeyListError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
+            }
+        } catch (serEx: Exception) {
+            try {
+                val root = json.parseToJsonElement(respBody).jsonObject
+                val resultEl = root["result"]
+                if (resultEl?.jsonObject?.containsKey("error") == true) {
+                    val errJson = resultEl.jsonObject["error"].toString()
+                    val rpcErr = runCatching { json.decodeFromString(RpcViewAccessKeyListError.serializer(), errJson) }.getOrNull()
+                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
+                }
+            } catch (_: Exception) { /* ignore parse error */ }
+            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
+        }
+    } catch (e: Throwable) {
+        val mapped = when (e) {
+            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
+            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
+            is java.io.IOException -> ErrorResult.Network(e)
+            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
+        }
+        return RpcResponse.Failure(mapped)
+    }
+  }
+
+  /**
+   * Returns information about an account for given account_id.
+   *
+   * @see path: /EXPERIMENTAL_view_account (method: post) — operationId: EXPERIMENTAL_view_account
+   *
+   * @param rpcViewAccountRequest Request parameters: `io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccountRequest` (required).
+   * @return Response: `RpcResponse<RpcViewAccountResponse>`.
+   */
+  public suspend fun experimentalViewAccount(rpcViewAccountRequest: RpcViewAccountRequest): RpcResponse<RpcViewAccountResponse> {
+    val request = JsonRpcRequestForExperimentalViewAccount(
+      id = nextId(),
+      jsonrpc = "2.0",
+      method = JsonRpcRequestForExperimentalViewAccount.Method.EXPERIMENTAL_VIEW_ACCOUNT,
+      params = rpcViewAccountRequest
+    )
+
+    try {
+        val httpResponse = httpClient.post(baseUrl) {
+            contentType(ContentType.Application.Json)
+            setBody(json.encodeToString(JsonRpcRequestForExperimentalViewAccount.serializer(), request))
+        }
+
+        val status = httpResponse.status.value
+        val respBody = httpResponse.bodyAsText()
+
+        if (status in 500..599) {
+            try {
+                val root = json.parseToJsonElement(respBody).jsonObject
+                if (root.containsKey("error")) {
+                    val rpcErr = json.decodeFromString(RpcViewAccountError.serializer(), root["error"].toString())
+                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
+                }
+                val resultEl = root["result"]
+                if (resultEl?.jsonObject?.containsKey("error") == true) {
+                    val errJson = resultEl!!.jsonObject["error"].toString()
+                    val rpcErr = runCatching { json.decodeFromString(RpcViewAccountError.serializer(), errJson) }.getOrNull()
+                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
+                }
+            } catch (_: Exception) { /* ignore parse error */ }
+            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
+        }
+
+        try {
+            val decoded = json.decodeFromString(JsonRpcResponseForRpcViewAccountResponseAndRpcViewAccountError.serializer(), respBody)
+            return when (decoded) {
+                is JsonRpcResponseForRpcViewAccountResponseAndRpcViewAccountError.Result -> RpcResponse.Success(decoded.result)
+                is JsonRpcResponseForRpcViewAccountResponseAndRpcViewAccountError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
+            }
+        } catch (serEx: Exception) {
+            try {
+                val root = json.parseToJsonElement(respBody).jsonObject
+                val resultEl = root["result"]
+                if (resultEl?.jsonObject?.containsKey("error") == true) {
+                    val errJson = resultEl.jsonObject["error"].toString()
+                    val rpcErr = runCatching { json.decodeFromString(RpcViewAccountError.serializer(), errJson) }.getOrNull()
+                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
+                }
+            } catch (_: Exception) { /* ignore parse error */ }
+            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
+        }
+    } catch (e: Throwable) {
+        val mapped = when (e) {
+            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
+            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
+            is java.io.IOException -> ErrorResult.Network(e)
+            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
+        }
+        return RpcResponse.Failure(mapped)
+    }
+  }
+
+  /**
+   * Returns the contract code (Wasm binary) deployed to the account.
+   *
+   * @see path: /EXPERIMENTAL_view_code (method: post) — operationId: EXPERIMENTAL_view_code
+   *
+   * @param rpcViewCodeRequest Request parameters: `io.github.hosseinkarami_dev.near.rpc.models.RpcViewCodeRequest` (required).
+   * @return Response: `RpcResponse<RpcViewCodeResponse>`.
+   */
+  public suspend fun experimentalViewCode(rpcViewCodeRequest: RpcViewCodeRequest): RpcResponse<RpcViewCodeResponse> {
+    val request = JsonRpcRequestForExperimentalViewCode(
+      id = nextId(),
+      jsonrpc = "2.0",
+      method = JsonRpcRequestForExperimentalViewCode.Method.EXPERIMENTAL_VIEW_CODE,
+      params = rpcViewCodeRequest
+    )
+
+    try {
+        val httpResponse = httpClient.post(baseUrl) {
+            contentType(ContentType.Application.Json)
+            setBody(json.encodeToString(JsonRpcRequestForExperimentalViewCode.serializer(), request))
+        }
+
+        val status = httpResponse.status.value
+        val respBody = httpResponse.bodyAsText()
+
+        if (status in 500..599) {
+            try {
+                val root = json.parseToJsonElement(respBody).jsonObject
+                if (root.containsKey("error")) {
+                    val rpcErr = json.decodeFromString(RpcViewCodeError.serializer(), root["error"].toString())
+                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
+                }
+                val resultEl = root["result"]
+                if (resultEl?.jsonObject?.containsKey("error") == true) {
+                    val errJson = resultEl!!.jsonObject["error"].toString()
+                    val rpcErr = runCatching { json.decodeFromString(RpcViewCodeError.serializer(), errJson) }.getOrNull()
+                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
+                }
+            } catch (_: Exception) { /* ignore parse error */ }
+            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
+        }
+
+        try {
+            val decoded = json.decodeFromString(JsonRpcResponseForRpcViewCodeResponseAndRpcViewCodeError.serializer(), respBody)
+            return when (decoded) {
+                is JsonRpcResponseForRpcViewCodeResponseAndRpcViewCodeError.Result -> RpcResponse.Success(decoded.result)
+                is JsonRpcResponseForRpcViewCodeResponseAndRpcViewCodeError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
+            }
+        } catch (serEx: Exception) {
+            try {
+                val root = json.parseToJsonElement(respBody).jsonObject
+                val resultEl = root["result"]
+                if (resultEl?.jsonObject?.containsKey("error") == true) {
+                    val errJson = resultEl.jsonObject["error"].toString()
+                    val rpcErr = runCatching { json.decodeFromString(RpcViewCodeError.serializer(), errJson) }.getOrNull()
+                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
+                }
+            } catch (_: Exception) { /* ignore parse error */ }
+            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
+        }
+    } catch (e: Throwable) {
+        val mapped = when (e) {
+            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
+            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
+            is java.io.IOException -> ErrorResult.Network(e)
+            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
+        }
+        return RpcResponse.Failure(mapped)
+    }
+  }
+
+  /**
+   * Returns information about a single gas key for given account.
+   *
+   * @see path: /EXPERIMENTAL_view_gas_key (method: post) — operationId: EXPERIMENTAL_view_gas_key
+   *
+   * @param rpcViewGasKeyRequest Request parameters: `io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyRequest` (required).
+   * @return Response: `RpcResponse<RpcViewGasKeyResponse>`.
+   */
+  public suspend fun experimentalViewGasKey(rpcViewGasKeyRequest: RpcViewGasKeyRequest): RpcResponse<RpcViewGasKeyResponse> {
+    val request = JsonRpcRequestForExperimentalViewGasKey(
+      id = nextId(),
+      jsonrpc = "2.0",
+      method = JsonRpcRequestForExperimentalViewGasKey.Method.EXPERIMENTAL_VIEW_GAS_KEY,
+      params = rpcViewGasKeyRequest
+    )
+
+    try {
+        val httpResponse = httpClient.post(baseUrl) {
+            contentType(ContentType.Application.Json)
+            setBody(json.encodeToString(JsonRpcRequestForExperimentalViewGasKey.serializer(), request))
+        }
+
+        val status = httpResponse.status.value
+        val respBody = httpResponse.bodyAsText()
+
+        if (status in 500..599) {
+            try {
+                val root = json.parseToJsonElement(respBody).jsonObject
+                if (root.containsKey("error")) {
+                    val rpcErr = json.decodeFromString(RpcViewGasKeyError.serializer(), root["error"].toString())
+                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
+                }
+                val resultEl = root["result"]
+                if (resultEl?.jsonObject?.containsKey("error") == true) {
+                    val errJson = resultEl!!.jsonObject["error"].toString()
+                    val rpcErr = runCatching { json.decodeFromString(RpcViewGasKeyError.serializer(), errJson) }.getOrNull()
+                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
+                }
+            } catch (_: Exception) { /* ignore parse error */ }
+            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
+        }
+
+        try {
+            val decoded = json.decodeFromString(JsonRpcResponseForRpcViewGasKeyResponseAndRpcViewGasKeyError.serializer(), respBody)
+            return when (decoded) {
+                is JsonRpcResponseForRpcViewGasKeyResponseAndRpcViewGasKeyError.Result -> RpcResponse.Success(decoded.result)
+                is JsonRpcResponseForRpcViewGasKeyResponseAndRpcViewGasKeyError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
+            }
+        } catch (serEx: Exception) {
+            try {
+                val root = json.parseToJsonElement(respBody).jsonObject
+                val resultEl = root["result"]
+                if (resultEl?.jsonObject?.containsKey("error") == true) {
+                    val errJson = resultEl.jsonObject["error"].toString()
+                    val rpcErr = runCatching { json.decodeFromString(RpcViewGasKeyError.serializer(), errJson) }.getOrNull()
+                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
+                }
+            } catch (_: Exception) { /* ignore parse error */ }
+            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
+        }
+    } catch (e: Throwable) {
+        val mapped = when (e) {
+            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
+            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
+            is java.io.IOException -> ErrorResult.Network(e)
+            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
+        }
+        return RpcResponse.Failure(mapped)
+    }
+  }
+
+  /**
+   * Returns all gas keys for a given account.
+   *
+   * @see path: /EXPERIMENTAL_view_gas_key_list (method: post) — operationId: EXPERIMENTAL_view_gas_key_list
+   *
+   * @param rpcViewGasKeyListRequest Request parameters: `io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyListRequest` (required).
+   * @return Response: `RpcResponse<RpcViewGasKeyListResponse>`.
+   */
+  public suspend fun experimentalViewGasKeyList(rpcViewGasKeyListRequest: RpcViewGasKeyListRequest): RpcResponse<RpcViewGasKeyListResponse> {
+    val request = JsonRpcRequestForExperimentalViewGasKeyList(
+      id = nextId(),
+      jsonrpc = "2.0",
+      method = JsonRpcRequestForExperimentalViewGasKeyList.Method.EXPERIMENTAL_VIEW_GAS_KEY_LIST,
+      params = rpcViewGasKeyListRequest
+    )
+
+    try {
+        val httpResponse = httpClient.post(baseUrl) {
+            contentType(ContentType.Application.Json)
+            setBody(json.encodeToString(JsonRpcRequestForExperimentalViewGasKeyList.serializer(), request))
+        }
+
+        val status = httpResponse.status.value
+        val respBody = httpResponse.bodyAsText()
+
+        if (status in 500..599) {
+            try {
+                val root = json.parseToJsonElement(respBody).jsonObject
+                if (root.containsKey("error")) {
+                    val rpcErr = json.decodeFromString(RpcViewGasKeyListError.serializer(), root["error"].toString())
+                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
+                }
+                val resultEl = root["result"]
+                if (resultEl?.jsonObject?.containsKey("error") == true) {
+                    val errJson = resultEl!!.jsonObject["error"].toString()
+                    val rpcErr = runCatching { json.decodeFromString(RpcViewGasKeyListError.serializer(), errJson) }.getOrNull()
+                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
+                }
+            } catch (_: Exception) { /* ignore parse error */ }
+            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
+        }
+
+        try {
+            val decoded = json.decodeFromString(JsonRpcResponseForRpcViewGasKeyListResponseAndRpcViewGasKeyListError.serializer(), respBody)
+            return when (decoded) {
+                is JsonRpcResponseForRpcViewGasKeyListResponseAndRpcViewGasKeyListError.Result -> RpcResponse.Success(decoded.result)
+                is JsonRpcResponseForRpcViewGasKeyListResponseAndRpcViewGasKeyListError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
+            }
+        } catch (serEx: Exception) {
+            try {
+                val root = json.parseToJsonElement(respBody).jsonObject
+                val resultEl = root["result"]
+                if (resultEl?.jsonObject?.containsKey("error") == true) {
+                    val errJson = resultEl.jsonObject["error"].toString()
+                    val rpcErr = runCatching { json.decodeFromString(RpcViewGasKeyListError.serializer(), errJson) }.getOrNull()
+                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
+                }
+            } catch (_: Exception) { /* ignore parse error */ }
+            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
+        }
+    } catch (e: Throwable) {
+        val mapped = when (e) {
+            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
+            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
+            is java.io.IOException -> ErrorResult.Network(e)
+            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
+        }
+        return RpcResponse.Failure(mapped)
+    }
+  }
+
+  /**
+   * Returns the state (key-value pairs) of a contract based on the key prefix.
+   *
+   * @see path: /EXPERIMENTAL_view_state (method: post) — operationId: EXPERIMENTAL_view_state
+   *
+   * @param rpcViewStateRequest Request parameters: `io.github.hosseinkarami_dev.near.rpc.models.RpcViewStateRequest` (required).
+   * @return Response: `RpcResponse<RpcViewStateResponse>`.
+   */
+  public suspend fun experimentalViewState(rpcViewStateRequest: RpcViewStateRequest): RpcResponse<RpcViewStateResponse> {
+    val request = JsonRpcRequestForExperimentalViewState(
+      id = nextId(),
+      jsonrpc = "2.0",
+      method = JsonRpcRequestForExperimentalViewState.Method.EXPERIMENTAL_VIEW_STATE,
+      params = rpcViewStateRequest
+    )
+
+    try {
+        val httpResponse = httpClient.post(baseUrl) {
+            contentType(ContentType.Application.Json)
+            setBody(json.encodeToString(JsonRpcRequestForExperimentalViewState.serializer(), request))
+        }
+
+        val status = httpResponse.status.value
+        val respBody = httpResponse.bodyAsText()
+
+        if (status in 500..599) {
+            try {
+                val root = json.parseToJsonElement(respBody).jsonObject
+                if (root.containsKey("error")) {
+                    val rpcErr = json.decodeFromString(RpcViewStateError.serializer(), root["error"].toString())
+                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
+                }
+                val resultEl = root["result"]
+                if (resultEl?.jsonObject?.containsKey("error") == true) {
+                    val errJson = resultEl!!.jsonObject["error"].toString()
+                    val rpcErr = runCatching { json.decodeFromString(RpcViewStateError.serializer(), errJson) }.getOrNull()
+                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
+                }
+            } catch (_: Exception) { /* ignore parse error */ }
+            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
+        }
+
+        try {
+            val decoded = json.decodeFromString(JsonRpcResponseForRpcViewStateResponseAndRpcViewStateError.serializer(), respBody)
+            return when (decoded) {
+                is JsonRpcResponseForRpcViewStateResponseAndRpcViewStateError.Result -> RpcResponse.Success(decoded.result)
+                is JsonRpcResponseForRpcViewStateResponseAndRpcViewStateError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
+            }
+        } catch (serEx: Exception) {
+            try {
+                val root = json.parseToJsonElement(respBody).jsonObject
+                val resultEl = root["result"]
+                if (resultEl?.jsonObject?.containsKey("error") == true) {
+                    val errJson = resultEl.jsonObject["error"].toString()
+                    val rpcErr = runCatching { json.decodeFromString(RpcViewStateError.serializer(), errJson) }.getOrNull()
                     return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
                 }
             } catch (_: Exception) { /* ignore parse error */ }
