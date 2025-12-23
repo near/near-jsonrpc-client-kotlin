@@ -24,28 +24,32 @@ import kotlinx.serialization.json.*
 object GlobalContractIdentifierViewSerializer : KSerializer<GlobalContractIdentifierView> {
 
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView") {
-        element("CryptoHash", serializer<JsonElement>().descriptor)
-        element("AccountId", serializer<JsonElement>().descriptor)
+        element("hash", serializer<JsonElement>().descriptor)
+        element("account_id", serializer<JsonElement>().descriptor)
     }
 
     override fun serialize(encoder: Encoder, value: GlobalContractIdentifierView) {
          if (encoder is JsonEncoder) {
             val jsonEncoder = encoder
             when (value) {
-                is io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.CryptoHash -> {
-                    val innerElem = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.CryptoHash>(), value.value)
-                    jsonEncoder.encodeJsonElement(innerElem)
+                is io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.Hash -> {
+                    val map = mutableMapOf<String, JsonElement>()
+                    map["hash"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.CryptoHash>(), value.hash)
+                    val payload = JsonObject(map)
+                    jsonEncoder.encodeJsonElement(payload)
                 }
                 is io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.AccountId -> {
-                    val innerElem = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.AccountId>(), value.value)
-                    jsonEncoder.encodeJsonElement(innerElem)
+                    val map = mutableMapOf<String, JsonElement>()
+                    map["account_id"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.AccountId>(), value.accountId)
+                    val payload = JsonObject(map)
+                    jsonEncoder.encodeJsonElement(payload)
                 }
             }
             return
         }
         val out = encoder.beginStructure(descriptor)
         when (value) {
-            is io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.CryptoHash -> out.encodeSerializableElement(descriptor, 0, serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.CryptoHash>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.Hash -> out.encodeSerializableElement(descriptor, 0, serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.Hash>(), value)
             is io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.AccountId -> out.encodeSerializableElement(descriptor, 1, serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.AccountId>(), value)
         }
         out.endStructure(descriptor)
@@ -59,14 +63,6 @@ object GlobalContractIdentifierViewSerializer : KSerializer<GlobalContractIdenti
                     if (element.isString) {
                         val s = element.content
                     }
-                    try {
-                        val payload = decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.CryptoHash>(), element)
-                        return io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.CryptoHash(payload)
-                    } catch (_: Exception) { }
-                    try {
-                        val payload = decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.AccountId>(), element)
-                        return io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.AccountId(payload)
-                    } catch (_: Exception) { }
                     throw SerializationException("Unknown discriminator (primitive) for GlobalContractIdentifierView")
                 }
 
@@ -74,12 +70,12 @@ object GlobalContractIdentifierViewSerializer : KSerializer<GlobalContractIdenti
 
                 is JsonObject -> {
                     val jobj = element
-                    val knownVariantNames = setOf("CryptoHash", "AccountId")
-                    if (jobj["CryptoHash"] != null) {
-                        return io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.CryptoHash(decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.CryptoHash>(), jobj["CryptoHash"]!!))
+                    val knownVariantNames = setOf("hash", "account_id")
+                    if (jobj["hash"] != null) {
+                        return io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.Hash(decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.CryptoHash>(), jobj["hash"]!!))
                     }
-                    if (jobj["AccountId"] != null) {
-                        return io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.AccountId(decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.AccountId>(), jobj["AccountId"]!!))
+                    if (jobj["account_id"] != null) {
+                        return io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.AccountId(decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.AccountId>(), jobj["account_id"]!!))
                     }
                     if (jobj.size == 1) {
                         val entry = jobj.entries.first()
@@ -87,11 +83,13 @@ object GlobalContractIdentifierViewSerializer : KSerializer<GlobalContractIdenti
                         val valueElem = entry.value
                         if (knownVariantNames.contains(key)) {
                             when (key) {
-                            "CryptoHash" -> {
-                                return io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.CryptoHash(decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.CryptoHash>(), valueElem))
+                            "hash" -> {
+                                val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant hash: " + key)
+                                return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.Hash>(), obj)
                             }
-                            "AccountId" -> {
-                                return io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.AccountId(decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.AccountId>(), valueElem))
+                            "account_id" -> {
+                                val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant account_id: " + key)
+                                return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.AccountId>(), obj)
                             }
                             else -> { /* knownVariantNames.contains(key) guards this branch; shouldn't reach here */ }
                             }
@@ -112,39 +110,39 @@ object GlobalContractIdentifierViewSerializer : KSerializer<GlobalContractIdenti
                         val tf = typeField.trim()
                         // try exact match of full variant name first
                         when (tf) {
-                            "CryptoHash" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.CryptoHash>(), jobj)
-                            "AccountId" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.AccountId>(), jobj)
+                            "hash" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.Hash>(), jobj)
+                            "account_id" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.AccountId>(), jobj)
                             else -> { /* fallthrough to grouped handling */ }
                         }
                         // grouped handling by tf content (if any)
                         val tfLower = tf.lowercase()
                         var chosenGroupKey: String? = null
-                        if (chosenGroupKey == null && ("CryptoHash".lowercase() == tfLower || tfLower.contains("CryptoHash".lowercase()) || "CryptoHash".lowercase().contains(tfLower))) { chosenGroupKey = "CryptoHash" }
-                        if (chosenGroupKey == null && ("AccountId".lowercase() == tfLower || tfLower.contains("AccountId".lowercase()) || "AccountId".lowercase().contains(tfLower))) { chosenGroupKey = "AccountId" }
+                        if (chosenGroupKey == null && ("hash".lowercase() == tfLower || tfLower.contains("hash".lowercase()) || "hash".lowercase().contains(tfLower))) { chosenGroupKey = "hash" }
+                        if (chosenGroupKey == null && ("account_id".lowercase() == tfLower || tfLower.contains("account_id".lowercase()) || "account_id".lowercase().contains(tfLower))) { chosenGroupKey = "account_id" }
                         if (chosenGroupKey != null) {
                             when (chosenGroupKey) {
-                                "CryptoHash" -> {
-                                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.CryptoHash>(), jobj) } catch (_: Exception) { }
-                                    throw SerializationException("Cannot disambiguate variant for base token 'CryptoHash' and tf='\$tf'")
+                                "hash" -> {
+                                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.Hash>(), jobj) } catch (_: Exception) { }
+                                    throw SerializationException("Cannot disambiguate variant for base token 'hash' and tf='\$tf'")
                                 }
-                                "AccountId" -> {
+                                "account_id" -> {
                                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.AccountId>(), jobj) } catch (_: Exception) { }
-                                    throw SerializationException("Cannot disambiguate variant for base token 'AccountId' and tf='\$tf'")
+                                    throw SerializationException("Cannot disambiguate variant for base token 'account_id' and tf='\$tf'")
                                 }
                                 else -> { /* no group matched */ }
                             }
                         }
                     }
                     // grouped handling by presence of distinguishing keys (no discriminator value available)
-                    // group: CryptoHash
-                    // group: AccountId
+                    // group: hash
+                    // group: account_id
 
                     val requiredMatches = mutableListOf<Int>()
-                    if (jobj.containsKey("CryptoHash")) requiredMatches.add(0)
-                    if (jobj.containsKey("AccountId")) requiredMatches.add(1)
+                    if (jobj.containsKey("hash")) requiredMatches.add(0)
+                    if (jobj.containsKey("account_id")) requiredMatches.add(1)
                     if (requiredMatches.size == 1) {
                         when (requiredMatches[0]) {
-                            0 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.CryptoHash>(), jobj)
+                            0 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.Hash>(), jobj)
                             1 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.AccountId>(), jobj)
                             else -> throw SerializationException("Internal required-match dispatch error")
                         }
@@ -153,24 +151,24 @@ object GlobalContractIdentifierViewSerializer : KSerializer<GlobalContractIdenti
                     var bestScore = -1.0
                     run {
                         var matchCount = 0
-                        if (jobj["CryptoHash"] != null) matchCount++
+                        if (jobj["hash"] != null) matchCount++
                         val score = matchCount.toDouble() / 1.toDouble()
                         if (score > bestScore) { bestScore = score; bestIdx = 0 } else if (score == bestScore) { bestIdx = null }
                     }
                     run {
                         var matchCount = 0
-                        if (jobj["AccountId"] != null) matchCount++
+                        if (jobj["account_id"] != null) matchCount++
                         val score = matchCount.toDouble() / 1.toDouble()
                         if (score > bestScore) { bestScore = score; bestIdx = 1 } else if (score == bestScore) { bestIdx = null }
                     }
                     if (bestIdx != null && bestScore > 0.0) {
                         when (bestIdx) {
-                            0 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.CryptoHash>(), jobj)
+                            0 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.Hash>(), jobj)
                             1 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.AccountId>(), jobj)
                             else -> throw SerializationException("Internal scoring dispatch error")
                         }
                     }
-                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.CryptoHash>(), jobj) } catch (_: Exception) { }
+                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.Hash>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.GlobalContractIdentifierView.AccountId>(), jobj) } catch (_: Exception) { }
                     throw SerializationException("Missing discriminator or recognizable variant in GlobalContractIdentifierView")
                 }
