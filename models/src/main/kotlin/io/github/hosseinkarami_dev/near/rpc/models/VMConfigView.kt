@@ -85,11 +85,6 @@ public data class VMConfigView(
   @SerialName("regular_op_cost")
   public val regularOpCost: UInt? = null,
   /**
-   *  * See [VMConfig::saturating_float_to_int](crate::vm::Config::saturating_float_to_int).
-   */
-  @SerialName("saturating_float_to_int")
-  public val saturatingFloatToInt: Boolean? = null,
-  /**
    *  * See [VMConfig::storage_get_mode](crate::vm::Config::storage_get_mode).
    */
   @SerialName("storage_get_mode")
