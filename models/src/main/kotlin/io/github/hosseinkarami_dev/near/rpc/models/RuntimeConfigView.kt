@@ -23,7 +23,7 @@ public data class RuntimeConfigView(
    */
   @SerialName("dynamic_resharding_config")
   public val dynamicReshardingConfig:
-      DynamicReshardingConfigView? = DynamicReshardingConfigView(maxNumberOfShards = 999999999999999.toULong(), memoryUsageThreshold = 999999999999999.toULong(), minChildMemoryUsage = 999999999999999.toULong(), minEpochsBetweenResharding = 999999999999999.toULong()),
+      DynamicReshardingConfigView? = DynamicReshardingConfigView(blockSplitShards = listOf(), forceSplitShards = listOf(), maxNumberOfShards = 999999999999999.toULong(), memoryUsageThreshold = 999999999999999.toULong(), minChildMemoryUsage = 999999999999999.toULong(), minEpochsBetweenResharding = 999999999999999.toULong()),
   /**
    *  * Amount of yN per byte required to have on the account.  See
    * <https://nomicon.io/Economics/Economics.html#state-stake> for details.
