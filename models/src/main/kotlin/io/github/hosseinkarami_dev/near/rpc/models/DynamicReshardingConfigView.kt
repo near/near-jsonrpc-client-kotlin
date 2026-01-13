@@ -1,18 +1,28 @@
 package io.github.hosseinkarami_dev.near.rpc.models
 
 import kotlin.ULong
+import kotlin.collections.List
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
  *  * Configuration for dynamic resharding feature
+ * See [`DynamicReshardingConfig`] for more details.
  */
 @Serializable
 public data class DynamicReshardingConfigView(
   /**
+   *  * Shards that should **not** be split even when they meet the regular split criteria.
+   */
+  @SerialName("block_split_shards")
+  public val blockSplitShards: List<ShardId>,
+  /**
+   *  * Shards that should be split even when they don't meet the regular split criteria.
+   */
+  @SerialName("force_split_shards")
+  public val forceSplitShards: List<ShardId>,
+  /**
    *  * Maximum number of shards in the network.
-   *
-   * See [`CongestionControlConfig`] for more details.
    *  * Minimum: 0.0
    *  * Format: uint64
    */
@@ -20,8 +30,6 @@ public data class DynamicReshardingConfigView(
   public val maxNumberOfShards: ULong,
   /**
    *  * Memory threshold over which a shard is marked for a split.
-   *
-   * See [`CongestionControlConfig`] for more details.
    *  * Minimum: 0.0
    *  * Format: uint64
    */
@@ -29,8 +37,6 @@ public data class DynamicReshardingConfigView(
   public val memoryUsageThreshold: ULong,
   /**
    *  * Minimum memory usage of a child shard.
-   *
-   * See [`CongestionControlConfig`] for more details.
    *  * Minimum: 0.0
    *  * Format: uint64
    */
@@ -38,8 +44,6 @@ public data class DynamicReshardingConfigView(
   public val minChildMemoryUsage: ULong,
   /**
    *  * Minimum number of epochs until next resharding can be scheduled.
-   *
-   * See [`CongestionControlConfig`] for more details.
    *  * Minimum: 0.0
    *  * Format: uint64
    */
