@@ -41,8 +41,6 @@ object ActionsValidationErrorSerializer : KSerializer<ActionsValidationError> {
         element("InvalidDeterministicStateInitReceiver", serializer<JsonElement>().descriptor)
         element("DeterministicStateInitKeyLengthExceeded", serializer<JsonElement>().descriptor)
         element("DeterministicStateInitValueLengthExceeded", serializer<JsonElement>().descriptor)
-        element("GasKeyPermissionInvalid", serializer<JsonElement>().descriptor)
-        element("GasKeyTooManyNoncesRequested", serializer<JsonElement>().descriptor)
     }
 
     override fun serialize(encoder: Encoder, value: ActionsValidationError) {
@@ -139,18 +137,6 @@ object ActionsValidationErrorSerializer : KSerializer<ActionsValidationError> {
                     val payload = JsonObject(map)
                     jsonEncoder.encodeJsonElement(payload)
                 }
-                is io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyPermissionInvalid -> {
-                    val map = mutableMapOf<String, JsonElement>()
-                    map["GasKeyPermissionInvalid"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyPermissionInvalid.GasKeyPermissionInvalidPayload>(), value.gasKeyPermissionInvalid)
-                    val payload = JsonObject(map)
-                    jsonEncoder.encodeJsonElement(payload)
-                }
-                is io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyTooManyNoncesRequested -> {
-                    val map = mutableMapOf<String, JsonElement>()
-                    map["GasKeyTooManyNoncesRequested"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyTooManyNoncesRequested.GasKeyTooManyNoncesRequestedPayload>(), value.gasKeyTooManyNoncesRequested)
-                    val payload = JsonObject(map)
-                    jsonEncoder.encodeJsonElement(payload)
-                }
             }
             return
         }
@@ -173,8 +159,6 @@ object ActionsValidationErrorSerializer : KSerializer<ActionsValidationError> {
             is io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.InvalidDeterministicStateInitReceiver -> out.encodeSerializableElement(descriptor, 14, serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.InvalidDeterministicStateInitReceiver>(), value)
             is io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeterministicStateInitKeyLengthExceeded -> out.encodeSerializableElement(descriptor, 15, serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeterministicStateInitKeyLengthExceeded>(), value)
             is io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeterministicStateInitValueLengthExceeded -> out.encodeSerializableElement(descriptor, 16, serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeterministicStateInitValueLengthExceeded>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyPermissionInvalid -> out.encodeSerializableElement(descriptor, 17, serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyPermissionInvalid>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyTooManyNoncesRequested -> out.encodeSerializableElement(descriptor, 18, serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyTooManyNoncesRequested>(), value)
         }
         out.endStructure(descriptor)
     }
@@ -198,7 +182,7 @@ object ActionsValidationErrorSerializer : KSerializer<ActionsValidationError> {
 
                 is JsonObject -> {
                     val jobj = element
-                    val knownVariantNames = setOf("DeleteActionMustBeFinal", "TotalPrepaidGasExceeded", "TotalNumberOfActionsExceeded", "AddKeyMethodNamesNumberOfBytesExceeded", "AddKeyMethodNameLengthExceeded", "IntegerOverflow", "InvalidAccountId", "ContractSizeExceeded", "FunctionCallMethodNameLengthExceeded", "FunctionCallArgumentsLengthExceeded", "UnsuitableStakingKey", "FunctionCallZeroAttachedGas", "DelegateActionMustBeOnlyOne", "UnsupportedProtocolFeature", "InvalidDeterministicStateInitReceiver", "DeterministicStateInitKeyLengthExceeded", "DeterministicStateInitValueLengthExceeded", "GasKeyPermissionInvalid", "GasKeyTooManyNoncesRequested")
+                    val knownVariantNames = setOf("DeleteActionMustBeFinal", "TotalPrepaidGasExceeded", "TotalNumberOfActionsExceeded", "AddKeyMethodNamesNumberOfBytesExceeded", "AddKeyMethodNameLengthExceeded", "IntegerOverflow", "InvalidAccountId", "ContractSizeExceeded", "FunctionCallMethodNameLengthExceeded", "FunctionCallArgumentsLengthExceeded", "UnsuitableStakingKey", "FunctionCallZeroAttachedGas", "DelegateActionMustBeOnlyOne", "UnsupportedProtocolFeature", "InvalidDeterministicStateInitReceiver", "DeterministicStateInitKeyLengthExceeded", "DeterministicStateInitValueLengthExceeded")
                     if (jobj["TotalPrepaidGasExceeded"] != null) {
                         return io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.TotalPrepaidGasExceeded(decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.TotalPrepaidGasExceeded.TotalPrepaidGasExceededPayload>(), jobj["TotalPrepaidGasExceeded"]!!))
                     }
@@ -237,12 +221,6 @@ object ActionsValidationErrorSerializer : KSerializer<ActionsValidationError> {
                     }
                     if (jobj["DeterministicStateInitValueLengthExceeded"] != null) {
                         return io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeterministicStateInitValueLengthExceeded(decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeterministicStateInitValueLengthExceeded.DeterministicStateInitValueLengthExceededPayload>(), jobj["DeterministicStateInitValueLengthExceeded"]!!))
-                    }
-                    if (jobj["GasKeyPermissionInvalid"] != null) {
-                        return io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyPermissionInvalid(decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyPermissionInvalid.GasKeyPermissionInvalidPayload>(), jobj["GasKeyPermissionInvalid"]!!))
-                    }
-                    if (jobj["GasKeyTooManyNoncesRequested"] != null) {
-                        return io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyTooManyNoncesRequested(decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyTooManyNoncesRequested.GasKeyTooManyNoncesRequestedPayload>(), jobj["GasKeyTooManyNoncesRequested"]!!))
                     }
                     if (jobj.size == 1) {
                         val entry = jobj.entries.first()
@@ -302,14 +280,6 @@ object ActionsValidationErrorSerializer : KSerializer<ActionsValidationError> {
                                 val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant DeterministicStateInitValueLengthExceeded: " + key)
                                 return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeterministicStateInitValueLengthExceeded>(), obj)
                             }
-                            "GasKeyPermissionInvalid" -> {
-                                val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant GasKeyPermissionInvalid: " + key)
-                                return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyPermissionInvalid>(), obj)
-                            }
-                            "GasKeyTooManyNoncesRequested" -> {
-                                val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant GasKeyTooManyNoncesRequested: " + key)
-                                return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyTooManyNoncesRequested>(), obj)
-                            }
                             "DeleteActionMustBeFinal" -> return io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeleteActionMustBeFinal
                             "IntegerOverflow" -> return io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.IntegerOverflow
                             "FunctionCallZeroAttachedGas" -> return io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.FunctionCallZeroAttachedGas
@@ -357,8 +327,6 @@ object ActionsValidationErrorSerializer : KSerializer<ActionsValidationError> {
                             "InvalidDeterministicStateInitReceiver" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.InvalidDeterministicStateInitReceiver>(), jobj)
                             "DeterministicStateInitKeyLengthExceeded" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeterministicStateInitKeyLengthExceeded>(), jobj)
                             "DeterministicStateInitValueLengthExceeded" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeterministicStateInitValueLengthExceeded>(), jobj)
-                            "GasKeyPermissionInvalid" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyPermissionInvalid>(), jobj)
-                            "GasKeyTooManyNoncesRequested" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyTooManyNoncesRequested>(), jobj)
                             else -> { /* fallthrough to grouped handling */ }
                         }
                         // grouped handling by tf content (if any)
@@ -381,8 +349,6 @@ object ActionsValidationErrorSerializer : KSerializer<ActionsValidationError> {
                         if (chosenGroupKey == null && ("InvalidDeterministicStateInitReceiver".lowercase() == tfLower || tfLower.contains("InvalidDeterministicStateInitReceiver".lowercase()) || "InvalidDeterministicStateInitReceiver".lowercase().contains(tfLower))) { chosenGroupKey = "InvalidDeterministicStateInitReceiver" }
                         if (chosenGroupKey == null && ("DeterministicStateInitKeyLengthExceeded".lowercase() == tfLower || tfLower.contains("DeterministicStateInitKeyLengthExceeded".lowercase()) || "DeterministicStateInitKeyLengthExceeded".lowercase().contains(tfLower))) { chosenGroupKey = "DeterministicStateInitKeyLengthExceeded" }
                         if (chosenGroupKey == null && ("DeterministicStateInitValueLengthExceeded".lowercase() == tfLower || tfLower.contains("DeterministicStateInitValueLengthExceeded".lowercase()) || "DeterministicStateInitValueLengthExceeded".lowercase().contains(tfLower))) { chosenGroupKey = "DeterministicStateInitValueLengthExceeded" }
-                        if (chosenGroupKey == null && ("GasKeyPermissionInvalid".lowercase() == tfLower || tfLower.contains("GasKeyPermissionInvalid".lowercase()) || "GasKeyPermissionInvalid".lowercase().contains(tfLower))) { chosenGroupKey = "GasKeyPermissionInvalid" }
-                        if (chosenGroupKey == null && ("GasKeyTooManyNoncesRequested".lowercase() == tfLower || tfLower.contains("GasKeyTooManyNoncesRequested".lowercase()) || "GasKeyTooManyNoncesRequested".lowercase().contains(tfLower))) { chosenGroupKey = "GasKeyTooManyNoncesRequested" }
                         if (chosenGroupKey != null) {
                             when (chosenGroupKey) {
                                 "DeleteActionMustBeFinal" -> {
@@ -453,14 +419,6 @@ object ActionsValidationErrorSerializer : KSerializer<ActionsValidationError> {
                                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeterministicStateInitValueLengthExceeded>(), jobj) } catch (_: Exception) { }
                                     throw SerializationException("Cannot disambiguate variant for base token 'DeterministicStateInitValueLengthExceeded' and tf='\$tf'")
                                 }
-                                "GasKeyPermissionInvalid" -> {
-                                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyPermissionInvalid>(), jobj) } catch (_: Exception) { }
-                                    throw SerializationException("Cannot disambiguate variant for base token 'GasKeyPermissionInvalid' and tf='\$tf'")
-                                }
-                                "GasKeyTooManyNoncesRequested" -> {
-                                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyTooManyNoncesRequested>(), jobj) } catch (_: Exception) { }
-                                    throw SerializationException("Cannot disambiguate variant for base token 'GasKeyTooManyNoncesRequested' and tf='\$tf'")
-                                }
                                 else -> { /* no group matched */ }
                             }
                         }
@@ -483,8 +441,6 @@ object ActionsValidationErrorSerializer : KSerializer<ActionsValidationError> {
                     // group: InvalidDeterministicStateInitReceiver
                     // group: DeterministicStateInitKeyLengthExceeded
                     // group: DeterministicStateInitValueLengthExceeded
-                    // group: GasKeyPermissionInvalid
-                    // group: GasKeyTooManyNoncesRequested
 
                     val requiredMatches = mutableListOf<Int>()
                     if (jobj.containsKey("TotalPrepaidGasExceeded")) requiredMatches.add(1)
@@ -500,8 +456,6 @@ object ActionsValidationErrorSerializer : KSerializer<ActionsValidationError> {
                     if (jobj.containsKey("InvalidDeterministicStateInitReceiver")) requiredMatches.add(14)
                     if (jobj.containsKey("DeterministicStateInitKeyLengthExceeded")) requiredMatches.add(15)
                     if (jobj.containsKey("DeterministicStateInitValueLengthExceeded")) requiredMatches.add(16)
-                    if (jobj.containsKey("GasKeyPermissionInvalid")) requiredMatches.add(17)
-                    if (jobj.containsKey("GasKeyTooManyNoncesRequested")) requiredMatches.add(18)
                     if (requiredMatches.size == 1) {
                         when (requiredMatches[0]) {
                             0 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeleteActionMustBeFinal>(), jobj)
@@ -521,8 +475,6 @@ object ActionsValidationErrorSerializer : KSerializer<ActionsValidationError> {
                             14 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.InvalidDeterministicStateInitReceiver>(), jobj)
                             15 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeterministicStateInitKeyLengthExceeded>(), jobj)
                             16 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeterministicStateInitValueLengthExceeded>(), jobj)
-                            17 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyPermissionInvalid>(), jobj)
-                            18 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyTooManyNoncesRequested>(), jobj)
                             else -> throw SerializationException("Internal required-match dispatch error")
                         }
                     }
@@ -610,18 +562,6 @@ object ActionsValidationErrorSerializer : KSerializer<ActionsValidationError> {
                         val score = matchCount.toDouble() / 1.toDouble()
                         if (score > bestScore) { bestScore = score; bestIdx = 16 } else if (score == bestScore) { bestIdx = null }
                     }
-                    run {
-                        var matchCount = 0
-                        if (jobj["GasKeyPermissionInvalid"] != null) matchCount++
-                        val score = matchCount.toDouble() / 1.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 17 } else if (score == bestScore) { bestIdx = null }
-                    }
-                    run {
-                        var matchCount = 0
-                        if (jobj["GasKeyTooManyNoncesRequested"] != null) matchCount++
-                        val score = matchCount.toDouble() / 1.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 18 } else if (score == bestScore) { bestIdx = null }
-                    }
                     if (bestIdx != null && bestScore > 0.0) {
                         when (bestIdx) {
                             0 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeleteActionMustBeFinal>(), jobj)
@@ -641,8 +581,6 @@ object ActionsValidationErrorSerializer : KSerializer<ActionsValidationError> {
                             14 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.InvalidDeterministicStateInitReceiver>(), jobj)
                             15 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeterministicStateInitKeyLengthExceeded>(), jobj)
                             16 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeterministicStateInitValueLengthExceeded>(), jobj)
-                            17 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyPermissionInvalid>(), jobj)
-                            18 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyTooManyNoncesRequested>(), jobj)
                             else -> throw SerializationException("Internal scoring dispatch error")
                         }
                     }
@@ -659,8 +597,6 @@ object ActionsValidationErrorSerializer : KSerializer<ActionsValidationError> {
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.InvalidDeterministicStateInitReceiver>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeterministicStateInitKeyLengthExceeded>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.DeterministicStateInitValueLengthExceeded>(), jobj) } catch (_: Exception) { }
-                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyPermissionInvalid>(), jobj) } catch (_: Exception) { }
-                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.ActionsValidationError.GasKeyTooManyNoncesRequested>(), jobj) } catch (_: Exception) { }
                     throw SerializationException("Missing discriminator or recognizable variant in ActionsValidationError")
                 }
             }

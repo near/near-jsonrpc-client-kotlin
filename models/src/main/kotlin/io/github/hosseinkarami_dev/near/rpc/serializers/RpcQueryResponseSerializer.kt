@@ -30,8 +30,6 @@ object RpcQueryResponseSerializer : KSerializer<RpcQueryResponse> {
         element("CallResult", serializer<JsonElement>().descriptor)
         element("AccessKeyView", serializer<JsonElement>().descriptor)
         element("AccessKeyList", serializer<JsonElement>().descriptor)
-        element("GasKeyView", serializer<JsonElement>().descriptor)
-        element("GasKeyList", serializer<JsonElement>().descriptor)
     }
 
     override fun serialize(encoder: Encoder, value: RpcQueryResponse) {
@@ -104,25 +102,6 @@ object RpcQueryResponseSerializer : KSerializer<RpcQueryResponse> {
                     val payload = JsonObject(map)
                     jsonEncoder.encodeJsonElement(payload)
                 }
-                is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyView -> {
-                    val map = mutableMapOf<String, JsonElement>()
-                    map["balance"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.NearToken>(), value.balance)
-                    map["nonces"] = jsonEncoder.json.encodeToJsonElement(ListSerializer(serializer<kotlin.ULong>()), value.nonces)
-                    map["num_nonces"] = jsonEncoder.json.encodeToJsonElement(serializer<kotlin.UInt>(), value.numNonces)
-                    map["permission"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.AccessKeyPermissionView>(), value.permission)
-                    map["block_hash"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.CryptoHash>(), value.blockHash)
-                    map["block_height"] = jsonEncoder.json.encodeToJsonElement(serializer<kotlin.ULong>(), value.blockHeight)
-                    val payload = JsonObject(map)
-                    jsonEncoder.encodeJsonElement(payload)
-                }
-                is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyList -> {
-                    val map = mutableMapOf<String, JsonElement>()
-                    map["keys"] = jsonEncoder.json.encodeToJsonElement(ListSerializer(serializer<io.github.hosseinkarami_dev.near.rpc.models.GasKeyInfoView>()), value.keys)
-                    map["block_hash"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.CryptoHash>(), value.blockHash)
-                    map["block_height"] = jsonEncoder.json.encodeToJsonElement(serializer<kotlin.ULong>(), value.blockHeight)
-                    val payload = JsonObject(map)
-                    jsonEncoder.encodeJsonElement(payload)
-                }
             }
             return
         }
@@ -134,8 +113,6 @@ object RpcQueryResponseSerializer : KSerializer<RpcQueryResponse> {
             is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.CallResult -> out.encodeSerializableElement(descriptor, 3, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.CallResult>(), value)
             is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccessKeyView -> out.encodeSerializableElement(descriptor, 4, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccessKeyView>(), value)
             is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccessKeyList -> out.encodeSerializableElement(descriptor, 5, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccessKeyList>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyView -> out.encodeSerializableElement(descriptor, 6, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyView>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyList -> out.encodeSerializableElement(descriptor, 7, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyList>(), value)
         }
         out.endStructure(descriptor)
     }
@@ -155,7 +132,7 @@ object RpcQueryResponseSerializer : KSerializer<RpcQueryResponse> {
 
                 is JsonObject -> {
                     val jobj = element
-                    val knownVariantNames = setOf("AccountView", "ContractCodeView", "ViewStateResult", "CallResult", "AccessKeyView", "AccessKeyList", "GasKeyView", "GasKeyList")
+                    val knownVariantNames = setOf("AccountView", "ContractCodeView", "ViewStateResult", "CallResult", "AccessKeyView", "AccessKeyList")
                     if (jobj["amount"] != null) {
                         val amountVal = decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.NearToken>(), jobj["amount"] ?: throw SerializationException("Missing field 'amount' for variant AccountView"))
                         val codeHashVal = decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.CryptoHash>(), jobj["code_hash"] ?: throw SerializationException("Missing field 'code_hash' for variant AccountView"))
@@ -196,14 +173,11 @@ object RpcQueryResponseSerializer : KSerializer<RpcQueryResponse> {
                         val blockHeightVal = decoder.json.decodeFromJsonElement(serializer<kotlin.ULong>(), jobj["block_height"] ?: throw SerializationException("Missing field 'block_height' for variant AccessKeyView"))
                         return io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccessKeyView(nonceVal, permissionVal, blockHashVal, blockHeightVal)
                     }
-                    if (jobj["balance"] != null) {
-                        val balanceVal = decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.NearToken>(), jobj["balance"] ?: throw SerializationException("Missing field 'balance' for variant GasKeyView"))
-                        val noncesVal = decoder.json.decodeFromJsonElement(ListSerializer(serializer<kotlin.ULong>()), jobj["nonces"] ?: throw SerializationException("Missing field 'nonces' for variant GasKeyView"))
-                        val numNoncesVal = decoder.json.decodeFromJsonElement(serializer<kotlin.UInt>(), jobj["num_nonces"] ?: throw SerializationException("Missing field 'num_nonces' for variant GasKeyView"))
-                        val permissionVal = decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.AccessKeyPermissionView>(), jobj["permission"] ?: throw SerializationException("Missing field 'permission' for variant GasKeyView"))
-                        val blockHashVal = decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.CryptoHash>(), jobj["block_hash"] ?: throw SerializationException("Missing field 'block_hash' for variant GasKeyView"))
-                        val blockHeightVal = decoder.json.decodeFromJsonElement(serializer<kotlin.ULong>(), jobj["block_height"] ?: throw SerializationException("Missing field 'block_height' for variant GasKeyView"))
-                        return io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyView(balanceVal, noncesVal, numNoncesVal, permissionVal, blockHashVal, blockHeightVal)
+                    if (jobj["keys"] != null) {
+                        val keysVal = decoder.json.decodeFromJsonElement(ListSerializer(serializer<io.github.hosseinkarami_dev.near.rpc.models.AccessKeyInfoView>()), jobj["keys"] ?: throw SerializationException("Missing field 'keys' for variant AccessKeyList"))
+                        val blockHashVal = decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.CryptoHash>(), jobj["block_hash"] ?: throw SerializationException("Missing field 'block_hash' for variant AccessKeyList"))
+                        val blockHeightVal = decoder.json.decodeFromJsonElement(serializer<kotlin.ULong>(), jobj["block_height"] ?: throw SerializationException("Missing field 'block_height' for variant AccessKeyList"))
+                        return io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccessKeyList(keysVal, blockHashVal, blockHeightVal)
                     }
                     if (jobj.size == 1) {
                         val entry = jobj.entries.first()
@@ -234,14 +208,6 @@ object RpcQueryResponseSerializer : KSerializer<RpcQueryResponse> {
                             "AccessKeyList" -> {
                                 val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant AccessKeyList: " + key)
                                 return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccessKeyList>(), obj)
-                            }
-                            "GasKeyView" -> {
-                                val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant GasKeyView: " + key)
-                                return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyView>(), obj)
-                            }
-                            "GasKeyList" -> {
-                                val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant GasKeyList: " + key)
-                                return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyList>(), obj)
                             }
                             else -> { /* knownVariantNames.contains(key) guards this branch; shouldn't reach here */ }
                             }
@@ -275,8 +241,6 @@ object RpcQueryResponseSerializer : KSerializer<RpcQueryResponse> {
                             "CallResult" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.CallResult>(), jobj)
                             "AccessKeyView" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccessKeyView>(), jobj)
                             "AccessKeyList" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccessKeyList>(), jobj)
-                            "GasKeyView" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyView>(), jobj)
-                            "GasKeyList" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyList>(), jobj)
                             else -> { /* fallthrough to grouped handling */ }
                         }
                         // grouped handling by tf content (if any)
@@ -288,8 +252,6 @@ object RpcQueryResponseSerializer : KSerializer<RpcQueryResponse> {
                         if (chosenGroupKey == null && ("CallResult".lowercase() == tfLower || tfLower.contains("CallResult".lowercase()) || "CallResult".lowercase().contains(tfLower))) { chosenGroupKey = "CallResult" }
                         if (chosenGroupKey == null && ("AccessKeyView".lowercase() == tfLower || tfLower.contains("AccessKeyView".lowercase()) || "AccessKeyView".lowercase().contains(tfLower))) { chosenGroupKey = "AccessKeyView" }
                         if (chosenGroupKey == null && ("AccessKeyList".lowercase() == tfLower || tfLower.contains("AccessKeyList".lowercase()) || "AccessKeyList".lowercase().contains(tfLower))) { chosenGroupKey = "AccessKeyList" }
-                        if (chosenGroupKey == null && ("GasKeyView".lowercase() == tfLower || tfLower.contains("GasKeyView".lowercase()) || "GasKeyView".lowercase().contains(tfLower))) { chosenGroupKey = "GasKeyView" }
-                        if (chosenGroupKey == null && ("GasKeyList".lowercase() == tfLower || tfLower.contains("GasKeyList".lowercase()) || "GasKeyList".lowercase().contains(tfLower))) { chosenGroupKey = "GasKeyList" }
                         if (chosenGroupKey != null) {
                             when (chosenGroupKey) {
                                 "AccountView" -> {
@@ -316,14 +278,6 @@ object RpcQueryResponseSerializer : KSerializer<RpcQueryResponse> {
                                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccessKeyList>(), jobj) } catch (_: Exception) { }
                                     throw SerializationException("Cannot disambiguate variant for base token 'AccessKeyList' and tf='\$tf'")
                                 }
-                                "GasKeyView" -> {
-                                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyView>(), jobj) } catch (_: Exception) { }
-                                    throw SerializationException("Cannot disambiguate variant for base token 'GasKeyView' and tf='\$tf'")
-                                }
-                                "GasKeyList" -> {
-                                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyList>(), jobj) } catch (_: Exception) { }
-                                    throw SerializationException("Cannot disambiguate variant for base token 'GasKeyList' and tf='\$tf'")
-                                }
                                 else -> { /* no group matched */ }
                             }
                         }
@@ -335,8 +289,6 @@ object RpcQueryResponseSerializer : KSerializer<RpcQueryResponse> {
                     // group: CallResult
                     // group: AccessKeyView
                     // group: AccessKeyList
-                    // group: GasKeyView
-                    // group: GasKeyList
 
                     val requiredMatches = mutableListOf<Int>()
                     if (jobj.containsKey("amount") && jobj.containsKey("code_hash") && jobj.containsKey("locked") && jobj.containsKey("storage_usage") && jobj.containsKey("block_hash") && jobj.containsKey("block_height")) requiredMatches.add(0)
@@ -345,8 +297,6 @@ object RpcQueryResponseSerializer : KSerializer<RpcQueryResponse> {
                     if (jobj.containsKey("logs") && jobj.containsKey("result") && jobj.containsKey("block_hash") && jobj.containsKey("block_height")) requiredMatches.add(3)
                     if (jobj.containsKey("nonce") && jobj.containsKey("permission") && jobj.containsKey("block_hash") && jobj.containsKey("block_height")) requiredMatches.add(4)
                     if (jobj.containsKey("keys") && jobj.containsKey("block_hash") && jobj.containsKey("block_height")) requiredMatches.add(5)
-                    if (jobj.containsKey("balance") && jobj.containsKey("nonces") && jobj.containsKey("num_nonces") && jobj.containsKey("permission") && jobj.containsKey("block_hash") && jobj.containsKey("block_height")) requiredMatches.add(6)
-                    if (jobj.containsKey("keys") && jobj.containsKey("block_hash") && jobj.containsKey("block_height")) requiredMatches.add(7)
                     if (requiredMatches.size == 1) {
                         when (requiredMatches[0]) {
                             0 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccountView>(), jobj)
@@ -355,8 +305,6 @@ object RpcQueryResponseSerializer : KSerializer<RpcQueryResponse> {
                             3 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.CallResult>(), jobj)
                             4 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccessKeyView>(), jobj)
                             5 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccessKeyList>(), jobj)
-                            6 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyView>(), jobj)
-                            7 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyList>(), jobj)
                             else -> throw SerializationException("Internal required-match dispatch error")
                         }
                     }
@@ -420,25 +368,6 @@ object RpcQueryResponseSerializer : KSerializer<RpcQueryResponse> {
                         val score = matchCount.toDouble() / 3.toDouble()
                         if (score > bestScore) { bestScore = score; bestIdx = 5 } else if (score == bestScore) { bestIdx = null }
                     }
-                    run {
-                        var matchCount = 0
-                        if (jobj["balance"] != null) matchCount++
-                        if (jobj["nonces"] != null) matchCount++
-                        if (jobj["num_nonces"] != null) matchCount++
-                        if (jobj["permission"] != null) matchCount++
-                        if (jobj["block_hash"] != null) matchCount++
-                        if (jobj["block_height"] != null) matchCount++
-                        val score = matchCount.toDouble() / 6.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 6 } else if (score == bestScore) { bestIdx = null }
-                    }
-                    run {
-                        var matchCount = 0
-                        if (jobj["keys"] != null) matchCount++
-                        if (jobj["block_hash"] != null) matchCount++
-                        if (jobj["block_height"] != null) matchCount++
-                        val score = matchCount.toDouble() / 3.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 7 } else if (score == bestScore) { bestIdx = null }
-                    }
                     if (bestIdx != null && bestScore > 0.0) {
                         when (bestIdx) {
                             0 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccountView>(), jobj)
@@ -447,8 +376,6 @@ object RpcQueryResponseSerializer : KSerializer<RpcQueryResponse> {
                             3 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.CallResult>(), jobj)
                             4 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccessKeyView>(), jobj)
                             5 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccessKeyList>(), jobj)
-                            6 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyView>(), jobj)
-                            7 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyList>(), jobj)
                             else -> throw SerializationException("Internal scoring dispatch error")
                         }
                     }
@@ -458,8 +385,6 @@ object RpcQueryResponseSerializer : KSerializer<RpcQueryResponse> {
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.CallResult>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccessKeyView>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.AccessKeyList>(), jobj) } catch (_: Exception) { }
-                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyView>(), jobj) } catch (_: Exception) { }
-                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse.GasKeyList>(), jobj) } catch (_: Exception) { }
                     throw SerializationException("Missing discriminator or recognizable variant in RpcQueryResponse")
                 }
             }

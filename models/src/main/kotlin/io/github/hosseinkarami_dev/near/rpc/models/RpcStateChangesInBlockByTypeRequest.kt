@@ -58,28 +58,6 @@ public sealed class RpcStateChangesInBlockByTypeRequest {
   }
 
   @Serializable
-  public data class SingleGasKeyChangesByBlockId(
-    @SerialName("block_id")
-    public val blockId: BlockId,
-    /**
-     *  * Possible values: single_gas_key_changes
-     */
-    @SerialName("changes_type")
-    public val changesType: ChangesType,
-    @SerialName("keys")
-    public val keys: List<AccountWithPublicKey>,
-  ) : RpcStateChangesInBlockByTypeRequest() {
-    /**
-     *  * Possible values: single_gas_key_changes
-     */
-    @Serializable
-    public enum class ChangesType {
-      @SerialName("single_gas_key_changes")
-      SINGLE_GAS_KEY_CHANGES,
-    }
-  }
-
-  @Serializable
   public data class AllAccessKeyChangesByBlockId(
     @SerialName("block_id")
     public val blockId: BlockId,
@@ -98,28 +76,6 @@ public sealed class RpcStateChangesInBlockByTypeRequest {
     public enum class ChangesType {
       @SerialName("all_access_key_changes")
       ALL_ACCESS_KEY_CHANGES,
-    }
-  }
-
-  @Serializable
-  public data class AllGasKeyChangesByBlockId(
-    @SerialName("block_id")
-    public val blockId: BlockId,
-    @SerialName("account_ids")
-    public val accountIds: List<AccountId>,
-    /**
-     *  * Possible values: all_gas_key_changes
-     */
-    @SerialName("changes_type")
-    public val changesType: ChangesType,
-  ) : RpcStateChangesInBlockByTypeRequest() {
-    /**
-     *  * Possible values: all_gas_key_changes
-     */
-    @Serializable
-    public enum class ChangesType {
-      @SerialName("all_gas_key_changes")
-      ALL_GAS_KEY_CHANGES,
     }
   }
 
@@ -214,28 +170,6 @@ public sealed class RpcStateChangesInBlockByTypeRequest {
   }
 
   @Serializable
-  public data class SingleGasKeyChangesByFinality(
-    @SerialName("finality")
-    public val finality: Finality,
-    /**
-     *  * Possible values: single_gas_key_changes
-     */
-    @SerialName("changes_type")
-    public val changesType: ChangesType,
-    @SerialName("keys")
-    public val keys: List<AccountWithPublicKey>,
-  ) : RpcStateChangesInBlockByTypeRequest() {
-    /**
-     *  * Possible values: single_gas_key_changes
-     */
-    @Serializable
-    public enum class ChangesType {
-      @SerialName("single_gas_key_changes")
-      SINGLE_GAS_KEY_CHANGES,
-    }
-  }
-
-  @Serializable
   public data class AllAccessKeyChangesByFinality(
     @SerialName("finality")
     public val finality: Finality,
@@ -254,28 +188,6 @@ public sealed class RpcStateChangesInBlockByTypeRequest {
     public enum class ChangesType {
       @SerialName("all_access_key_changes")
       ALL_ACCESS_KEY_CHANGES,
-    }
-  }
-
-  @Serializable
-  public data class AllGasKeyChangesByFinality(
-    @SerialName("finality")
-    public val finality: Finality,
-    @SerialName("account_ids")
-    public val accountIds: List<AccountId>,
-    /**
-     *  * Possible values: all_gas_key_changes
-     */
-    @SerialName("changes_type")
-    public val changesType: ChangesType,
-  ) : RpcStateChangesInBlockByTypeRequest() {
-    /**
-     *  * Possible values: all_gas_key_changes
-     */
-    @Serializable
-    public enum class ChangesType {
-      @SerialName("all_gas_key_changes")
-      ALL_GAS_KEY_CHANGES,
     }
   }
 
@@ -370,28 +282,6 @@ public sealed class RpcStateChangesInBlockByTypeRequest {
   }
 
   @Serializable
-  public data class SingleGasKeyChangesBySyncCheckpoint(
-    @SerialName("sync_checkpoint")
-    public val syncCheckpoint: SyncCheckpoint,
-    /**
-     *  * Possible values: single_gas_key_changes
-     */
-    @SerialName("changes_type")
-    public val changesType: ChangesType,
-    @SerialName("keys")
-    public val keys: List<AccountWithPublicKey>,
-  ) : RpcStateChangesInBlockByTypeRequest() {
-    /**
-     *  * Possible values: single_gas_key_changes
-     */
-    @Serializable
-    public enum class ChangesType {
-      @SerialName("single_gas_key_changes")
-      SINGLE_GAS_KEY_CHANGES,
-    }
-  }
-
-  @Serializable
   public data class AllAccessKeyChangesBySyncCheckpoint(
     @SerialName("sync_checkpoint")
     public val syncCheckpoint: SyncCheckpoint,
@@ -410,28 +300,6 @@ public sealed class RpcStateChangesInBlockByTypeRequest {
     public enum class ChangesType {
       @SerialName("all_access_key_changes")
       ALL_ACCESS_KEY_CHANGES,
-    }
-  }
-
-  @Serializable
-  public data class AllGasKeyChangesBySyncCheckpoint(
-    @SerialName("sync_checkpoint")
-    public val syncCheckpoint: SyncCheckpoint,
-    @SerialName("account_ids")
-    public val accountIds: List<AccountId>,
-    /**
-     *  * Possible values: all_gas_key_changes
-     */
-    @SerialName("changes_type")
-    public val changesType: ChangesType,
-  ) : RpcStateChangesInBlockByTypeRequest() {
-    /**
-     *  * Possible values: all_gas_key_changes
-     */
-    @Serializable
-    public enum class ChangesType {
-      @SerialName("all_gas_key_changes")
-      ALL_GAS_KEY_CHANGES,
     }
   }
 
