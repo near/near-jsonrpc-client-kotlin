@@ -485,60 +485,6 @@ class NearClientUnitTests {
     }
 
     @Test
-    fun testExperimentalViewGasKey() = runTest {
-        val data = loadMockJson("JsonRpcRequestForExperimentalViewGasKey.json")
-        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalViewGasKey.json does not exist!")
-
-
-        val mockEngine = MockEngine { req ->
-            when (req.url.fullPath) {
-                else -> respond(data, headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())))
-            }
-        }
-
-        val client = HttpClient(mockEngine) {
-            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
-        }
-
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
-
-        try {
-            val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewGasKey.serializer(), data)
-            val response = nearClient.experimentalViewGasKey(requestObj.params)
-            assertNotNull(response)
-        } catch (e: Exception) {
-            fail("Test for ExperimentalViewGasKey failed: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testExperimentalViewGasKeyList() = runTest {
-        val data = loadMockJson("JsonRpcRequestForExperimentalViewGasKeyList.json")
-        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalViewGasKeyList.json does not exist!")
-
-
-        val mockEngine = MockEngine { req ->
-            when (req.url.fullPath) {
-                else -> respond(data, headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())))
-            }
-        }
-
-        val client = HttpClient(mockEngine) {
-            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
-        }
-
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
-
-        try {
-            val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewGasKeyList.serializer(), data)
-            val response = nearClient.experimentalViewGasKeyList(requestObj.params)
-            assertNotNull(response)
-        } catch (e: Exception) {
-            fail("Test for ExperimentalViewGasKeyList failed: ${e.message}")
-        }
-    }
-
-    @Test
     fun testExperimentalViewState() = runTest {
         val data = loadMockJson("JsonRpcRequestForExperimentalViewState.json")
         assertNotNull(data, "Mock file JsonRpcRequestForExperimentalViewState.json does not exist!")

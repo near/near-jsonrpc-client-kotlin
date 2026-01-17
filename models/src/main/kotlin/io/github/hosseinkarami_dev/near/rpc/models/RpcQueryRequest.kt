@@ -125,52 +125,6 @@ public sealed class RpcQueryRequest {
   }
 
   @Serializable
-  public data class ViewGasKeyByBlockId(
-    @SerialName("block_id")
-    public val blockId: BlockId,
-    @SerialName("account_id")
-    public val accountId: AccountId,
-    @SerialName("public_key")
-    public val publicKey: PublicKey,
-    /**
-     *  * Possible values: view_gas_key
-     */
-    @SerialName("request_type")
-    public val requestType: RequestType,
-  ) : RpcQueryRequest() {
-    /**
-     *  * Possible values: view_gas_key
-     */
-    @Serializable
-    public enum class RequestType {
-      @SerialName("view_gas_key")
-      VIEW_GAS_KEY,
-    }
-  }
-
-  @Serializable
-  public data class ViewGasKeyListByBlockId(
-    @SerialName("block_id")
-    public val blockId: BlockId,
-    @SerialName("account_id")
-    public val accountId: AccountId,
-    /**
-     *  * Possible values: view_gas_key_list
-     */
-    @SerialName("request_type")
-    public val requestType: RequestType,
-  ) : RpcQueryRequest() {
-    /**
-     *  * Possible values: view_gas_key_list
-     */
-    @Serializable
-    public enum class RequestType {
-      @SerialName("view_gas_key_list")
-      VIEW_GAS_KEY_LIST,
-    }
-  }
-
-  @Serializable
   public data class CallFunctionByBlockId(
     @SerialName("block_id")
     public val blockId: BlockId,
@@ -357,52 +311,6 @@ public sealed class RpcQueryRequest {
   }
 
   @Serializable
-  public data class ViewGasKeyByFinality(
-    @SerialName("finality")
-    public val finality: Finality,
-    @SerialName("account_id")
-    public val accountId: AccountId,
-    @SerialName("public_key")
-    public val publicKey: PublicKey,
-    /**
-     *  * Possible values: view_gas_key
-     */
-    @SerialName("request_type")
-    public val requestType: RequestType,
-  ) : RpcQueryRequest() {
-    /**
-     *  * Possible values: view_gas_key
-     */
-    @Serializable
-    public enum class RequestType {
-      @SerialName("view_gas_key")
-      VIEW_GAS_KEY,
-    }
-  }
-
-  @Serializable
-  public data class ViewGasKeyListByFinality(
-    @SerialName("finality")
-    public val finality: Finality,
-    @SerialName("account_id")
-    public val accountId: AccountId,
-    /**
-     *  * Possible values: view_gas_key_list
-     */
-    @SerialName("request_type")
-    public val requestType: RequestType,
-  ) : RpcQueryRequest() {
-    /**
-     *  * Possible values: view_gas_key_list
-     */
-    @Serializable
-    public enum class RequestType {
-      @SerialName("view_gas_key_list")
-      VIEW_GAS_KEY_LIST,
-    }
-  }
-
-  @Serializable
   public data class CallFunctionByFinality(
     @SerialName("finality")
     public val finality: Finality,
@@ -585,52 +493,6 @@ public sealed class RpcQueryRequest {
     public enum class RequestType {
       @SerialName("view_access_key_list")
       VIEW_ACCESS_KEY_LIST,
-    }
-  }
-
-  @Serializable
-  public data class ViewGasKeyBySyncCheckpoint(
-    @SerialName("sync_checkpoint")
-    public val syncCheckpoint: SyncCheckpoint,
-    @SerialName("account_id")
-    public val accountId: AccountId,
-    @SerialName("public_key")
-    public val publicKey: PublicKey,
-    /**
-     *  * Possible values: view_gas_key
-     */
-    @SerialName("request_type")
-    public val requestType: RequestType,
-  ) : RpcQueryRequest() {
-    /**
-     *  * Possible values: view_gas_key
-     */
-    @Serializable
-    public enum class RequestType {
-      @SerialName("view_gas_key")
-      VIEW_GAS_KEY,
-    }
-  }
-
-  @Serializable
-  public data class ViewGasKeyListBySyncCheckpoint(
-    @SerialName("sync_checkpoint")
-    public val syncCheckpoint: SyncCheckpoint,
-    @SerialName("account_id")
-    public val accountId: AccountId,
-    /**
-     *  * Possible values: view_gas_key_list
-     */
-    @SerialName("request_type")
-    public val requestType: RequestType,
-  ) : RpcQueryRequest() {
-    /**
-     *  * Possible values: view_gas_key_list
-     */
-    @Serializable
-    public enum class RequestType {
-      @SerialName("view_gas_key_list")
-      VIEW_GAS_KEY_LIST,
     }
   }
 

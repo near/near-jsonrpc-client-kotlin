@@ -328,22 +328,6 @@ class ModelSerializationTests {
     }
 
     @Test
-    fun testAddGasKeyActionEncodeDecode() {
-        val data = loadMockJson("AddGasKeyAction.json")
-        assertNotNull(data, "Mock file AddGasKeyAction.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.AddGasKeyAction.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.AddGasKeyAction.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.AddGasKeyAction.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for AddGasKeyAction: ${e.message}")
-        }
-    }
-
-    @Test
     fun testAddKeyActionEncodeDecode() {
         val data = loadMockJson("AddKeyAction.json")
         assertNotNull(data, "Mock file AddKeyAction.json does not exist!")
@@ -804,22 +788,6 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for DeleteAccountAction: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testDeleteGasKeyActionEncodeDecode() {
-        val data = loadMockJson("DeleteGasKeyAction.json")
-        assertNotNull(data, "Mock file DeleteGasKeyAction.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.DeleteGasKeyAction.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.DeleteGasKeyAction.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.DeleteGasKeyAction.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for DeleteGasKeyAction: ${e.message}")
         }
     }
 
@@ -1384,38 +1352,6 @@ class ModelSerializationTests {
     }
 
     @Test
-    fun testErrorWrapperForRpcViewGasKeyErrorEncodeDecode() {
-        val data = loadMockJson("ErrorWrapperForRpcViewGasKeyError.json")
-        assertNotNull(data, "Mock file ErrorWrapperForRpcViewGasKeyError.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcViewGasKeyError.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcViewGasKeyError.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcViewGasKeyError.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for ErrorWrapperForRpcViewGasKeyError: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testErrorWrapperForRpcViewGasKeyListErrorEncodeDecode() {
-        val data = loadMockJson("ErrorWrapperForRpcViewGasKeyListError.json")
-        assertNotNull(data, "Mock file ErrorWrapperForRpcViewGasKeyListError.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcViewGasKeyListError.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcViewGasKeyListError.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcViewGasKeyListError.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for ErrorWrapperForRpcViewGasKeyListError: ${e.message}")
-        }
-    }
-
-    @Test
     fun testErrorWrapperForRpcViewStateErrorEncodeDecode() {
         val data = loadMockJson("ErrorWrapperForRpcViewStateError.json")
         assertNotNull(data, "Mock file ErrorWrapperForRpcViewStateError.json does not exist!")
@@ -1700,70 +1636,6 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for GCConfig: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testGasKeyEncodeDecode() {
-        val data = loadMockJson("GasKey.json")
-        assertNotNull(data, "Mock file GasKey.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.GasKey.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.GasKey.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.GasKey.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for GasKey: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testGasKeyInfoViewEncodeDecode() {
-        val data = loadMockJson("GasKeyInfoView.json")
-        assertNotNull(data, "Mock file GasKeyInfoView.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.GasKeyInfoView.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.GasKeyInfoView.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.GasKeyInfoView.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for GasKeyInfoView: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testGasKeyListEncodeDecode() {
-        val data = loadMockJson("GasKeyList.json")
-        assertNotNull(data, "Mock file GasKeyList.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.GasKeyList.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.GasKeyList.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.GasKeyList.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for GasKeyList: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testGasKeyViewEncodeDecode() {
-        val data = loadMockJson("GasKeyView.json")
-        assertNotNull(data, "Mock file GasKeyView.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.GasKeyView.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.GasKeyView.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.GasKeyView.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for GasKeyView: ${e.message}")
         }
     }
 
@@ -2196,38 +2068,6 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for JsonRpcRequestForExperimentalViewCode: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testJsonRpcRequestForExperimentalViewGasKeyEncodeDecode() {
-        val data = loadMockJson("JsonRpcRequestForExperimentalViewGasKey.json")
-        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalViewGasKey.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewGasKey.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewGasKey.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewGasKey.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for JsonRpcRequestForExperimentalViewGasKey: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testJsonRpcRequestForExperimentalViewGasKeyListEncodeDecode() {
-        val data = loadMockJson("JsonRpcRequestForExperimentalViewGasKeyList.json")
-        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalViewGasKeyList.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewGasKeyList.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewGasKeyList.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewGasKeyList.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for JsonRpcRequestForExperimentalViewGasKeyList: ${e.message}")
         }
     }
 
@@ -2996,38 +2836,6 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for JsonRpcResponseForRpcViewCodeResponseAndRpcViewCodeError: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testJsonRpcResponseForRpcViewGasKeyListResponseAndRpcViewGasKeyListErrorEncodeDecode() {
-        val data = loadMockJson("JsonRpcResponseForRpcViewGasKeyListResponseAndRpcViewGasKeyListError.json")
-        assertNotNull(data, "Mock file JsonRpcResponseForRpcViewGasKeyListResponseAndRpcViewGasKeyListError.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcViewGasKeyListResponseAndRpcViewGasKeyListError.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcViewGasKeyListResponseAndRpcViewGasKeyListError.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcViewGasKeyListResponseAndRpcViewGasKeyListError.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for JsonRpcResponseForRpcViewGasKeyListResponseAndRpcViewGasKeyListError: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testJsonRpcResponseForRpcViewGasKeyResponseAndRpcViewGasKeyErrorEncodeDecode() {
-        val data = loadMockJson("JsonRpcResponseForRpcViewGasKeyResponseAndRpcViewGasKeyError.json")
-        assertNotNull(data, "Mock file JsonRpcResponseForRpcViewGasKeyResponseAndRpcViewGasKeyError.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcViewGasKeyResponseAndRpcViewGasKeyError.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcViewGasKeyResponseAndRpcViewGasKeyError.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcViewGasKeyResponseAndRpcViewGasKeyError.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for JsonRpcResponseForRpcViewGasKeyResponseAndRpcViewGasKeyError: ${e.message}")
         }
     }
 
@@ -4616,102 +4424,6 @@ class ModelSerializationTests {
     }
 
     @Test
-    fun testRpcViewGasKeyErrorEncodeDecode() {
-        val data = loadMockJson("RpcViewGasKeyError.json")
-        assertNotNull(data, "Mock file RpcViewGasKeyError.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyError.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyError.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyError.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for RpcViewGasKeyError: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testRpcViewGasKeyListErrorEncodeDecode() {
-        val data = loadMockJson("RpcViewGasKeyListError.json")
-        assertNotNull(data, "Mock file RpcViewGasKeyListError.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyListError.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyListError.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyListError.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for RpcViewGasKeyListError: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testRpcViewGasKeyListRequestEncodeDecode() {
-        val data = loadMockJson("RpcViewGasKeyListRequest.json")
-        assertNotNull(data, "Mock file RpcViewGasKeyListRequest.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyListRequest.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyListRequest.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyListRequest.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for RpcViewGasKeyListRequest: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testRpcViewGasKeyListResponseEncodeDecode() {
-        val data = loadMockJson("RpcViewGasKeyListResponse.json")
-        assertNotNull(data, "Mock file RpcViewGasKeyListResponse.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyListResponse.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyListResponse.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyListResponse.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for RpcViewGasKeyListResponse: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testRpcViewGasKeyRequestEncodeDecode() {
-        val data = loadMockJson("RpcViewGasKeyRequest.json")
-        assertNotNull(data, "Mock file RpcViewGasKeyRequest.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyRequest.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyRequest.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyRequest.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for RpcViewGasKeyRequest: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testRpcViewGasKeyResponseEncodeDecode() {
-        val data = loadMockJson("RpcViewGasKeyResponse.json")
-        assertNotNull(data, "Mock file RpcViewGasKeyResponse.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyResponse.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyResponse.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcViewGasKeyResponse.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for RpcViewGasKeyResponse: ${e.message}")
-        }
-    }
-
-    @Test
     fun testRpcViewStateErrorEncodeDecode() {
         val data = loadMockJson("RpcViewStateError.json")
         assertNotNull(data, "Mock file RpcViewStateError.json does not exist!")
@@ -5268,22 +4980,6 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for TransferAction: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testTransferToGasKeyActionEncodeDecode() {
-        val data = loadMockJson("TransferToGasKeyAction.json")
-        assertNotNull(data, "Mock file TransferToGasKeyAction.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.TransferToGasKeyAction.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.TransferToGasKeyAction.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.TransferToGasKeyAction.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for TransferToGasKeyAction: ${e.message}")
         }
     }
 

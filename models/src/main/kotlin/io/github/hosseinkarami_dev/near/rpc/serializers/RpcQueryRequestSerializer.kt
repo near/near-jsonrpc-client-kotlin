@@ -29,8 +29,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
         element("view_state_by_block_id", serializer<JsonElement>().descriptor)
         element("view_access_key_by_block_id", serializer<JsonElement>().descriptor)
         element("view_access_key_list_by_block_id", serializer<JsonElement>().descriptor)
-        element("view_gas_key_by_block_id", serializer<JsonElement>().descriptor)
-        element("view_gas_key_list_by_block_id", serializer<JsonElement>().descriptor)
         element("call_function_by_block_id", serializer<JsonElement>().descriptor)
         element("view_global_contract_code_by_block_id", serializer<JsonElement>().descriptor)
         element("view_global_contract_code_by_account_id_by_block_id", serializer<JsonElement>().descriptor)
@@ -39,8 +37,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
         element("view_state_by_finality", serializer<JsonElement>().descriptor)
         element("view_access_key_by_finality", serializer<JsonElement>().descriptor)
         element("view_access_key_list_by_finality", serializer<JsonElement>().descriptor)
-        element("view_gas_key_by_finality", serializer<JsonElement>().descriptor)
-        element("view_gas_key_list_by_finality", serializer<JsonElement>().descriptor)
         element("call_function_by_finality", serializer<JsonElement>().descriptor)
         element("view_global_contract_code_by_finality", serializer<JsonElement>().descriptor)
         element("view_global_contract_code_by_account_id_by_finality", serializer<JsonElement>().descriptor)
@@ -49,8 +45,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
         element("view_state_by_sync_checkpoint", serializer<JsonElement>().descriptor)
         element("view_access_key_by_sync_checkpoint", serializer<JsonElement>().descriptor)
         element("view_access_key_list_by_sync_checkpoint", serializer<JsonElement>().descriptor)
-        element("view_gas_key_by_sync_checkpoint", serializer<JsonElement>().descriptor)
-        element("view_gas_key_list_by_sync_checkpoint", serializer<JsonElement>().descriptor)
         element("call_function_by_sync_checkpoint", serializer<JsonElement>().descriptor)
         element("view_global_contract_code_by_sync_checkpoint", serializer<JsonElement>().descriptor)
         element("view_global_contract_code_by_account_id_by_sync_checkpoint", serializer<JsonElement>().descriptor)
@@ -102,23 +96,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                     map["block_id"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.BlockId>(), value.blockId)
                     map["account_id"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.AccountId>(), value.accountId)
                     map["request_type"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByBlockId.RequestType>(), value.requestType)
-                    val payload = JsonObject(map)
-                    jsonEncoder.encodeJsonElement(payload)
-                }
-                is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByBlockId -> {
-                    val map = mutableMapOf<String, JsonElement>()
-                    map["block_id"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.BlockId>(), value.blockId)
-                    map["account_id"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.AccountId>(), value.accountId)
-                    map["public_key"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.PublicKey>(), value.publicKey)
-                    map["request_type"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByBlockId.RequestType>(), value.requestType)
-                    val payload = JsonObject(map)
-                    jsonEncoder.encodeJsonElement(payload)
-                }
-                is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByBlockId -> {
-                    val map = mutableMapOf<String, JsonElement>()
-                    map["block_id"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.BlockId>(), value.blockId)
-                    map["account_id"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.AccountId>(), value.accountId)
-                    map["request_type"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByBlockId.RequestType>(), value.requestType)
                     val payload = JsonObject(map)
                     jsonEncoder.encodeJsonElement(payload)
                 }
@@ -193,23 +170,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                     val payload = JsonObject(map)
                     jsonEncoder.encodeJsonElement(payload)
                 }
-                is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByFinality -> {
-                    val map = mutableMapOf<String, JsonElement>()
-                    map["finality"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.Finality>(), value.finality)
-                    map["account_id"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.AccountId>(), value.accountId)
-                    map["public_key"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.PublicKey>(), value.publicKey)
-                    map["request_type"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByFinality.RequestType>(), value.requestType)
-                    val payload = JsonObject(map)
-                    jsonEncoder.encodeJsonElement(payload)
-                }
-                is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByFinality -> {
-                    val map = mutableMapOf<String, JsonElement>()
-                    map["finality"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.Finality>(), value.finality)
-                    map["account_id"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.AccountId>(), value.accountId)
-                    map["request_type"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByFinality.RequestType>(), value.requestType)
-                    val payload = JsonObject(map)
-                    jsonEncoder.encodeJsonElement(payload)
-                }
                 is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByFinality -> {
                     val map = mutableMapOf<String, JsonElement>()
                     map["finality"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.Finality>(), value.finality)
@@ -281,23 +241,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                     val payload = JsonObject(map)
                     jsonEncoder.encodeJsonElement(payload)
                 }
-                is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyBySyncCheckpoint -> {
-                    val map = mutableMapOf<String, JsonElement>()
-                    map["sync_checkpoint"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.SyncCheckpoint>(), value.syncCheckpoint)
-                    map["account_id"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.AccountId>(), value.accountId)
-                    map["public_key"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.PublicKey>(), value.publicKey)
-                    map["request_type"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyBySyncCheckpoint.RequestType>(), value.requestType)
-                    val payload = JsonObject(map)
-                    jsonEncoder.encodeJsonElement(payload)
-                }
-                is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListBySyncCheckpoint -> {
-                    val map = mutableMapOf<String, JsonElement>()
-                    map["sync_checkpoint"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.SyncCheckpoint>(), value.syncCheckpoint)
-                    map["account_id"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.AccountId>(), value.accountId)
-                    map["request_type"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListBySyncCheckpoint.RequestType>(), value.requestType)
-                    val payload = JsonObject(map)
-                    jsonEncoder.encodeJsonElement(payload)
-                }
                 is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionBySyncCheckpoint -> {
                     val map = mutableMapOf<String, JsonElement>()
                     map["sync_checkpoint"] = jsonEncoder.json.encodeToJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.SyncCheckpoint>(), value.syncCheckpoint)
@@ -334,31 +277,25 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
             is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateByBlockId -> out.encodeSerializableElement(descriptor, 2, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateByBlockId>(), value)
             is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyByBlockId -> out.encodeSerializableElement(descriptor, 3, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyByBlockId>(), value)
             is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByBlockId -> out.encodeSerializableElement(descriptor, 4, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByBlockId>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByBlockId -> out.encodeSerializableElement(descriptor, 5, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByBlockId>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByBlockId -> out.encodeSerializableElement(descriptor, 6, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByBlockId>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByBlockId -> out.encodeSerializableElement(descriptor, 7, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByBlockId>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByBlockId -> out.encodeSerializableElement(descriptor, 8, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByBlockId>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByBlockId -> out.encodeSerializableElement(descriptor, 9, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByBlockId>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccountByFinality -> out.encodeSerializableElement(descriptor, 10, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccountByFinality>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewCodeByFinality -> out.encodeSerializableElement(descriptor, 11, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewCodeByFinality>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateByFinality -> out.encodeSerializableElement(descriptor, 12, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateByFinality>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyByFinality -> out.encodeSerializableElement(descriptor, 13, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyByFinality>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByFinality -> out.encodeSerializableElement(descriptor, 14, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByFinality>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByFinality -> out.encodeSerializableElement(descriptor, 15, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByFinality>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByFinality -> out.encodeSerializableElement(descriptor, 16, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByFinality>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByFinality -> out.encodeSerializableElement(descriptor, 17, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByFinality>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByFinality -> out.encodeSerializableElement(descriptor, 18, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByFinality>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByFinality -> out.encodeSerializableElement(descriptor, 19, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByFinality>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccountBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 20, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccountBySyncCheckpoint>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewCodeBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 21, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewCodeBySyncCheckpoint>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 22, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateBySyncCheckpoint>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 23, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyBySyncCheckpoint>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 24, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListBySyncCheckpoint>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 25, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyBySyncCheckpoint>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 26, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListBySyncCheckpoint>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 27, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionBySyncCheckpoint>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 28, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeBySyncCheckpoint>(), value)
-            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 29, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdBySyncCheckpoint>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByBlockId -> out.encodeSerializableElement(descriptor, 5, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByBlockId>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByBlockId -> out.encodeSerializableElement(descriptor, 6, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByBlockId>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByBlockId -> out.encodeSerializableElement(descriptor, 7, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByBlockId>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccountByFinality -> out.encodeSerializableElement(descriptor, 8, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccountByFinality>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewCodeByFinality -> out.encodeSerializableElement(descriptor, 9, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewCodeByFinality>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateByFinality -> out.encodeSerializableElement(descriptor, 10, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateByFinality>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyByFinality -> out.encodeSerializableElement(descriptor, 11, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyByFinality>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByFinality -> out.encodeSerializableElement(descriptor, 12, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByFinality>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByFinality -> out.encodeSerializableElement(descriptor, 13, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByFinality>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByFinality -> out.encodeSerializableElement(descriptor, 14, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByFinality>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByFinality -> out.encodeSerializableElement(descriptor, 15, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByFinality>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccountBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 16, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccountBySyncCheckpoint>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewCodeBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 17, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewCodeBySyncCheckpoint>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 18, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateBySyncCheckpoint>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 19, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyBySyncCheckpoint>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 20, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListBySyncCheckpoint>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 21, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionBySyncCheckpoint>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 22, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeBySyncCheckpoint>(), value)
+            is io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdBySyncCheckpoint -> out.encodeSerializableElement(descriptor, 23, serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdBySyncCheckpoint>(), value)
         }
         out.endStructure(descriptor)
     }
@@ -378,7 +315,7 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
 
                 is JsonObject -> {
                     val jobj = element
-                    val knownVariantNames = setOf("view_account_by_block_id", "view_code_by_block_id", "view_state_by_block_id", "view_access_key_by_block_id", "view_access_key_list_by_block_id", "view_gas_key_by_block_id", "view_gas_key_list_by_block_id", "call_function_by_block_id", "view_global_contract_code_by_block_id", "view_global_contract_code_by_account_id_by_block_id", "view_account_by_finality", "view_code_by_finality", "view_state_by_finality", "view_access_key_by_finality", "view_access_key_list_by_finality", "view_gas_key_by_finality", "view_gas_key_list_by_finality", "call_function_by_finality", "view_global_contract_code_by_finality", "view_global_contract_code_by_account_id_by_finality", "view_account_by_sync_checkpoint", "view_code_by_sync_checkpoint", "view_state_by_sync_checkpoint", "view_access_key_by_sync_checkpoint", "view_access_key_list_by_sync_checkpoint", "view_gas_key_by_sync_checkpoint", "view_gas_key_list_by_sync_checkpoint", "call_function_by_sync_checkpoint", "view_global_contract_code_by_sync_checkpoint", "view_global_contract_code_by_account_id_by_sync_checkpoint")
+                    val knownVariantNames = setOf("view_account_by_block_id", "view_code_by_block_id", "view_state_by_block_id", "view_access_key_by_block_id", "view_access_key_list_by_block_id", "call_function_by_block_id", "view_global_contract_code_by_block_id", "view_global_contract_code_by_account_id_by_block_id", "view_account_by_finality", "view_code_by_finality", "view_state_by_finality", "view_access_key_by_finality", "view_access_key_list_by_finality", "call_function_by_finality", "view_global_contract_code_by_finality", "view_global_contract_code_by_account_id_by_finality", "view_account_by_sync_checkpoint", "view_code_by_sync_checkpoint", "view_state_by_sync_checkpoint", "view_access_key_by_sync_checkpoint", "view_access_key_list_by_sync_checkpoint", "call_function_by_sync_checkpoint", "view_global_contract_code_by_sync_checkpoint", "view_global_contract_code_by_account_id_by_sync_checkpoint")
                     if (jobj.size == 1) {
                         val entry = jobj.entries.first()
                         val key = entry.key
@@ -404,14 +341,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                             "view_access_key_list_by_block_id" -> {
                                 val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant view_access_key_list_by_block_id: " + key)
                                 return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByBlockId>(), obj)
-                            }
-                            "view_gas_key_by_block_id" -> {
-                                val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant view_gas_key_by_block_id: " + key)
-                                return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByBlockId>(), obj)
-                            }
-                            "view_gas_key_list_by_block_id" -> {
-                                val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant view_gas_key_list_by_block_id: " + key)
-                                return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByBlockId>(), obj)
                             }
                             "call_function_by_block_id" -> {
                                 val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant call_function_by_block_id: " + key)
@@ -445,14 +374,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                                 val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant view_access_key_list_by_finality: " + key)
                                 return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByFinality>(), obj)
                             }
-                            "view_gas_key_by_finality" -> {
-                                val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant view_gas_key_by_finality: " + key)
-                                return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByFinality>(), obj)
-                            }
-                            "view_gas_key_list_by_finality" -> {
-                                val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant view_gas_key_list_by_finality: " + key)
-                                return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByFinality>(), obj)
-                            }
                             "call_function_by_finality" -> {
                                 val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant call_function_by_finality: " + key)
                                 return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByFinality>(), obj)
@@ -484,14 +405,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                             "view_access_key_list_by_sync_checkpoint" -> {
                                 val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant view_access_key_list_by_sync_checkpoint: " + key)
                                 return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListBySyncCheckpoint>(), obj)
-                            }
-                            "view_gas_key_by_sync_checkpoint" -> {
-                                val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant view_gas_key_by_sync_checkpoint: " + key)
-                                return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyBySyncCheckpoint>(), obj)
-                            }
-                            "view_gas_key_list_by_sync_checkpoint" -> {
-                                val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant view_gas_key_list_by_sync_checkpoint: " + key)
-                                return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListBySyncCheckpoint>(), obj)
                             }
                             "call_function_by_sync_checkpoint" -> {
                                 val obj = valueElem as? JsonObject ?: throw SerializationException("Expected object payload for variant call_function_by_sync_checkpoint: " + key)
@@ -536,8 +449,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                             "view_state_by_block_id" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateByBlockId>(), jobj)
                             "view_access_key_by_block_id" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyByBlockId>(), jobj)
                             "view_access_key_list_by_block_id" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByBlockId>(), jobj)
-                            "view_gas_key_by_block_id" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByBlockId>(), jobj)
-                            "view_gas_key_list_by_block_id" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByBlockId>(), jobj)
                             "call_function_by_block_id" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByBlockId>(), jobj)
                             "view_global_contract_code_by_block_id" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByBlockId>(), jobj)
                             "view_global_contract_code_by_account_id_by_block_id" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByBlockId>(), jobj)
@@ -546,8 +457,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                             "view_state_by_finality" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateByFinality>(), jobj)
                             "view_access_key_by_finality" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyByFinality>(), jobj)
                             "view_access_key_list_by_finality" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByFinality>(), jobj)
-                            "view_gas_key_by_finality" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByFinality>(), jobj)
-                            "view_gas_key_list_by_finality" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByFinality>(), jobj)
                             "call_function_by_finality" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByFinality>(), jobj)
                             "view_global_contract_code_by_finality" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByFinality>(), jobj)
                             "view_global_contract_code_by_account_id_by_finality" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByFinality>(), jobj)
@@ -556,8 +465,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                             "view_state_by_sync_checkpoint" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateBySyncCheckpoint>(), jobj)
                             "view_access_key_by_sync_checkpoint" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyBySyncCheckpoint>(), jobj)
                             "view_access_key_list_by_sync_checkpoint" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListBySyncCheckpoint>(), jobj)
-                            "view_gas_key_by_sync_checkpoint" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyBySyncCheckpoint>(), jobj)
-                            "view_gas_key_list_by_sync_checkpoint" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListBySyncCheckpoint>(), jobj)
                             "call_function_by_sync_checkpoint" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionBySyncCheckpoint>(), jobj)
                             "view_global_contract_code_by_sync_checkpoint" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeBySyncCheckpoint>(), jobj)
                             "view_global_contract_code_by_account_id_by_sync_checkpoint" -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdBySyncCheckpoint>(), jobj)
@@ -571,8 +478,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                         if (chosenGroupKey == null && ("view_state".lowercase() == tfLower || tfLower.contains("view_state".lowercase()) || "view_state".lowercase().contains(tfLower))) { chosenGroupKey = "view_state" }
                         if (chosenGroupKey == null && ("view_access_key".lowercase() == tfLower || tfLower.contains("view_access_key".lowercase()) || "view_access_key".lowercase().contains(tfLower))) { chosenGroupKey = "view_access_key" }
                         if (chosenGroupKey == null && ("view_access_key_list".lowercase() == tfLower || tfLower.contains("view_access_key_list".lowercase()) || "view_access_key_list".lowercase().contains(tfLower))) { chosenGroupKey = "view_access_key_list" }
-                        if (chosenGroupKey == null && ("view_gas_key".lowercase() == tfLower || tfLower.contains("view_gas_key".lowercase()) || "view_gas_key".lowercase().contains(tfLower))) { chosenGroupKey = "view_gas_key" }
-                        if (chosenGroupKey == null && ("view_gas_key_list".lowercase() == tfLower || tfLower.contains("view_gas_key_list".lowercase()) || "view_gas_key_list".lowercase().contains(tfLower))) { chosenGroupKey = "view_gas_key_list" }
                         if (chosenGroupKey == null && ("call_function".lowercase() == tfLower || tfLower.contains("call_function".lowercase()) || "call_function".lowercase().contains(tfLower))) { chosenGroupKey = "call_function" }
                         if (chosenGroupKey == null && ("view_global_contract_code".lowercase() == tfLower || tfLower.contains("view_global_contract_code".lowercase()) || "view_global_contract_code".lowercase().contains(tfLower))) { chosenGroupKey = "view_global_contract_code" }
                         if (chosenGroupKey != null) {
@@ -651,36 +556,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByFinality>(), jobj) } catch (_: Exception) { }
                                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListBySyncCheckpoint>(), jobj) } catch (_: Exception) { }
                                     throw SerializationException("Cannot disambiguate variant for base token 'view_access_key_list' and tf='\$tf'")
-                                }
-                                "view_gas_key" -> {
-                                    if (jobj["block_id"] != null) {
-                                        try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByBlockId>(), jobj) } catch (_: Exception) { }
-                                    }
-                                    if (jobj["finality"] != null) {
-                                        try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByFinality>(), jobj) } catch (_: Exception) { }
-                                    }
-                                    if (jobj["sync_checkpoint"] != null) {
-                                        try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyBySyncCheckpoint>(), jobj) } catch (_: Exception) { }
-                                    }
-                                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByBlockId>(), jobj) } catch (_: Exception) { }
-                                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByFinality>(), jobj) } catch (_: Exception) { }
-                                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyBySyncCheckpoint>(), jobj) } catch (_: Exception) { }
-                                    throw SerializationException("Cannot disambiguate variant for base token 'view_gas_key' and tf='\$tf'")
-                                }
-                                "view_gas_key_list" -> {
-                                    if (jobj["block_id"] != null) {
-                                        try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByBlockId>(), jobj) } catch (_: Exception) { }
-                                    }
-                                    if (jobj["finality"] != null) {
-                                        try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByFinality>(), jobj) } catch (_: Exception) { }
-                                    }
-                                    if (jobj["sync_checkpoint"] != null) {
-                                        try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListBySyncCheckpoint>(), jobj) } catch (_: Exception) { }
-                                    }
-                                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByBlockId>(), jobj) } catch (_: Exception) { }
-                                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByFinality>(), jobj) } catch (_: Exception) { }
-                                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListBySyncCheckpoint>(), jobj) } catch (_: Exception) { }
-                                    throw SerializationException("Cannot disambiguate variant for base token 'view_gas_key_list' and tf='\$tf'")
                                 }
                                 "call_function" -> {
                                     if (jobj["block_id"] != null) {
@@ -773,26 +648,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                     if (jobj["sync_checkpoint"] != null) {
                         try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListBySyncCheckpoint>(), jobj) } catch (_: Exception) { }
                     }
-                    // group: view_gas_key
-                    if (jobj["block_id"] != null) {
-                        try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByBlockId>(), jobj) } catch (_: Exception) { }
-                    }
-                    if (jobj["finality"] != null) {
-                        try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByFinality>(), jobj) } catch (_: Exception) { }
-                    }
-                    if (jobj["sync_checkpoint"] != null) {
-                        try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyBySyncCheckpoint>(), jobj) } catch (_: Exception) { }
-                    }
-                    // group: view_gas_key_list
-                    if (jobj["block_id"] != null) {
-                        try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByBlockId>(), jobj) } catch (_: Exception) { }
-                    }
-                    if (jobj["finality"] != null) {
-                        try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByFinality>(), jobj) } catch (_: Exception) { }
-                    }
-                    if (jobj["sync_checkpoint"] != null) {
-                        try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListBySyncCheckpoint>(), jobj) } catch (_: Exception) { }
-                    }
                     // group: call_function
                     if (jobj["block_id"] != null) {
                         try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByBlockId>(), jobj) } catch (_: Exception) { }
@@ -823,31 +678,25 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                     if (jobj.containsKey("block_id") && jobj.containsKey("account_id") && jobj.containsKey("prefix_base64") && jobj.containsKey("request_type")) requiredMatches.add(2)
                     if (jobj.containsKey("block_id") && jobj.containsKey("account_id") && jobj.containsKey("public_key") && jobj.containsKey("request_type")) requiredMatches.add(3)
                     if (jobj.containsKey("block_id") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(4)
-                    if (jobj.containsKey("block_id") && jobj.containsKey("account_id") && jobj.containsKey("public_key") && jobj.containsKey("request_type")) requiredMatches.add(5)
-                    if (jobj.containsKey("block_id") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(6)
-                    if (jobj.containsKey("block_id") && jobj.containsKey("account_id") && jobj.containsKey("args_base64") && jobj.containsKey("method_name") && jobj.containsKey("request_type")) requiredMatches.add(7)
-                    if (jobj.containsKey("block_id") && jobj.containsKey("code_hash") && jobj.containsKey("request_type")) requiredMatches.add(8)
-                    if (jobj.containsKey("block_id") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(9)
-                    if (jobj.containsKey("finality") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(10)
-                    if (jobj.containsKey("finality") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(11)
-                    if (jobj.containsKey("finality") && jobj.containsKey("account_id") && jobj.containsKey("prefix_base64") && jobj.containsKey("request_type")) requiredMatches.add(12)
-                    if (jobj.containsKey("finality") && jobj.containsKey("account_id") && jobj.containsKey("public_key") && jobj.containsKey("request_type")) requiredMatches.add(13)
-                    if (jobj.containsKey("finality") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(14)
-                    if (jobj.containsKey("finality") && jobj.containsKey("account_id") && jobj.containsKey("public_key") && jobj.containsKey("request_type")) requiredMatches.add(15)
-                    if (jobj.containsKey("finality") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(16)
-                    if (jobj.containsKey("finality") && jobj.containsKey("account_id") && jobj.containsKey("args_base64") && jobj.containsKey("method_name") && jobj.containsKey("request_type")) requiredMatches.add(17)
-                    if (jobj.containsKey("finality") && jobj.containsKey("code_hash") && jobj.containsKey("request_type")) requiredMatches.add(18)
-                    if (jobj.containsKey("finality") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(19)
+                    if (jobj.containsKey("block_id") && jobj.containsKey("account_id") && jobj.containsKey("args_base64") && jobj.containsKey("method_name") && jobj.containsKey("request_type")) requiredMatches.add(5)
+                    if (jobj.containsKey("block_id") && jobj.containsKey("code_hash") && jobj.containsKey("request_type")) requiredMatches.add(6)
+                    if (jobj.containsKey("block_id") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(7)
+                    if (jobj.containsKey("finality") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(8)
+                    if (jobj.containsKey("finality") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(9)
+                    if (jobj.containsKey("finality") && jobj.containsKey("account_id") && jobj.containsKey("prefix_base64") && jobj.containsKey("request_type")) requiredMatches.add(10)
+                    if (jobj.containsKey("finality") && jobj.containsKey("account_id") && jobj.containsKey("public_key") && jobj.containsKey("request_type")) requiredMatches.add(11)
+                    if (jobj.containsKey("finality") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(12)
+                    if (jobj.containsKey("finality") && jobj.containsKey("account_id") && jobj.containsKey("args_base64") && jobj.containsKey("method_name") && jobj.containsKey("request_type")) requiredMatches.add(13)
+                    if (jobj.containsKey("finality") && jobj.containsKey("code_hash") && jobj.containsKey("request_type")) requiredMatches.add(14)
+                    if (jobj.containsKey("finality") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(15)
+                    if (jobj.containsKey("sync_checkpoint") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(16)
+                    if (jobj.containsKey("sync_checkpoint") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(17)
+                    if (jobj.containsKey("sync_checkpoint") && jobj.containsKey("account_id") && jobj.containsKey("prefix_base64") && jobj.containsKey("request_type")) requiredMatches.add(18)
+                    if (jobj.containsKey("sync_checkpoint") && jobj.containsKey("account_id") && jobj.containsKey("public_key") && jobj.containsKey("request_type")) requiredMatches.add(19)
                     if (jobj.containsKey("sync_checkpoint") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(20)
-                    if (jobj.containsKey("sync_checkpoint") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(21)
-                    if (jobj.containsKey("sync_checkpoint") && jobj.containsKey("account_id") && jobj.containsKey("prefix_base64") && jobj.containsKey("request_type")) requiredMatches.add(22)
-                    if (jobj.containsKey("sync_checkpoint") && jobj.containsKey("account_id") && jobj.containsKey("public_key") && jobj.containsKey("request_type")) requiredMatches.add(23)
-                    if (jobj.containsKey("sync_checkpoint") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(24)
-                    if (jobj.containsKey("sync_checkpoint") && jobj.containsKey("account_id") && jobj.containsKey("public_key") && jobj.containsKey("request_type")) requiredMatches.add(25)
-                    if (jobj.containsKey("sync_checkpoint") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(26)
-                    if (jobj.containsKey("sync_checkpoint") && jobj.containsKey("account_id") && jobj.containsKey("args_base64") && jobj.containsKey("method_name") && jobj.containsKey("request_type")) requiredMatches.add(27)
-                    if (jobj.containsKey("sync_checkpoint") && jobj.containsKey("code_hash") && jobj.containsKey("request_type")) requiredMatches.add(28)
-                    if (jobj.containsKey("sync_checkpoint") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(29)
+                    if (jobj.containsKey("sync_checkpoint") && jobj.containsKey("account_id") && jobj.containsKey("args_base64") && jobj.containsKey("method_name") && jobj.containsKey("request_type")) requiredMatches.add(21)
+                    if (jobj.containsKey("sync_checkpoint") && jobj.containsKey("code_hash") && jobj.containsKey("request_type")) requiredMatches.add(22)
+                    if (jobj.containsKey("sync_checkpoint") && jobj.containsKey("account_id") && jobj.containsKey("request_type")) requiredMatches.add(23)
                     if (requiredMatches.size == 1) {
                         when (requiredMatches[0]) {
                             0 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccountByBlockId>(), jobj)
@@ -855,31 +704,25 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                             2 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateByBlockId>(), jobj)
                             3 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyByBlockId>(), jobj)
                             4 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByBlockId>(), jobj)
-                            5 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByBlockId>(), jobj)
-                            6 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByBlockId>(), jobj)
-                            7 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByBlockId>(), jobj)
-                            8 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByBlockId>(), jobj)
-                            9 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByBlockId>(), jobj)
-                            10 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccountByFinality>(), jobj)
-                            11 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewCodeByFinality>(), jobj)
-                            12 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateByFinality>(), jobj)
-                            13 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyByFinality>(), jobj)
-                            14 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByFinality>(), jobj)
-                            15 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByFinality>(), jobj)
-                            16 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByFinality>(), jobj)
-                            17 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByFinality>(), jobj)
-                            18 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByFinality>(), jobj)
-                            19 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByFinality>(), jobj)
-                            20 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccountBySyncCheckpoint>(), jobj)
-                            21 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewCodeBySyncCheckpoint>(), jobj)
-                            22 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateBySyncCheckpoint>(), jobj)
-                            23 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyBySyncCheckpoint>(), jobj)
-                            24 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListBySyncCheckpoint>(), jobj)
-                            25 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyBySyncCheckpoint>(), jobj)
-                            26 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListBySyncCheckpoint>(), jobj)
-                            27 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionBySyncCheckpoint>(), jobj)
-                            28 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeBySyncCheckpoint>(), jobj)
-                            29 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdBySyncCheckpoint>(), jobj)
+                            5 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByBlockId>(), jobj)
+                            6 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByBlockId>(), jobj)
+                            7 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByBlockId>(), jobj)
+                            8 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccountByFinality>(), jobj)
+                            9 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewCodeByFinality>(), jobj)
+                            10 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateByFinality>(), jobj)
+                            11 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyByFinality>(), jobj)
+                            12 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByFinality>(), jobj)
+                            13 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByFinality>(), jobj)
+                            14 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByFinality>(), jobj)
+                            15 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByFinality>(), jobj)
+                            16 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccountBySyncCheckpoint>(), jobj)
+                            17 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewCodeBySyncCheckpoint>(), jobj)
+                            18 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateBySyncCheckpoint>(), jobj)
+                            19 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyBySyncCheckpoint>(), jobj)
+                            20 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListBySyncCheckpoint>(), jobj)
+                            21 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionBySyncCheckpoint>(), jobj)
+                            22 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeBySyncCheckpoint>(), jobj)
+                            23 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdBySyncCheckpoint>(), jobj)
                             else -> throw SerializationException("Internal required-match dispatch error")
                         }
                     }
@@ -932,15 +775,16 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                         var matchCount = 0
                         if (jobj["block_id"] != null) matchCount++
                         if (jobj["account_id"] != null) matchCount++
-                        if (jobj["public_key"] != null) matchCount++
+                        if (jobj["args_base64"] != null) matchCount++
+                        if (jobj["method_name"] != null) matchCount++
                         if (jobj["request_type"] != null) matchCount++
-                        val score = matchCount.toDouble() / 4.toDouble()
+                        val score = matchCount.toDouble() / 5.toDouble()
                         if (score > bestScore) { bestScore = score; bestIdx = 5 } else if (score == bestScore) { bestIdx = null }
                     }
                     run {
                         var matchCount = 0
                         if (jobj["block_id"] != null) matchCount++
-                        if (jobj["account_id"] != null) matchCount++
+                        if (jobj["code_hash"] != null) matchCount++
                         if (jobj["request_type"] != null) matchCount++
                         val score = matchCount.toDouble() / 3.toDouble()
                         if (score > bestScore) { bestScore = score; bestIdx = 6 } else if (score == bestScore) { bestIdx = null }
@@ -949,23 +793,21 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                         var matchCount = 0
                         if (jobj["block_id"] != null) matchCount++
                         if (jobj["account_id"] != null) matchCount++
-                        if (jobj["args_base64"] != null) matchCount++
-                        if (jobj["method_name"] != null) matchCount++
                         if (jobj["request_type"] != null) matchCount++
-                        val score = matchCount.toDouble() / 5.toDouble()
+                        val score = matchCount.toDouble() / 3.toDouble()
                         if (score > bestScore) { bestScore = score; bestIdx = 7 } else if (score == bestScore) { bestIdx = null }
                     }
                     run {
                         var matchCount = 0
-                        if (jobj["block_id"] != null) matchCount++
-                        if (jobj["code_hash"] != null) matchCount++
+                        if (jobj["finality"] != null) matchCount++
+                        if (jobj["account_id"] != null) matchCount++
                         if (jobj["request_type"] != null) matchCount++
                         val score = matchCount.toDouble() / 3.toDouble()
                         if (score > bestScore) { bestScore = score; bestIdx = 8 } else if (score == bestScore) { bestIdx = null }
                     }
                     run {
                         var matchCount = 0
-                        if (jobj["block_id"] != null) matchCount++
+                        if (jobj["finality"] != null) matchCount++
                         if (jobj["account_id"] != null) matchCount++
                         if (jobj["request_type"] != null) matchCount++
                         val score = matchCount.toDouble() / 3.toDouble()
@@ -975,61 +817,28 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                         var matchCount = 0
                         if (jobj["finality"] != null) matchCount++
                         if (jobj["account_id"] != null) matchCount++
+                        if (jobj["include_proof"] != null) matchCount++
+                        if (jobj["prefix_base64"] != null) matchCount++
                         if (jobj["request_type"] != null) matchCount++
-                        val score = matchCount.toDouble() / 3.toDouble()
+                        val score = matchCount.toDouble() / 5.toDouble()
                         if (score > bestScore) { bestScore = score; bestIdx = 10 } else if (score == bestScore) { bestIdx = null }
                     }
                     run {
                         var matchCount = 0
                         if (jobj["finality"] != null) matchCount++
                         if (jobj["account_id"] != null) matchCount++
+                        if (jobj["public_key"] != null) matchCount++
                         if (jobj["request_type"] != null) matchCount++
-                        val score = matchCount.toDouble() / 3.toDouble()
+                        val score = matchCount.toDouble() / 4.toDouble()
                         if (score > bestScore) { bestScore = score; bestIdx = 11 } else if (score == bestScore) { bestIdx = null }
                     }
                     run {
                         var matchCount = 0
                         if (jobj["finality"] != null) matchCount++
                         if (jobj["account_id"] != null) matchCount++
-                        if (jobj["include_proof"] != null) matchCount++
-                        if (jobj["prefix_base64"] != null) matchCount++
                         if (jobj["request_type"] != null) matchCount++
-                        val score = matchCount.toDouble() / 5.toDouble()
+                        val score = matchCount.toDouble() / 3.toDouble()
                         if (score > bestScore) { bestScore = score; bestIdx = 12 } else if (score == bestScore) { bestIdx = null }
-                    }
-                    run {
-                        var matchCount = 0
-                        if (jobj["finality"] != null) matchCount++
-                        if (jobj["account_id"] != null) matchCount++
-                        if (jobj["public_key"] != null) matchCount++
-                        if (jobj["request_type"] != null) matchCount++
-                        val score = matchCount.toDouble() / 4.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 13 } else if (score == bestScore) { bestIdx = null }
-                    }
-                    run {
-                        var matchCount = 0
-                        if (jobj["finality"] != null) matchCount++
-                        if (jobj["account_id"] != null) matchCount++
-                        if (jobj["request_type"] != null) matchCount++
-                        val score = matchCount.toDouble() / 3.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 14 } else if (score == bestScore) { bestIdx = null }
-                    }
-                    run {
-                        var matchCount = 0
-                        if (jobj["finality"] != null) matchCount++
-                        if (jobj["account_id"] != null) matchCount++
-                        if (jobj["public_key"] != null) matchCount++
-                        if (jobj["request_type"] != null) matchCount++
-                        val score = matchCount.toDouble() / 4.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 15 } else if (score == bestScore) { bestIdx = null }
-                    }
-                    run {
-                        var matchCount = 0
-                        if (jobj["finality"] != null) matchCount++
-                        if (jobj["account_id"] != null) matchCount++
-                        if (jobj["request_type"] != null) matchCount++
-                        val score = matchCount.toDouble() / 3.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 16 } else if (score == bestScore) { bestIdx = null }
                     }
                     run {
                         var matchCount = 0
@@ -1039,7 +848,7 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                         if (jobj["method_name"] != null) matchCount++
                         if (jobj["request_type"] != null) matchCount++
                         val score = matchCount.toDouble() / 5.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 17 } else if (score == bestScore) { bestIdx = null }
+                        if (score > bestScore) { bestScore = score; bestIdx = 13 } else if (score == bestScore) { bestIdx = null }
                     }
                     run {
                         var matchCount = 0
@@ -1047,7 +856,7 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                         if (jobj["code_hash"] != null) matchCount++
                         if (jobj["request_type"] != null) matchCount++
                         val score = matchCount.toDouble() / 3.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 18 } else if (score == bestScore) { bestIdx = null }
+                        if (score > bestScore) { bestScore = score; bestIdx = 14 } else if (score == bestScore) { bestIdx = null }
                     }
                     run {
                         var matchCount = 0
@@ -1055,6 +864,41 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                         if (jobj["account_id"] != null) matchCount++
                         if (jobj["request_type"] != null) matchCount++
                         val score = matchCount.toDouble() / 3.toDouble()
+                        if (score > bestScore) { bestScore = score; bestIdx = 15 } else if (score == bestScore) { bestIdx = null }
+                    }
+                    run {
+                        var matchCount = 0
+                        if (jobj["sync_checkpoint"] != null) matchCount++
+                        if (jobj["account_id"] != null) matchCount++
+                        if (jobj["request_type"] != null) matchCount++
+                        val score = matchCount.toDouble() / 3.toDouble()
+                        if (score > bestScore) { bestScore = score; bestIdx = 16 } else if (score == bestScore) { bestIdx = null }
+                    }
+                    run {
+                        var matchCount = 0
+                        if (jobj["sync_checkpoint"] != null) matchCount++
+                        if (jobj["account_id"] != null) matchCount++
+                        if (jobj["request_type"] != null) matchCount++
+                        val score = matchCount.toDouble() / 3.toDouble()
+                        if (score > bestScore) { bestScore = score; bestIdx = 17 } else if (score == bestScore) { bestIdx = null }
+                    }
+                    run {
+                        var matchCount = 0
+                        if (jobj["sync_checkpoint"] != null) matchCount++
+                        if (jobj["account_id"] != null) matchCount++
+                        if (jobj["include_proof"] != null) matchCount++
+                        if (jobj["prefix_base64"] != null) matchCount++
+                        if (jobj["request_type"] != null) matchCount++
+                        val score = matchCount.toDouble() / 5.toDouble()
+                        if (score > bestScore) { bestScore = score; bestIdx = 18 } else if (score == bestScore) { bestIdx = null }
+                    }
+                    run {
+                        var matchCount = 0
+                        if (jobj["sync_checkpoint"] != null) matchCount++
+                        if (jobj["account_id"] != null) matchCount++
+                        if (jobj["public_key"] != null) matchCount++
+                        if (jobj["request_type"] != null) matchCount++
+                        val score = matchCount.toDouble() / 4.toDouble()
                         if (score > bestScore) { bestScore = score; bestIdx = 19 } else if (score == bestScore) { bestIdx = null }
                     }
                     run {
@@ -1069,63 +913,11 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                         var matchCount = 0
                         if (jobj["sync_checkpoint"] != null) matchCount++
                         if (jobj["account_id"] != null) matchCount++
-                        if (jobj["request_type"] != null) matchCount++
-                        val score = matchCount.toDouble() / 3.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 21 } else if (score == bestScore) { bestIdx = null }
-                    }
-                    run {
-                        var matchCount = 0
-                        if (jobj["sync_checkpoint"] != null) matchCount++
-                        if (jobj["account_id"] != null) matchCount++
-                        if (jobj["include_proof"] != null) matchCount++
-                        if (jobj["prefix_base64"] != null) matchCount++
-                        if (jobj["request_type"] != null) matchCount++
-                        val score = matchCount.toDouble() / 5.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 22 } else if (score == bestScore) { bestIdx = null }
-                    }
-                    run {
-                        var matchCount = 0
-                        if (jobj["sync_checkpoint"] != null) matchCount++
-                        if (jobj["account_id"] != null) matchCount++
-                        if (jobj["public_key"] != null) matchCount++
-                        if (jobj["request_type"] != null) matchCount++
-                        val score = matchCount.toDouble() / 4.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 23 } else if (score == bestScore) { bestIdx = null }
-                    }
-                    run {
-                        var matchCount = 0
-                        if (jobj["sync_checkpoint"] != null) matchCount++
-                        if (jobj["account_id"] != null) matchCount++
-                        if (jobj["request_type"] != null) matchCount++
-                        val score = matchCount.toDouble() / 3.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 24 } else if (score == bestScore) { bestIdx = null }
-                    }
-                    run {
-                        var matchCount = 0
-                        if (jobj["sync_checkpoint"] != null) matchCount++
-                        if (jobj["account_id"] != null) matchCount++
-                        if (jobj["public_key"] != null) matchCount++
-                        if (jobj["request_type"] != null) matchCount++
-                        val score = matchCount.toDouble() / 4.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 25 } else if (score == bestScore) { bestIdx = null }
-                    }
-                    run {
-                        var matchCount = 0
-                        if (jobj["sync_checkpoint"] != null) matchCount++
-                        if (jobj["account_id"] != null) matchCount++
-                        if (jobj["request_type"] != null) matchCount++
-                        val score = matchCount.toDouble() / 3.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 26 } else if (score == bestScore) { bestIdx = null }
-                    }
-                    run {
-                        var matchCount = 0
-                        if (jobj["sync_checkpoint"] != null) matchCount++
-                        if (jobj["account_id"] != null) matchCount++
                         if (jobj["args_base64"] != null) matchCount++
                         if (jobj["method_name"] != null) matchCount++
                         if (jobj["request_type"] != null) matchCount++
                         val score = matchCount.toDouble() / 5.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 27 } else if (score == bestScore) { bestIdx = null }
+                        if (score > bestScore) { bestScore = score; bestIdx = 21 } else if (score == bestScore) { bestIdx = null }
                     }
                     run {
                         var matchCount = 0
@@ -1133,7 +925,7 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                         if (jobj["code_hash"] != null) matchCount++
                         if (jobj["request_type"] != null) matchCount++
                         val score = matchCount.toDouble() / 3.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 28 } else if (score == bestScore) { bestIdx = null }
+                        if (score > bestScore) { bestScore = score; bestIdx = 22 } else if (score == bestScore) { bestIdx = null }
                     }
                     run {
                         var matchCount = 0
@@ -1141,7 +933,7 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                         if (jobj["account_id"] != null) matchCount++
                         if (jobj["request_type"] != null) matchCount++
                         val score = matchCount.toDouble() / 3.toDouble()
-                        if (score > bestScore) { bestScore = score; bestIdx = 29 } else if (score == bestScore) { bestIdx = null }
+                        if (score > bestScore) { bestScore = score; bestIdx = 23 } else if (score == bestScore) { bestIdx = null }
                     }
                     if (bestIdx != null && bestScore > 0.0) {
                         when (bestIdx) {
@@ -1150,31 +942,25 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                             2 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateByBlockId>(), jobj)
                             3 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyByBlockId>(), jobj)
                             4 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByBlockId>(), jobj)
-                            5 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByBlockId>(), jobj)
-                            6 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByBlockId>(), jobj)
-                            7 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByBlockId>(), jobj)
-                            8 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByBlockId>(), jobj)
-                            9 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByBlockId>(), jobj)
-                            10 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccountByFinality>(), jobj)
-                            11 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewCodeByFinality>(), jobj)
-                            12 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateByFinality>(), jobj)
-                            13 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyByFinality>(), jobj)
-                            14 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByFinality>(), jobj)
-                            15 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByFinality>(), jobj)
-                            16 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByFinality>(), jobj)
-                            17 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByFinality>(), jobj)
-                            18 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByFinality>(), jobj)
-                            19 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByFinality>(), jobj)
-                            20 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccountBySyncCheckpoint>(), jobj)
-                            21 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewCodeBySyncCheckpoint>(), jobj)
-                            22 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateBySyncCheckpoint>(), jobj)
-                            23 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyBySyncCheckpoint>(), jobj)
-                            24 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListBySyncCheckpoint>(), jobj)
-                            25 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyBySyncCheckpoint>(), jobj)
-                            26 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListBySyncCheckpoint>(), jobj)
-                            27 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionBySyncCheckpoint>(), jobj)
-                            28 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeBySyncCheckpoint>(), jobj)
-                            29 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdBySyncCheckpoint>(), jobj)
+                            5 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByBlockId>(), jobj)
+                            6 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByBlockId>(), jobj)
+                            7 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByBlockId>(), jobj)
+                            8 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccountByFinality>(), jobj)
+                            9 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewCodeByFinality>(), jobj)
+                            10 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateByFinality>(), jobj)
+                            11 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyByFinality>(), jobj)
+                            12 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByFinality>(), jobj)
+                            13 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByFinality>(), jobj)
+                            14 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByFinality>(), jobj)
+                            15 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByFinality>(), jobj)
+                            16 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccountBySyncCheckpoint>(), jobj)
+                            17 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewCodeBySyncCheckpoint>(), jobj)
+                            18 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateBySyncCheckpoint>(), jobj)
+                            19 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyBySyncCheckpoint>(), jobj)
+                            20 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListBySyncCheckpoint>(), jobj)
+                            21 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionBySyncCheckpoint>(), jobj)
+                            22 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeBySyncCheckpoint>(), jobj)
+                            23 -> return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdBySyncCheckpoint>(), jobj)
                             else -> throw SerializationException("Internal scoring dispatch error")
                         }
                     }
@@ -1183,8 +969,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateByBlockId>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyByBlockId>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByBlockId>(), jobj) } catch (_: Exception) { }
-                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByBlockId>(), jobj) } catch (_: Exception) { }
-                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByBlockId>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByBlockId>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByBlockId>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByBlockId>(), jobj) } catch (_: Exception) { }
@@ -1193,8 +977,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateByFinality>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyByFinality>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListByFinality>(), jobj) } catch (_: Exception) { }
-                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyByFinality>(), jobj) } catch (_: Exception) { }
-                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListByFinality>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionByFinality>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByFinality>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdByFinality>(), jobj) } catch (_: Exception) { }
@@ -1203,8 +985,6 @@ object RpcQueryRequestSerializer : KSerializer<RpcQueryRequest> {
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewStateBySyncCheckpoint>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyBySyncCheckpoint>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewAccessKeyListBySyncCheckpoint>(), jobj) } catch (_: Exception) { }
-                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyBySyncCheckpoint>(), jobj) } catch (_: Exception) { }
-                    try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGasKeyListBySyncCheckpoint>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.CallFunctionBySyncCheckpoint>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeBySyncCheckpoint>(), jobj) } catch (_: Exception) { }
                     try { return decoder.json.decodeFromJsonElement(serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest.ViewGlobalContractCodeByAccountIdBySyncCheckpoint>(), jobj) } catch (_: Exception) { }

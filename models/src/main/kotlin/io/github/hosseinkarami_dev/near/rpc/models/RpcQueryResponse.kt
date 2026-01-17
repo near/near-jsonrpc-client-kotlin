@@ -3,7 +3,6 @@ package io.github.hosseinkarami_dev.near.rpc.models
 import io.github.hosseinkarami_dev.near.rpc.serializers.RpcQueryResponseSerializer
 import kotlin.String
 import kotlin.UByte
-import kotlin.UInt
 import kotlin.ULong
 import kotlin.collections.List
 import kotlinx.serialization.SerialName
@@ -118,44 +117,6 @@ public sealed class RpcQueryResponse {
   public data class AccessKeyList(
     @SerialName("keys")
     public val keys: List<AccessKeyInfoView>,
-    @SerialName("block_hash")
-    public val blockHash: CryptoHash,
-    /**
-     *  * Minimum: 0.0
-     *  * Format: uint64
-     */
-    @SerialName("block_height")
-    public val blockHeight: ULong,
-  ) : RpcQueryResponse()
-
-  @Serializable
-  public data class GasKeyView(
-    @SerialName("balance")
-    public val balance: NearToken,
-    @SerialName("nonces")
-    public val nonces: List<ULong>,
-    /**
-     *  * Minimum: 0.0
-     *  * Format: uint32
-     */
-    @SerialName("num_nonces")
-    public val numNonces: UInt,
-    @SerialName("permission")
-    public val permission: AccessKeyPermissionView,
-    @SerialName("block_hash")
-    public val blockHash: CryptoHash,
-    /**
-     *  * Minimum: 0.0
-     *  * Format: uint64
-     */
-    @SerialName("block_height")
-    public val blockHeight: ULong,
-  ) : RpcQueryResponse()
-
-  @Serializable
-  public data class GasKeyList(
-    @SerialName("keys")
-    public val keys: List<GasKeyInfoView>,
     @SerialName("block_hash")
     public val blockHash: CryptoHash,
     /**
