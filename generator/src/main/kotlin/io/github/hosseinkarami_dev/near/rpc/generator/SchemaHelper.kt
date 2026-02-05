@@ -54,4 +54,14 @@ object SchemaHelper {
 
     fun Schema.isPrimitiveType() = getPrimitiveTypeName() != null && enum.isNullOrEmpty()
 
+    fun Schema.itemSchema(): Schema? = when (val itemsDef = items) {
+        is ItemsDefinition.Single -> itemsDef.schema
+        else -> null
+    }
+
+    fun Schema.tupleItems(): List<Schema>? = when (val itemsDef = items) {
+        is ItemsDefinition.Tuple -> itemsDef.schemas
+        else -> null
+    }
+
 }

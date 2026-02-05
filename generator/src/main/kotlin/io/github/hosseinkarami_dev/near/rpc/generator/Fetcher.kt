@@ -18,6 +18,7 @@ fun fetchOpenApiSpec(openApiUrl: String): OpenApiSpec = runBlocking {
         Json {
             ignoreUnknownKeys = true
             coerceInputValues = true
+
         }.decodeFromString(OpenApiSpec.serializer(), response.bodyAsText())
     }
 }

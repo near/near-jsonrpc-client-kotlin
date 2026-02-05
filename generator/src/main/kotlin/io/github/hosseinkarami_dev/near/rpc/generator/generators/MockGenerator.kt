@@ -2,6 +2,8 @@ package io.github.hosseinkarami_dev.near.rpc.generator.generators
 
 import io.github.hosseinkarami_dev.near.rpc.generator.OpenApiSpec
 import io.github.hosseinkarami_dev.near.rpc.generator.Schema
+import io.github.hosseinkarami_dev.near.rpc.generator.SchemaHelper.itemSchema
+import io.github.hosseinkarami_dev.near.rpc.generator.SchemaHelper.tupleItems
 import io.github.hosseinkarami_dev.near.rpc.generator.pascalCase
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -97,7 +99,15 @@ object MockGenerator {
         resolvedRoot.enum?.firstOrNull()?.let { return JsonPrimitive(it) }
 
         // Array -> generate items respecting minItems/maxItems when present
-        resolvedRoot.items?.let { item ->
+        val tupleItems = resolvedRoot.tupleItems()
+        if (!tupleItems.isNullOrEmpty()) {
+            val list = tupleItems.map { itemSchema ->
+                generateSample(itemSchema, spec, depth + 1, seen.toMutableSet()) ?: fallbackValue(itemSchema)
+            }
+            return JsonArray(list)
+        }
+
+        resolvedRoot.itemSchema()?.let { item ->
             val size = when {
                 resolvedRoot.minItems != null -> resolvedRoot.minItems
                 resolvedRoot.maxItems != null -> maxOf(1, resolvedRoot.maxItems)

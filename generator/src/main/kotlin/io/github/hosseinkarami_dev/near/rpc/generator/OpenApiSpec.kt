@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import io.github.hosseinkarami_dev.near.rpc.generator.serializers.AdditionalPropertiesSerializer
+import io.github.hosseinkarami_dev.near.rpc.generator.serializers.ItemsSerializer
 
 /**
  * Lightweight Kotlin models for the parts of OpenAPI we consume.
@@ -77,7 +78,8 @@ data class Schema(
     val properties: Map<String, Schema>? = null,
     @SerialName("\$ref")
     val ref: String? = null,
-    val items: Schema? = null,
+    @Serializable(with = ItemsSerializer::class)
+    val items: ItemsDefinition? = null,
     val oneOf: List<Schema>? = null,
     val anyOf: List<Schema>? = null,
     val allOf: List<Schema>? = null,
@@ -97,3 +99,8 @@ data class Schema(
     @SerialName("\$schema")
     val schemaNote: String? = null,
 )
+
+sealed class ItemsDefinition {
+    data class Single(val schema: Schema) : ItemsDefinition()
+    data class Tuple(val schemas: List<Schema>) : ItemsDefinition()
+}

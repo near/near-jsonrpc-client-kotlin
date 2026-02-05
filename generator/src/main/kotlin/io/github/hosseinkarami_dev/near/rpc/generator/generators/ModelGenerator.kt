@@ -6,6 +6,7 @@ import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
@@ -19,7 +20,9 @@ import io.github.hosseinkarami_dev.near.rpc.generator.PropInfo
 import io.github.hosseinkarami_dev.near.rpc.generator.Schema
 import io.github.hosseinkarami_dev.near.rpc.generator.SchemaHelper.generateKdoc
 import io.github.hosseinkarami_dev.near.rpc.generator.SchemaHelper.getPrimitiveTypeName
+import io.github.hosseinkarami_dev.near.rpc.generator.SchemaHelper.itemSchema
 import io.github.hosseinkarami_dev.near.rpc.generator.SchemaHelper.isPrimitiveType
+import io.github.hosseinkarami_dev.near.rpc.generator.SchemaHelper.tupleItems
 import io.github.hosseinkarami_dev.near.rpc.generator.SealedInfo
 import io.github.hosseinkarami_dev.near.rpc.generator.VariantInfo
 import io.github.hosseinkarami_dev.near.rpc.generator.camelCase
@@ -386,30 +389,46 @@ class ModelGenerator(
         }
 
         // 5) array wrapper
-        if (topSchema.type == "array" && topSchema.items != null) {
-            val itemSchema =
-                if (!topSchema.items.ref.isNullOrBlank()) spec.components.schemas[topSchema.items.ref.substringAfterLast(
-                    "/"
-                )] ?: topSchema.items else topSchema.items
-            val itemClassName = "${className}Item"
-            buildSchemaRecursive(fileBuilder, itemClassName, itemSchema, builtTypes)
-            val listType = ClassName("kotlin.collections", "List").parameterizedBy(
-                ClassName(
-                    modelPackageName,
-                    itemClassName
+        if (topSchema.type == "array") {
+            val tupleItems = topSchema.tupleItems()
+            if (!tupleItems.isNullOrEmpty()) {
+                buildTupleClass(
+                    fileBuilder = fileBuilder,
+                    className = className,
+                    tupleItems = tupleItems,
+                    builtTypes = builtTypes,
+                    ownerSchema = topSchema
                 )
-            )
-            val ctor = FunSpec.constructorBuilder().addParameter("items", listType).build()
-            val classBuilder = TypeSpec.classBuilder(className)
-                .addModifiers(KModifier.DATA)
-                .addAnnotation(Serializable::class)
-                .primaryConstructor(ctor)
-                .addProperty(PropertySpec.builder("items", listType).initializer("items").build())
-            topSchema.generateKdoc()?.let { classBuilder.addKdoc(it) }
-            fileBuilder.addType(classBuilder.build())
-            builtTypes.add(className)
-            buildingTypes.remove(className)
-            return
+                buildingTypes.remove(className)
+                return
+            }
+
+            val singleItem = topSchema.itemSchema()
+            if (singleItem != null) {
+                val itemSchema =
+                    if (!singleItem.ref.isNullOrBlank()) spec.components.schemas[singleItem.ref.substringAfterLast(
+                        "/"
+                    )] ?: singleItem else singleItem
+                val itemClassName = "${className}Item"
+                buildSchemaRecursive(fileBuilder, itemClassName, itemSchema, builtTypes)
+                val listType = ClassName("kotlin.collections", "List").parameterizedBy(
+                    ClassName(
+                        modelPackageName,
+                        itemClassName
+                    )
+                )
+                val ctor = FunSpec.constructorBuilder().addParameter("items", listType).build()
+                val classBuilder = TypeSpec.classBuilder(className)
+                    .addModifiers(KModifier.DATA)
+                    .addAnnotation(Serializable::class)
+                    .primaryConstructor(ctor)
+                    .addProperty(PropertySpec.builder("items", listType).initializer("items").build())
+                topSchema.generateKdoc()?.let { classBuilder.addKdoc(it) }
+                fileBuilder.addType(classBuilder.build())
+                builtTypes.add(className)
+                buildingTypes.remove(className)
+                return
+            }
         }
 
         // 6) primitive fallback
@@ -1160,6 +1179,65 @@ class ModelGenerator(
         builtTypes.add(className)
     }
 
+    private fun buildTupleClass(
+        fileBuilder: FileSpec.Builder,
+        className: String,
+        tupleItems: List<Schema>,
+        builtTypes: MutableSet<String>,
+        ownerSchema: Schema? = null
+    ) {
+        if (builtTypes.contains(className)) return
+
+        val tupleClassName = ClassName(fileBuilder.build().packageName, className)
+        val tupleSerializerOwner = ClassName("", className)
+
+        val nested = mutableListOf<TypeSpec>()
+        val ctor = FunSpec.constructorBuilder()
+        val classBuilder = TypeSpec.classBuilder(className)
+            .addModifiers(KModifier.DATA)
+            .addAnnotation(
+                AnnotationSpec.builder(Serializable::class)
+                    .addMember("with = %T.TupleSerializer::class", tupleSerializerOwner)
+                    .build()
+            )
+        ownerSchema?.generateKdoc()?.let { classBuilder.addKdoc(it) }
+
+        val itemTypes = mutableListOf<TypeName>()
+        tupleItems.forEachIndexed { idx, itemSchema ->
+            val itemType = resolveTypeForSchema(
+                itemSchema,
+                className,
+                nested,
+                "Item${idx + 1}",
+                true,
+                fileBuilder,
+                builtTypes
+            )
+            itemTypes.add(itemType)
+            val paramName = "item$idx"
+            val paramBuilder = ParameterSpec.builder(paramName, itemType)
+            val dv = defaultValueLiteralForSchema(itemSchema, itemType)
+            if (dv != null) {
+                paramBuilder.defaultValue("%L", dv)
+            } else if (itemType.isNullable) {
+                paramBuilder.defaultValue("%L", "null")
+            }
+            ctor.addParameter(paramBuilder.build())
+
+            val pBuilder = PropertySpec.builder(paramName, itemType)
+                .initializer("%N", paramName)
+            itemSchema.generateKdoc()?.let { pBuilder.addKdoc(it) }
+            classBuilder.addProperty(pBuilder.build())
+        }
+
+        addTupleSerializer(classBuilder, tupleClassName, itemTypes)
+
+        nested.forEach { classBuilder.addType(it) }
+        classBuilder.primaryConstructor(ctor.build())
+        fileBuilder.addType(classBuilder.build())
+        builtTypes.add(className)
+    }
+
     fun mergeAllOfInto(schema: Schema): Pair<LinkedHashMap<String, Schema>, MutableList<String>> {
         val mergedProps = linkedMapOf<String, Schema>()
         val mergedRequired = mutableListOf<String>()
@@ -1303,19 +1381,80 @@ class ModelGenerator(
             }
         }
 
-        if (ctxSchema.type == "array" && ctxSchema.items != null) {
-            val inner = resolveTypeForSchema(
-                ctxSchema.items,
-                parentClassForNested,
-                nestedCollector,
-                propNameForNested + "Item",
-                true,
-                fileBuilder,
-                builtTypes
-            )
+        if (ctxSchema.type == "array") {
+            val tupleItems = ctxSchema.tupleItems()
+            if (!tupleItems.isNullOrEmpty()) {
+                val tupleName = "${propNameForNested.pascalCase()}Tuple"
+                val tupleClassName = ClassName(
+                    fileBuilder.build().packageName,
+                    parentClassForNested,
+                    tupleName
+                )
+                val tupleSerializerOwner = ClassName("", tupleName)
+                val tupleBuilder = TypeSpec.classBuilder(tupleName)
+                    .addModifiers(KModifier.DATA)
+                    .addAnnotation(
+                        AnnotationSpec.builder(Serializable::class)
+                            .addMember("with = %T.TupleSerializer::class", tupleSerializerOwner)
+                            .build()
+                    )
+                ctxSchema.generateKdoc()?.let { tupleBuilder.addKdoc(it) }
 
-            val listType = ClassName("kotlin.collections", "List").parameterizedBy(inner)
-            return listType.copy(nullable = !isRequired || (ctxSchema.nullable == true))
+                val itemTypes = mutableListOf<TypeName>()
+                val tupleCtor = FunSpec.constructorBuilder()
+                tupleItems.forEachIndexed { idx, itemSchema ->
+                    val itemType = resolveTypeForSchema(
+                        itemSchema,
+                        parentClassForNested,
+                        nestedCollector,
+                        "${tupleName}Item${idx + 1}",
+                        true,
+                        fileBuilder,
+                        builtTypes
+                    )
+                    itemTypes.add(itemType)
+                    val paramName = "item$idx"
+                    val paramBuilder = ParameterSpec.builder(paramName, itemType)
+                    val dv = defaultValueLiteralForSchema(itemSchema, itemType)
+                    if (dv != null) {
+                        paramBuilder.defaultValue("%L", dv)
+                    } else if (itemType.isNullable) {
+                        paramBuilder.defaultValue("%L", "null")
+                    }
+                    tupleCtor.addParameter(paramBuilder.build())
+
+                    val propBuilder = PropertySpec.builder(paramName, itemType)
+                        .initializer("%N", paramName)
+                    itemSchema.generateKdoc()?.let { propBuilder.addKdoc(it) }
+                    tupleBuilder.addProperty(propBuilder.build())
+                }
+
+                addTupleSerializer(tupleBuilder, tupleClassName, itemTypes)
+
+                tupleBuilder.primaryConstructor(tupleCtor.build())
+                nestedCollector.add(tupleBuilder.build())
+                return ClassName(
+                    fileBuilder.build().packageName,
+                    parentClassForNested,
+                    tupleName
+                ).copy(nullable = !isRequired || (ctxSchema.nullable == true))
+            }
+
+            val singleItem = ctxSchema.itemSchema()
+            if (singleItem != null) {
+                val inner = resolveTypeForSchema(
+                    singleItem,
+                    parentClassForNested,
+                    nestedCollector,
+                    propNameForNested + "Item",
+                    true,
+                    fileBuilder,
+                    builtTypes
+                )
+
+                val listType = ClassName("kotlin.collections", "List").parameterizedBy(inner)
+                return listType.copy(nullable = !isRequired || (ctxSchema.nullable == true))
+            }
         }
 
         if (ctxSchema.isPrimitiveType()) {
@@ -1448,7 +1587,7 @@ class ModelGenerator(
         }
 
         // array checks
-        if (schema.type == "array") {
+        if (schema.type == "array" && schema.tupleItems().isNullOrEmpty()) {
             schema.minItems?.let { minItems ->
                 checks.add(
                     CodeBlock.of(
@@ -1629,5 +1768,109 @@ class ModelGenerator(
                 "mapOf(" + pairs.joinToString(", ") + ")"
             }
         }
+    }
+
+    private fun addTupleSerializer(
+        tupleBuilder: TypeSpec.Builder,
+        tupleClassName: ClassName,
+        itemTypes: List<TypeName>
+    ) {
+        val buildSerialDescriptorMember =
+            MemberName("kotlinx.serialization.descriptors", "buildSerialDescriptor")
+        val serializerMember = MemberName("kotlinx.serialization", "serializer")
+
+        val localTupleName = ClassName("", tupleClassName.simpleName)
+
+        val optInAnnotation = AnnotationSpec.builder(ClassName("kotlin", "OptIn"))
+            .addMember("%T::class", ClassName("kotlinx.serialization", "InternalSerializationApi"))
+            .build()
+
+        val serializerType = TypeSpec.objectBuilder("TupleSerializer")
+            .addSuperinterface(
+                ClassName("kotlinx.serialization", "KSerializer").parameterizedBy(localTupleName)
+            )
+            .addAnnotation(optInAnnotation)
+            .addProperty(
+                PropertySpec.builder("descriptor", ClassName("kotlinx.serialization.descriptors", "SerialDescriptor"))
+                    .addModifiers(KModifier.OVERRIDE)
+                    .initializer(
+                        "%M(%S, %T.LIST)",
+                        buildSerialDescriptorMember,
+                        tupleClassName.simpleName,
+                        ClassName("kotlinx.serialization.descriptors", "StructureKind")
+                    )
+                    .build()
+            )
+
+        val serializeFun = FunSpec.builder("serialize")
+            .addModifiers(KModifier.OVERRIDE)
+            .addParameter("encoder", ClassName("kotlinx.serialization.encoding", "Encoder"))
+            .addParameter("value", localTupleName)
+
+        val serializeCode = CodeBlock.builder()
+        serializeCode.add(
+            "if (encoder !is %T) throw %T(%S)\n",
+            ClassName("kotlinx.serialization.json", "JsonEncoder"),
+            ClassName("kotlinx.serialization", "SerializationException"),
+            "Cannot serialize ${tupleClassName.simpleName} with non-JSON encoder"
+        )
+        serializeCode.add("val json = encoder.json\n")
+        serializeCode.add("val list = buildList<%T> {\n", ClassName("kotlinx.serialization.json", "JsonElement"))
+        itemTypes.forEachIndexed { idx, type ->
+            serializeCode.add(
+                "  add(json.encodeToJsonElement(%M<%T>(), value.item$idx))\n",
+                serializerMember,
+                type
+            )
+        }
+        serializeCode.add("}\n")
+        serializeCode.add(
+            "encoder.encodeJsonElement(%T(list))\n",
+            ClassName("kotlinx.serialization.json", "JsonArray")
+        )
+        serializeFun.addCode(serializeCode.build())
+
+        val deserializeFun = FunSpec.builder("deserialize")
+            .addModifiers(KModifier.OVERRIDE)
+            .addParameter("decoder", ClassName("kotlinx.serialization.encoding", "Decoder"))
+            .returns(localTupleName)
+
+        val deserializeCode = CodeBlock.builder()
+        deserializeCode.add(
+            "if (decoder !is %T) throw %T(%S)\n",
+            ClassName("kotlinx.serialization.json", "JsonDecoder"),
+            ClassName("kotlinx.serialization", "SerializationException"),
+            "Cannot deserialize ${tupleClassName.simpleName} with non-JSON decoder"
+        )
+        deserializeCode.add("val element = decoder.decodeJsonElement()\n")
+        deserializeCode.add(
+            "val arr = element as? %T ?: throw %T(%S)\n",
+            ClassName("kotlinx.serialization.json", "JsonArray"),
+            ClassName("kotlinx.serialization", "SerializationException"),
+            "Expected JSON array for ${tupleClassName.simpleName}"
+        )
+        deserializeCode.add(
+            "if (arr.size != ${itemTypes.size}) throw %T(%S)\n",
+            ClassName("kotlinx.serialization", "SerializationException"),
+            "Expected ${itemTypes.size} items for ${tupleClassName.simpleName}"
+        )
+        itemTypes.forEachIndexed { idx, type ->
+            deserializeCode.add(
+                "val item$idx = decoder.json.decodeFromJsonElement(%M<%T>(), arr[$idx])\n",
+                serializerMember,
+                type
+            )
+        }
+        deserializeCode.add(
+            "return %T(%L)\n",
+            localTupleName,
+            (0 until itemTypes.size).joinToString(", ") { "item$it" }
+        )
+        deserializeFun.addCode(deserializeCode.build())
+
+        serializerType.addFunction(serializeFun.build())
+        serializerType.addFunction(deserializeFun.build())
+
+        tupleBuilder.addType(serializerType.build())
     }
 }

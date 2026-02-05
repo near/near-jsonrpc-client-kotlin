@@ -15,6 +15,7 @@ import com.squareup.kotlinpoet.UNIT
 import io.github.hosseinkarami_dev.near.rpc.generator.OpenApiSpec
 import io.github.hosseinkarami_dev.near.rpc.generator.Operation
 import io.github.hosseinkarami_dev.near.rpc.generator.Schema
+import io.github.hosseinkarami_dev.near.rpc.generator.SchemaHelper.itemSchema
 import io.github.hosseinkarami_dev.near.rpc.generator.camelCase
 import io.github.hosseinkarami_dev.near.rpc.generator.constantName
 import io.github.hosseinkarami_dev.near.rpc.generator.pascalCase
@@ -565,7 +566,7 @@ object ClientGenerator {
 
         // 4) inline array
         if (paramsSchema.type == "array") {
-            val item = paramsSchema.items
+            val item = paramsSchema.itemSchema()
             if (item?.ref != null) {
                 val itemName = item.ref.substringAfterLast('/')
                 return "List<$modelsPackage.${itemName.pascalCase()}>"
@@ -666,7 +667,7 @@ object ClientGenerator {
             if (resultProp.anyOf != null) {
                 val variants = resultProp.anyOf
                 val refVariant =
-                    variants.find { !it.ref.isNullOrBlank() || (it.type == "array" && it.items?.ref != null) }
+                    variants.find { !it.ref.isNullOrBlank() || (it.type == "array" && it.itemSchema()?.ref != null) }
                 val nullVariant = variants.find { v ->
                     (v.enum?.size == 1 && v.enum[0] == null) || (v.nullable == true) || (v.type == "null")
                 }
@@ -677,16 +678,18 @@ object ClientGenerator {
                         return "$modelsPackage.${refClass}?"
                     }
 
-                    if (refVariant.type == "array" && refVariant.items?.ref != null) {
-                        val itemRef = refVariant.items.ref.substringAfterLast("/")
-                        val itemClass = itemRef.pascalCase()
-                        return "List<$modelsPackage.${itemClass}>?"
+                    if (refVariant.type == "array") {
+                        val itemRef = refVariant.itemSchema()?.ref
+                        if (itemRef != null) {
+                            val itemClass = itemRef.substringAfterLast("/").pascalCase()
+                            return "List<$modelsPackage.${itemClass}>?"
+                        }
                     }
                 }
             }
 
             if (resultProp.type == "array") {
-                val items = resultProp.items
+                val items = resultProp.itemSchema()
                 if (items?.ref != null) {
                     val itemName = items.ref.substringAfterLast('/')
                     return "List<$modelsPackage.${itemName.pascalCase()}>"

@@ -3,6 +3,7 @@ package io.github.hosseinkarami_dev.near.rpc.generator.generators
 import io.github.hosseinkarami_dev.near.rpc.generator.OpenApiSpec
 import io.github.hosseinkarami_dev.near.rpc.generator.Operation
 import io.github.hosseinkarami_dev.near.rpc.generator.Schema
+import io.github.hosseinkarami_dev.near.rpc.generator.SchemaHelper.itemSchema
 import io.github.hosseinkarami_dev.near.rpc.generator.camelCase
 import io.github.hosseinkarami_dev.near.rpc.generator.pascalCase
 import kotlinx.serialization.json.JsonElement
@@ -191,7 +192,7 @@ object ClientTestGenerator {
         if (paramsSchema.nullable == true) return "Unit"
 
         if (paramsSchema.type == "array") {
-            val item = paramsSchema.items
+            val item = paramsSchema.itemSchema()
             if (item?.ref != null) {
                 val itemName = item.ref.substringAfterLast('/')
                 return "List<$modelsPackage.${itemName.pascalCase()}>"
