@@ -150,7 +150,7 @@ class RequestViewModel(
                     "transaction_status" -> {
                         val senderAccountId = params["sender_account_id"]!!
                         val cryptoHash = params["tx_hash"]!!
-                        val request = RpcTransactionStatusRequest.SenderAccountId(
+                        val request = RpcTransactionStatusRequest.SenderAccountIdTxHash(
                             senderAccountId = AccountId(senderAccountId),
                             txHash = CryptoHash(cryptoHash)
                         )
@@ -192,7 +192,7 @@ class RequestViewModel(
                         val waitUntil = params["wait_until"]
 
                         nearClient.tx(
-                            RpcTransactionStatusRequest.SenderAccountId(
+                            RpcTransactionStatusRequest.SenderAccountIdTxHash(
                                 senderAccountId = AccountId(senderAccountId),
                                 txHash = CryptoHash(txHash),
                                 waitUntil = when (waitUntil?.lowercase()) {
