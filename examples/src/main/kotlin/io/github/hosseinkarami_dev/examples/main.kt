@@ -77,7 +77,7 @@ fun main() = runBlocking {
 
     //Transaction Status
     when (val response = nearClient.tx(
-        RpcTransactionStatusRequest.SenderAccountId(
+        RpcTransactionStatusRequest.SenderAccountIdTxHash(
             senderAccountId = AccountId("sweat-relayer.near"),
             txHash = CryptoHash("B4PGu3RicwMrjhv4k4MGaUhnZrTqPrrRu5gH9jxtHH4J")
         )

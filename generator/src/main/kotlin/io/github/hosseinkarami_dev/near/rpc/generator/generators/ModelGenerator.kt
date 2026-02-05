@@ -268,7 +268,7 @@ class ModelGenerator(
                         v.title ?: typeLiteral ?: when {
                             !v.ref.isNullOrBlank() -> v.ref.substringAfterLast("/")
                             v.enum?.isNotEmpty() == true -> v.enum.filterNotNull().first()
-                            v.properties?.isNotEmpty() == true -> v.properties.keys.first()
+                            v.properties?.isNotEmpty() == true -> propsBasedTitle(v.properties)
                             else -> "Part${i + 1}"
                         }
                     }
@@ -529,7 +529,8 @@ class ModelGenerator(
             val variantTitle = v.title ?: typeLiteral ?: when {
                 !v.ref.isNullOrBlank() -> v.ref.substringAfterLast("/")
                 v.enum?.isNotEmpty() == true -> v.enum.filterNotNull().first()
-                v.properties?.isNotEmpty() == true -> v.properties.keys.first()
+                effectiveProps.isNotEmpty() -> propsBasedTitle(effectiveProps)
+                topLevelProps.isNotEmpty() -> propsBasedTitle(topLevelProps)
                 else -> "Variant${idx + 1}"
             }
 
@@ -1768,6 +1769,11 @@ class ModelGenerator(
                 "mapOf(" + pairs.joinToString(", ") + ")"
             }
         }
+    }
+
+    private fun propsBasedTitle(props: Map<String, Schema>?): String {
+        if (props.isNullOrEmpty()) return ""
+        return props.keys.sorted().joinToString("_")
     }
 
     private fun addTupleSerializer(
