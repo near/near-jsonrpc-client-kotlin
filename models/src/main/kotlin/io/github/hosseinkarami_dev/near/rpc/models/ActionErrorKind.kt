@@ -373,4 +373,42 @@ public sealed class ActionErrorKind {
       public val identifier: GlobalContractIdentifier,
     )
   }
+
+  /**
+   *  * Gas key does not exist for the specified public key
+   */
+  @Serializable
+  public data class GasKeyDoesNotExist(
+    @SerialName("GasKeyDoesNotExist")
+    public val gasKeyDoesNotExist: GasKeyDoesNotExistPayload,
+  ) : ActionErrorKind() {
+    @Serializable
+    public data class GasKeyDoesNotExistPayload(
+      @SerialName("account_id")
+      public val accountId: AccountId,
+      @SerialName("public_key")
+      public val publicKey: PublicKey,
+    )
+  }
+
+  /**
+   *  * Gas key does not have sufficient balance for the requested withdrawal
+   */
+  @Serializable
+  public data class InsufficientGasKeyBalance(
+    @SerialName("InsufficientGasKeyBalance")
+    public val insufficientGasKeyBalance: InsufficientGasKeyBalancePayload,
+  ) : ActionErrorKind() {
+    @Serializable
+    public data class InsufficientGasKeyBalancePayload(
+      @SerialName("account_id")
+      public val accountId: AccountId,
+      @SerialName("balance")
+      public val balance: NearToken,
+      @SerialName("public_key")
+      public val publicKey: PublicKey,
+      @SerialName("required")
+      public val required: NearToken,
+    )
+  }
 }
