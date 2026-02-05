@@ -15,7 +15,7 @@ public sealed class RpcTransactionStatusRequest {
   ) : RpcTransactionStatusRequest()
 
   @Serializable
-  public data class SenderAccountId(
+  public data class SenderAccountIdTxHash(
     @SerialName("sender_account_id")
     public val senderAccountId: AccountId,
     @SerialName("tx_hash")
