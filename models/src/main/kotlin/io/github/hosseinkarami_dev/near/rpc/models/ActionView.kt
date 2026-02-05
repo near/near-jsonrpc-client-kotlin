@@ -195,4 +195,32 @@ public sealed class ActionView {
       public val deposit: NearToken,
     )
   }
+
+  @Serializable
+  public data class TransferToGasKey(
+    @SerialName("TransferToGasKey")
+    public val transferToGasKey: TransferToGasKeyPayload,
+  ) : ActionView() {
+    @Serializable
+    public data class TransferToGasKeyPayload(
+      @SerialName("deposit")
+      public val deposit: NearToken,
+      @SerialName("public_key")
+      public val publicKey: PublicKey,
+    )
+  }
+
+  @Serializable
+  public data class WithdrawFromGasKey(
+    @SerialName("WithdrawFromGasKey")
+    public val withdrawFromGasKey: WithdrawFromGasKeyPayload,
+  ) : ActionView() {
+    @Serializable
+    public data class WithdrawFromGasKeyPayload(
+      @SerialName("amount")
+      public val amount: NearToken,
+      @SerialName("public_key")
+      public val publicKey: PublicKey,
+    )
+  }
 }
