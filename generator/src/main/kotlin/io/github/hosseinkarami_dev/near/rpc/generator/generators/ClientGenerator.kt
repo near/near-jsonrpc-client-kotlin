@@ -39,7 +39,6 @@ object ClientGenerator {
     ) {
         val httpClientClass = ClassName("io.ktor.client", "HttpClient")
         val stringClass = ClassName("kotlin", "String")
-        val jsonClass = ClassName("kotlinx.serialization.json", "Json")
         val uuidClass = ClassName("java.util", "UUID")
 
         val rpcResponseClass = ClassName(clientPackage, "RpcResponse")
@@ -51,11 +50,6 @@ object ClientGenerator {
         val ctor = FunSpec.constructorBuilder()
             .addParameter("httpClient", httpClientClass)
             .addParameter("baseUrl", stringClass)
-            .addParameter(
-                ParameterSpec.builder("json", jsonClass)
-                    .defaultValue("%T { ignoreUnknownKeys = true }", jsonClass)
-                    .build()
-            )
             .build()
         classBuilder.primaryConstructor(ctor)
 
@@ -71,13 +65,6 @@ object ClientGenerator {
                 .initializer("baseUrl")
                 .build()
         )
-        classBuilder.addProperty(
-            PropertySpec.builder("json", jsonClass)
-                .addModifiers(KModifier.PRIVATE)
-                .initializer("json")
-                .build()
-        )
-
         val nextIdFun = FunSpec.builder("nextId")
             .addModifiers(KModifier.PRIVATE)
             .returns(stringClass)
@@ -246,115 +233,18 @@ object ClientGenerator {
             }
             cb.addStatement(")\n")
 
-            // Begin network call + robust error handling
-            cb.addStatement("try {")
-            cb.addStatement("    val httpResponse = httpClient.post(baseUrl) {")
-            cb.addStatement(
-                "        contentType(%T.Application.Json)",
-                ClassName("io.ktor.http", "ContentType")
-            )
-            cb.addStatement(
-                "        setBody(json.encodeToString(%T.serializer(), request))",
-                reqWrapperClassName
-            )
+            cb.addStatement("return callRpc(")
+            cb.addStatement("    httpClient,")
+            cb.addStatement("    baseUrl,")
+            cb.addStatement("    request,")
+            cb.addStatement("    %T.serializer(),", reqWrapperClassName)
+            cb.addStatement("    %T.serializer(),", respWrapperClassName)
+            cb.addStatement("    %T.serializer()", rpcErrorClassGuess)
+            cb.addStatement(") { decoded ->")
+            cb.addStatement("    when (decoded) {")
+            cb.addStatement("        is %T.Result -> %T.Success(decoded.result)", respWrapperClassName, rpcResponseClass)
+            cb.addStatement("        is %T.Error -> %T.Failure(%T.Rpc(error = decoded.error))", respWrapperClassName, rpcResponseClass, errorResultClass)
             cb.addStatement("    }")
-            cb.addStatement("")
-            cb.addStatement("    val status = httpResponse.status.value")
-            cb.addStatement("    val respBody = httpResponse.bodyAsText()")
-            cb.addStatement("")
-// If non-2xx -> try to extract RpcError from body, otherwise return Http error
-            cb.addStatement("    if (status in 500..599) {")
-            cb.addStatement("        try {")
-            cb.addStatement("            val root = json.parseToJsonElement(respBody).jsonObject")
-            cb.addStatement("            if (root.containsKey(\"error\")) {")
-            cb.addStatement(
-                "                val rpcErr = json.decodeFromString(%T.serializer(), root[\"error\"].toString())",
-                rpcErrorClassGuess
-            )
-            cb.addStatement(
-                "                return %T.Failure(%T.Rpc(error = rpcErr))",
-                rpcResponseClass,
-                errorResultClass
-            )
-            cb.addStatement("            }")
-            cb.addStatement("            val resultEl = root[\"result\"]")
-            cb.addStatement("            if (resultEl?.jsonObject?.containsKey(\"error\") == true) {")
-            cb.addStatement("                val errJson = resultEl!!.jsonObject[\"error\"].toString()")
-            cb.addStatement(
-                "                val rpcErr = runCatching { json.decodeFromString(%T.serializer(), errJson) }.getOrNull()",
-                rpcErrorClassGuess
-            )
-            cb.addStatement(
-                "                return if (rpcErr != null) %T.Failure(%T.Rpc(error = rpcErr)) else %T.Failure(%T.RpcRuntime(errJson))",
-                rpcResponseClass, errorResultClass, rpcResponseClass, errorResultClass
-            )
-            cb.addStatement("            }")
-            cb.addStatement("        } catch (_: Exception) { /* ignore parse error */ }")
-            cb.addStatement(
-                "        return %T.Failure(%T.Http(status, respBody))",
-                rpcResponseClass,
-                errorResultClass
-            )
-            cb.addStatement("    }")
-            cb.addStatement("")
-// Successful status -> try decode expected wrapper
-            cb.addStatement("    try {")
-            cb.addStatement(
-                "        val decoded = json.decodeFromString(%T.serializer(), respBody)",
-                respWrapperClassName
-            )
-            cb.addStatement("        return when (decoded) {")
-            cb.addStatement(
-                "            is %T.Result -> %T.Success(decoded.result)",
-                respWrapperClassName,
-                rpcResponseClass
-            )
-            cb.addStatement(
-                "            is %T.Error -> %T.Failure(%T.Rpc(error = decoded.error))",
-                respWrapperClassName,
-                rpcResponseClass,
-                errorResultClass
-            )
-            cb.addStatement("        }")
-            cb.addStatement("    } catch (serEx: Exception) {")
-            cb.addStatement("        try {")
-            cb.addStatement("            val root = json.parseToJsonElement(respBody).jsonObject")
-            cb.addStatement("            val resultEl = root[\"result\"]")
-            cb.addStatement("            if (resultEl?.jsonObject?.containsKey(\"error\") == true) {")
-            cb.addStatement("                val errJson = resultEl.jsonObject[\"error\"].toString()")
-            cb.addStatement(
-                "                val rpcErr = runCatching { json.decodeFromString(%T.serializer(), errJson) }.getOrNull()",
-                rpcErrorClassGuess
-            )
-            cb.addStatement(
-                "                return if (rpcErr != null) %T.Failure(%T.Rpc(error = rpcErr)) else %T.Failure(%T.RpcRuntime(errJson))",
-                rpcResponseClass, errorResultClass, rpcResponseClass, errorResultClass
-            )
-            cb.addStatement("            }")
-            cb.addStatement("        } catch (_: Exception) { /* ignore parse error */ }")
-            cb.addStatement(
-                "        return %T.Failure(%T.Deserialization(serEx, respBody))",
-                rpcResponseClass,
-                errorResultClass
-            )
-            cb.addStatement("    }")
-            cb.addStatement("} catch (e: Throwable) {")
-            cb.addStatement("    val mapped = when (e) {")
-            cb.addStatement(
-                "        is java.util.concurrent.CancellationException -> %T.Cancellation(e)",
-                errorResultClass
-            )
-            cb.addStatement(
-                "        is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> %T.Timeout(e)",
-                errorResultClass
-            )
-            cb.addStatement("        is java.io.IOException -> %T.Network(e)", errorResultClass)
-            cb.addStatement(
-                "        else -> %T.Unknown(e.message ?: \"Unknown\", e)",
-                errorResultClass
-            )
-            cb.addStatement("    }")
-            cb.addStatement("    return %T.Failure(mapped)", rpcResponseClass)
             cb.addStatement("}")
 
             funBuilder.addCode(cb.build())
@@ -362,14 +252,7 @@ object ClientGenerator {
         }
 
         val fileSpec = FileSpec.builder(clientPackage, clientClassName)
-            .addImport("io.ktor.client.request", "post", "setBody")
-            .addImport("io.ktor.client.statement", "bodyAsText")
-            .addImport("io.ktor.http", "ContentType", "contentType")
-            .addImport("kotlinx.serialization.json", "Json")
-            .addImport("kotlinx.serialization.json", "JsonObject")
-            .addImport("kotlinx.serialization.json", "jsonObject")
-            .addImport("kotlinx.serialization.builtins", "serializer")
-            .addImport("kotlinx.serialization.builtins", "ListSerializer")
+            .addImport(clientPackage, "callRpc")
             .addType(classBuilder.build())
             .build()
 
