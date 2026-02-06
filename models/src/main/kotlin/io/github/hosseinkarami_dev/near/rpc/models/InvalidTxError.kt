@@ -5,6 +5,7 @@ import kotlin.Double
 import kotlin.String
 import kotlin.UInt
 import kotlin.ULong
+import kotlin.UShort
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -292,6 +293,56 @@ public sealed class InvalidTxError {
        */
       @SerialName("shard_id")
       public val shardId: UInt,
+    )
+  }
+
+  /**
+   *  * Transaction is specifying an invalid nonce index. Gas key transactions
+   * must have a nonce_index in valid range, regular transactions must not.
+   */
+  @Serializable
+  public data class InvalidNonceIndex(
+    @SerialName("InvalidNonceIndex")
+    public val invalidNonceIndex: InvalidNonceIndexPayload,
+  ) : InvalidTxError() {
+    @Serializable
+    public data class InvalidNonceIndexPayload(
+      /**
+       *  * Number of nonces supported by the key. 0 means no nonce_index allowed (regular key).
+       *  * Minimum: 0.0
+       *  * Maximum: 65535.0
+       *  * Format: uint16
+       */
+      @SerialName("num_nonces")
+      public val numNonces: UShort,
+      /**
+       *  * The nonce_index from the transaction (None if missing).
+       *  * Minimum: 0.0
+       *  * Maximum: 65535.0
+       *  * Format: uint16
+       *  * Nullable: true
+       */
+      @SerialName("tx_nonce_index")
+      public val txNonceIndex: UShort? = null,
+    )
+  }
+
+  /**
+   *  * Gas key does not have enough balance to cover gas costs.
+   */
+  @Serializable
+  public data class NotEnoughGasKeyBalance(
+    @SerialName("NotEnoughGasKeyBalance")
+    public val notEnoughGasKeyBalance: NotEnoughGasKeyBalancePayload,
+  ) : InvalidTxError() {
+    @Serializable
+    public data class NotEnoughGasKeyBalancePayload(
+      @SerialName("balance")
+      public val balance: NearToken,
+      @SerialName("cost")
+      public val cost: NearToken,
+      @SerialName("signer_id")
+      public val signerId: AccountId,
     )
   }
 }

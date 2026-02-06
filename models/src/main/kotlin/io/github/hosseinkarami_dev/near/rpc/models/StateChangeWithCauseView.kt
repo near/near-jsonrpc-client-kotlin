@@ -3,6 +3,7 @@ package io.github.hosseinkarami_dev.near.rpc.models
 import io.github.hosseinkarami_dev.near.rpc.serializers.StateChangeWithCauseViewSerializer
 import kotlin.String
 import kotlin.ULong
+import kotlin.UShort
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -152,6 +153,49 @@ public sealed class StateChangeWithCauseView {
     public enum class Type {
       @SerialName("access_key_deletion")
       ACCESS_KEY_DELETION,
+    }
+  }
+
+  @Serializable
+  public data class GasKeyNonceUpdate(
+    @SerialName("change")
+    public val change: ChangePayload,
+    /**
+     *  * Possible values: gas_key_nonce_update
+     */
+    @SerialName("type")
+    public val type: Type,
+    @SerialName("cause")
+    public val cause: StateChangeCauseView,
+  ) : StateChangeWithCauseView() {
+    @Serializable
+    public data class ChangePayload(
+      @SerialName("account_id")
+      public val accountId: AccountId,
+      /**
+       *  * Minimum: 0.0
+       *  * Maximum: 65535.0
+       *  * Format: uint16
+       */
+      @SerialName("index")
+      public val index: UShort,
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("nonce")
+      public val nonce: ULong,
+      @SerialName("public_key")
+      public val publicKey: PublicKey,
+    )
+
+    /**
+     *  * Possible values: gas_key_nonce_update
+     */
+    @Serializable
+    public enum class Type {
+      @SerialName("gas_key_nonce_update")
+      GAS_KEY_NONCE_UPDATE,
     }
   }
 

@@ -1,13 +1,27 @@
 package io.github.hosseinkarami_dev.near.rpc.models
 
 import kotlin.Boolean
+import kotlin.OptIn
 import kotlin.String
 import kotlin.UByte
 import kotlin.UInt
 import kotlin.ULong
 import kotlin.collections.List
+import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.StructureKind
+import kotlinx.serialization.descriptors.buildSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonEncoder
+import kotlinx.serialization.serializer
 
 /**
  *  * Contains main info about the block.
@@ -102,6 +116,13 @@ public data class BlockHeaderView(
   @SerialName("rent_paid")
   public val rentPaid: NearToken? = NearToken("0"),
   /**
+   *  * Min Items: 2
+   *  * Max Items: 2
+   *  * Nullable: true
+   */
+  @SerialName("shard_split")
+  public val shardSplit: ShardSplitTuple? = null,
+  /**
    *  * Signature of the block producer.
    */
   @SerialName("signature")
@@ -124,4 +145,41 @@ public data class BlockHeaderView(
    */
   @SerialName("validator_reward")
   public val validatorReward: NearToken? = NearToken("0"),
-)
+) {
+  /**
+   *  * Min Items: 2
+   *  * Max Items: 2
+   *  * Nullable: true
+   */
+  @Serializable(with = ShardSplitTuple.TupleSerializer::class)
+  public data class ShardSplitTuple(
+    public val item0: ShardId,
+    public val item1: AccountId,
+  ) {
+    @OptIn(InternalSerializationApi::class)
+    public object TupleSerializer : KSerializer<ShardSplitTuple> {
+      override val descriptor: SerialDescriptor =
+          buildSerialDescriptor("ShardSplitTuple", StructureKind.LIST)
+
+      override fun serialize(encoder: Encoder, `value`: ShardSplitTuple) {
+        if (encoder !is JsonEncoder) throw SerializationException("Cannot serialize ShardSplitTuple with non-JSON encoder")
+        val json = encoder.json
+        val list = buildList<JsonElement> {
+          add(json.encodeToJsonElement(serializer<ShardId>(), value.item0))
+          add(json.encodeToJsonElement(serializer<AccountId>(), value.item1))
+        }
+        encoder.encodeJsonElement(JsonArray(list))
+      }
+
+      override fun deserialize(decoder: Decoder): ShardSplitTuple {
+        if (decoder !is JsonDecoder) throw SerializationException("Cannot deserialize ShardSplitTuple with non-JSON decoder")
+        val element = decoder.decodeJsonElement()
+        val arr = element as? JsonArray ?: throw SerializationException("Expected JSON array for ShardSplitTuple")
+        if (arr.size != 2) throw SerializationException("Expected 2 items for ShardSplitTuple")
+        val item0 = decoder.json.decodeFromJsonElement(serializer<ShardId>(), arr[0])
+        val item1 = decoder.json.decodeFromJsonElement(serializer<AccountId>(), arr[1])
+        return ShardSplitTuple(item0, item1)
+      }
+    }
+  }
+}
