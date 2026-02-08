@@ -1,5 +1,6 @@
 package io.github.hosseinkarami_dev.near.rpc.client
 
+import io.github.hosseinkarami_dev.near.rpc.client.callRpc
 import io.github.hosseinkarami_dev.near.rpc.models.CryptoHash
 import io.github.hosseinkarami_dev.near.rpc.models.GenesisConfig
 import io.github.hosseinkarami_dev.near.rpc.models.GenesisConfigError
@@ -143,26 +144,16 @@ import io.github.hosseinkarami_dev.near.rpc.models.RpcViewStateRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcViewStateResponse
 import io.github.hosseinkarami_dev.near.rpc.models.ValidatorStakeView
 import io.ktor.client.HttpClient
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
 import java.util.UUID
 import kotlin.Deprecated
 import kotlin.DeprecationLevel
 import kotlin.String
 import kotlin.collections.List
-import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.builtins.serializer
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.jsonObject
 
 public class NearClient(
   private val httpClient: HttpClient,
-  private val baseUrl: String,
-  private val json: Json = Json { ignoreUnknownKeys = true },
+  private val rpcUrls: RpcUrls,
 ) {
   private fun nextId(): String = UUID.randomUUID().toString()
 
@@ -182,58 +173,18 @@ public class NearClient(
       params = rpcCallFunctionRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalCallFunction.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalCallFunction.serializer(),
+        JsonRpcResponseForRpcCallFunctionResponseAndRpcCallFunctionError.serializer(),
+        RpcCallFunctionError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcCallFunctionResponseAndRpcCallFunctionError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcCallFunctionResponseAndRpcCallFunctionError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcCallFunctionError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcCallFunctionError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcCallFunctionResponseAndRpcCallFunctionError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcCallFunctionResponseAndRpcCallFunctionError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcCallFunctionResponseAndRpcCallFunctionError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcCallFunctionError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -258,58 +209,18 @@ public class NearClient(
       params = rpcStateChangesInBlockByTypeRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalChanges.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalChanges.serializer(),
+        JsonRpcResponseForRpcStateChangesInBlockResponseAndRpcStateChangesError.serializer(),
+        RpcStateChangesError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcStateChangesInBlockResponseAndRpcStateChangesError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcStateChangesInBlockResponseAndRpcStateChangesError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcStateChangesError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcStateChangesError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcStateChangesInBlockResponseAndRpcStateChangesError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcStateChangesInBlockResponseAndRpcStateChangesError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcStateChangesInBlockResponseAndRpcStateChangesError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcStateChangesError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -334,58 +245,18 @@ public class NearClient(
       params = rpcStateChangesInBlockRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalChangesInBlock.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalChangesInBlock.serializer(),
+        JsonRpcResponseForRpcStateChangesInBlockByTypeResponseAndRpcStateChangesError.serializer(),
+        RpcStateChangesError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcStateChangesInBlockByTypeResponseAndRpcStateChangesError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcStateChangesInBlockByTypeResponseAndRpcStateChangesError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcStateChangesError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcStateChangesError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcStateChangesInBlockByTypeResponseAndRpcStateChangesError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcStateChangesInBlockByTypeResponseAndRpcStateChangesError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcStateChangesInBlockByTypeResponseAndRpcStateChangesError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcStateChangesError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -405,58 +276,18 @@ public class NearClient(
       params = rpcCongestionLevelRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalCongestionLevel.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalCongestionLevel.serializer(),
+        JsonRpcResponseForRpcCongestionLevelResponseAndRpcChunkError.serializer(),
+        RpcChunkError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcCongestionLevelResponseAndRpcChunkError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcCongestionLevelResponseAndRpcChunkError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcChunkError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcChunkError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcCongestionLevelResponseAndRpcChunkError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcCongestionLevelResponseAndRpcChunkError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcCongestionLevelResponseAndRpcChunkError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcChunkError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -480,58 +311,18 @@ public class NearClient(
       params = null
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalGenesisConfig.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalGenesisConfig.serializer(),
+        JsonRpcResponseForGenesisConfigAndGenesisConfigError.serializer(),
+        GenesisConfigError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForGenesisConfigAndGenesisConfigError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForGenesisConfigAndGenesisConfigError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(GenesisConfigError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(GenesisConfigError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForGenesisConfigAndGenesisConfigError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForGenesisConfigAndGenesisConfigError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForGenesisConfigAndGenesisConfigError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(GenesisConfigError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -551,58 +342,18 @@ public class NearClient(
       params = rpcLightClientBlockProofRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalLightClientBlockProof.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalLightClientBlockProof.serializer(),
+        JsonRpcResponseForRpcLightClientBlockProofResponseAndRpcLightClientProofError.serializer(),
+        RpcLightClientProofError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcLightClientBlockProofResponseAndRpcLightClientProofError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcLightClientBlockProofResponseAndRpcLightClientProofError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcLightClientProofError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcLightClientProofError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcLightClientBlockProofResponseAndRpcLightClientProofError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcLightClientBlockProofResponseAndRpcLightClientProofError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcLightClientBlockProofResponseAndRpcLightClientProofError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcLightClientProofError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -622,58 +373,18 @@ public class NearClient(
       params = rpcLightClientExecutionProofRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalLightClientProof.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalLightClientProof.serializer(),
+        JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.serializer(),
+        RpcLightClientProofError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcLightClientProofError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcLightClientProofError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcLightClientProofError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -698,58 +409,18 @@ public class NearClient(
       params = rpcMaintenanceWindowsRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalMaintenanceWindows.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalMaintenanceWindows.serializer(),
+        JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError.serializer(),
+        RpcMaintenanceWindowsError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcMaintenanceWindowsError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcMaintenanceWindowsError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcMaintenanceWindowsError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -769,58 +440,18 @@ public class NearClient(
       params = rpcProtocolConfigRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalProtocolConfig.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalProtocolConfig.serializer(),
+        JsonRpcResponseForRpcProtocolConfigResponseAndRpcProtocolConfigError.serializer(),
+        RpcProtocolConfigError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcProtocolConfigResponseAndRpcProtocolConfigError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcProtocolConfigResponseAndRpcProtocolConfigError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcProtocolConfigError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcProtocolConfigError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcProtocolConfigResponseAndRpcProtocolConfigError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcProtocolConfigResponseAndRpcProtocolConfigError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcProtocolConfigResponseAndRpcProtocolConfigError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcProtocolConfigError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -840,58 +471,18 @@ public class NearClient(
       params = rpcReceiptRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalReceipt.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalReceipt.serializer(),
+        JsonRpcResponseForRpcReceiptResponseAndRpcReceiptError.serializer(),
+        RpcReceiptError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcReceiptResponseAndRpcReceiptError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcReceiptResponseAndRpcReceiptError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcReceiptError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcReceiptError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcReceiptResponseAndRpcReceiptError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcReceiptResponseAndRpcReceiptError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcReceiptResponseAndRpcReceiptError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcReceiptError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -911,58 +502,18 @@ public class NearClient(
       params = RpcSplitStorageInfoRequest(value = JsonObject(emptyMap()))
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalSplitStorageInfo.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalSplitStorageInfo.serializer(),
+        JsonRpcResponseForRpcSplitStorageInfoResponseAndRpcSplitStorageInfoError.serializer(),
+        RpcSplitStorageInfoError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcSplitStorageInfoResponseAndRpcSplitStorageInfoError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcSplitStorageInfoResponseAndRpcSplitStorageInfoError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcSplitStorageInfoError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcSplitStorageInfoError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcSplitStorageInfoResponseAndRpcSplitStorageInfoError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcSplitStorageInfoResponseAndRpcSplitStorageInfoError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcSplitStorageInfoResponseAndRpcSplitStorageInfoError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcSplitStorageInfoError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -982,58 +533,18 @@ public class NearClient(
       params = rpcTransactionStatusRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalTxStatus.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalTxStatus.serializer(),
+        JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.serializer(),
+        RpcTransactionError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcTransactionError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcTransactionError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcTransactionError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -1053,58 +564,18 @@ public class NearClient(
       params = rpcValidatorsOrderedRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalValidatorsOrdered.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalValidatorsOrdered.serializer(),
+        JsonRpcResponseForArrayOfValidatorStakeViewAndRpcValidatorError.serializer(),
+        RpcValidatorError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForArrayOfValidatorStakeViewAndRpcValidatorError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForArrayOfValidatorStakeViewAndRpcValidatorError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcValidatorError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcValidatorError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForArrayOfValidatorStakeViewAndRpcValidatorError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForArrayOfValidatorStakeViewAndRpcValidatorError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForArrayOfValidatorStakeViewAndRpcValidatorError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcValidatorError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -1124,58 +595,18 @@ public class NearClient(
       params = rpcViewAccessKeyRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalViewAccessKey.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalViewAccessKey.serializer(),
+        JsonRpcResponseForRpcViewAccessKeyResponseAndRpcViewAccessKeyError.serializer(),
+        RpcViewAccessKeyError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcViewAccessKeyResponseAndRpcViewAccessKeyError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcViewAccessKeyResponseAndRpcViewAccessKeyError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcViewAccessKeyError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcViewAccessKeyError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcViewAccessKeyResponseAndRpcViewAccessKeyError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcViewAccessKeyResponseAndRpcViewAccessKeyError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcViewAccessKeyResponseAndRpcViewAccessKeyError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcViewAccessKeyError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -1195,58 +626,18 @@ public class NearClient(
       params = rpcViewAccessKeyListRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalViewAccessKeyList.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalViewAccessKeyList.serializer(),
+        JsonRpcResponseForRpcViewAccessKeyListResponseAndRpcViewAccessKeyListError.serializer(),
+        RpcViewAccessKeyListError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcViewAccessKeyListResponseAndRpcViewAccessKeyListError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcViewAccessKeyListResponseAndRpcViewAccessKeyListError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcViewAccessKeyListError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcViewAccessKeyListError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcViewAccessKeyListResponseAndRpcViewAccessKeyListError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcViewAccessKeyListResponseAndRpcViewAccessKeyListError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcViewAccessKeyListResponseAndRpcViewAccessKeyListError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcViewAccessKeyListError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -1266,58 +657,18 @@ public class NearClient(
       params = rpcViewAccountRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalViewAccount.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalViewAccount.serializer(),
+        JsonRpcResponseForRpcViewAccountResponseAndRpcViewAccountError.serializer(),
+        RpcViewAccountError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcViewAccountResponseAndRpcViewAccountError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcViewAccountResponseAndRpcViewAccountError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcViewAccountError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcViewAccountError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcViewAccountResponseAndRpcViewAccountError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcViewAccountResponseAndRpcViewAccountError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcViewAccountResponseAndRpcViewAccountError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcViewAccountError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -1337,58 +688,18 @@ public class NearClient(
       params = rpcViewCodeRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalViewCode.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalViewCode.serializer(),
+        JsonRpcResponseForRpcViewCodeResponseAndRpcViewCodeError.serializer(),
+        RpcViewCodeError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcViewCodeResponseAndRpcViewCodeError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcViewCodeResponseAndRpcViewCodeError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcViewCodeError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcViewCodeError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcViewCodeResponseAndRpcViewCodeError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcViewCodeResponseAndRpcViewCodeError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcViewCodeResponseAndRpcViewCodeError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcViewCodeError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -1408,58 +719,18 @@ public class NearClient(
       params = rpcViewStateRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForExperimentalViewState.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForExperimentalViewState.serializer(),
+        JsonRpcResponseForRpcViewStateResponseAndRpcViewStateError.serializer(),
+        RpcViewStateError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcViewStateResponseAndRpcViewStateError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcViewStateResponseAndRpcViewStateError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcViewStateError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcViewStateError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcViewStateResponseAndRpcViewStateError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcViewStateResponseAndRpcViewStateError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcViewStateResponseAndRpcViewStateError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcViewStateError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -1479,58 +750,18 @@ public class NearClient(
       params = rpcBlockRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForBlock.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForBlock.serializer(),
+        JsonRpcResponseForRpcBlockResponseAndRpcBlockError.serializer(),
+        RpcBlockError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcBlockResponseAndRpcBlockError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcBlockResponseAndRpcBlockError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcBlockError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcBlockError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcBlockResponseAndRpcBlockError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcBlockResponseAndRpcBlockError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcBlockResponseAndRpcBlockError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcBlockError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -1550,58 +781,18 @@ public class NearClient(
       params = rpcStateChangesInBlockRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForBlockEffects.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForBlockEffects.serializer(),
+        JsonRpcResponseForRpcStateChangesInBlockByTypeResponseAndRpcStateChangesError.serializer(),
+        RpcStateChangesError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcStateChangesInBlockByTypeResponseAndRpcStateChangesError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcStateChangesInBlockByTypeResponseAndRpcStateChangesError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcStateChangesError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcStateChangesError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcStateChangesInBlockByTypeResponseAndRpcStateChangesError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcStateChangesInBlockByTypeResponseAndRpcStateChangesError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcStateChangesInBlockByTypeResponseAndRpcStateChangesError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcStateChangesError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -1626,58 +817,18 @@ public class NearClient(
       params = rpcSendTransactionRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForBroadcastTxAsync.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForBroadcastTxAsync.serializer(),
+        JsonRpcResponseForCryptoHashAndRpcTransactionError.serializer(),
+        RpcTransactionError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForCryptoHashAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForCryptoHashAndRpcTransactionError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcTransactionError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcTransactionError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForCryptoHashAndRpcTransactionError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForCryptoHashAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForCryptoHashAndRpcTransactionError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcTransactionError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -1702,58 +853,18 @@ public class NearClient(
       params = rpcSendTransactionRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForBroadcastTxCommit.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForBroadcastTxCommit.serializer(),
+        JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.serializer(),
+        RpcTransactionError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcTransactionError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcTransactionError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcTransactionError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -1773,58 +884,18 @@ public class NearClient(
       params = rpcStateChangesInBlockByTypeRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForChanges.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForChanges.serializer(),
+        JsonRpcResponseForRpcStateChangesInBlockResponseAndRpcStateChangesError.serializer(),
+        RpcStateChangesError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcStateChangesInBlockResponseAndRpcStateChangesError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcStateChangesInBlockResponseAndRpcStateChangesError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcStateChangesError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcStateChangesError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcStateChangesInBlockResponseAndRpcStateChangesError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcStateChangesInBlockResponseAndRpcStateChangesError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcStateChangesInBlockResponseAndRpcStateChangesError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcStateChangesError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -1844,58 +915,18 @@ public class NearClient(
       params = rpcChunkRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForChunk.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForChunk.serializer(),
+        JsonRpcResponseForRpcChunkResponseAndRpcChunkError.serializer(),
+        RpcChunkError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcChunkResponseAndRpcChunkError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcChunkResponseAndRpcChunkError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcChunkError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcChunkError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcChunkResponseAndRpcChunkError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcChunkResponseAndRpcChunkError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcChunkResponseAndRpcChunkError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcChunkError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -1915,58 +946,18 @@ public class NearClient(
       params = null
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForClientConfig.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForClientConfig.serializer(),
+        JsonRpcResponseForRpcClientConfigResponseAndRpcClientConfigError.serializer(),
+        RpcClientConfigError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcClientConfigResponseAndRpcClientConfigError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcClientConfigResponseAndRpcClientConfigError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcClientConfigError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcClientConfigError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcClientConfigResponseAndRpcClientConfigError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcClientConfigResponseAndRpcClientConfigError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcClientConfigResponseAndRpcClientConfigError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcClientConfigError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -1986,58 +977,18 @@ public class NearClient(
       params = rpcGasPriceRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForGasPrice.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForGasPrice.serializer(),
+        JsonRpcResponseForRpcGasPriceResponseAndRpcGasPriceError.serializer(),
+        RpcGasPriceError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcGasPriceResponseAndRpcGasPriceError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcGasPriceResponseAndRpcGasPriceError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcGasPriceError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcGasPriceError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcGasPriceResponseAndRpcGasPriceError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcGasPriceResponseAndRpcGasPriceError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcGasPriceResponseAndRpcGasPriceError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcGasPriceError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -2057,58 +1008,18 @@ public class NearClient(
       params = null
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForGenesisConfig.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForGenesisConfig.serializer(),
+        JsonRpcResponseForGenesisConfigAndGenesisConfigError.serializer(),
+        GenesisConfigError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForGenesisConfigAndGenesisConfigError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForGenesisConfigAndGenesisConfigError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(GenesisConfigError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(GenesisConfigError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForGenesisConfigAndGenesisConfigError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForGenesisConfigAndGenesisConfigError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForGenesisConfigAndGenesisConfigError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(GenesisConfigError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -2128,58 +1039,18 @@ public class NearClient(
       params = null
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForHealth.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForHealth.serializer(),
+        JsonRpcResponseForNullableRpcHealthResponseAndRpcStatusError.serializer(),
+        RpcStatusError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForNullableRpcHealthResponseAndRpcStatusError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForNullableRpcHealthResponseAndRpcStatusError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcStatusError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcStatusError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForNullableRpcHealthResponseAndRpcStatusError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForNullableRpcHealthResponseAndRpcStatusError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForNullableRpcHealthResponseAndRpcStatusError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcStatusError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -2199,58 +1070,18 @@ public class NearClient(
       params = rpcLightClientExecutionProofRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForLightClientProof.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForLightClientProof.serializer(),
+        JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.serializer(),
+        RpcLightClientProofError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcLightClientProofError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcLightClientProofError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcLightClientProofError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -2270,58 +1101,18 @@ public class NearClient(
       params = rpcMaintenanceWindowsRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForMaintenanceWindows.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForMaintenanceWindows.serializer(),
+        JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError.serializer(),
+        RpcMaintenanceWindowsError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcMaintenanceWindowsError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcMaintenanceWindowsError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcMaintenanceWindowsError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -2341,58 +1132,18 @@ public class NearClient(
       params = null
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForNetworkInfo.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForNetworkInfo.serializer(),
+        JsonRpcResponseForRpcNetworkInfoResponseAndRpcNetworkInfoError.serializer(),
+        RpcNetworkInfoError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcNetworkInfoResponseAndRpcNetworkInfoError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcNetworkInfoResponseAndRpcNetworkInfoError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcNetworkInfoError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcNetworkInfoError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcNetworkInfoResponseAndRpcNetworkInfoError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcNetworkInfoResponseAndRpcNetworkInfoError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcNetworkInfoResponseAndRpcNetworkInfoError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcNetworkInfoError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -2412,58 +1163,18 @@ public class NearClient(
       params = rpcLightClientNextBlockRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForNextLightClientBlock.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForNextLightClientBlock.serializer(),
+        JsonRpcResponseForRpcLightClientNextBlockResponseAndRpcLightClientNextBlockError.serializer(),
+        RpcLightClientNextBlockError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcLightClientNextBlockResponseAndRpcLightClientNextBlockError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcLightClientNextBlockResponseAndRpcLightClientNextBlockError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcLightClientNextBlockError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcLightClientNextBlockError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcLightClientNextBlockResponseAndRpcLightClientNextBlockError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcLightClientNextBlockResponseAndRpcLightClientNextBlockError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcLightClientNextBlockResponseAndRpcLightClientNextBlockError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcLightClientNextBlockError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -2495,58 +1206,18 @@ public class NearClient(
       params = rpcQueryRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForQuery.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForQuery.serializer(),
+        JsonRpcResponseForRpcQueryResponseAndRpcQueryError.serializer(),
+        RpcQueryError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcQueryResponseAndRpcQueryError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcQueryResponseAndRpcQueryError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcQueryError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcQueryError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcQueryResponseAndRpcQueryError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcQueryResponseAndRpcQueryError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcQueryResponseAndRpcQueryError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcQueryError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -2566,58 +1237,18 @@ public class NearClient(
       params = rpcSendTransactionRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForSendTx.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForSendTx.serializer(),
+        JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.serializer(),
+        RpcTransactionError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcTransactionError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcTransactionError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcTransactionError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -2637,58 +1268,18 @@ public class NearClient(
       params = null
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForStatus.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForStatus.serializer(),
+        JsonRpcResponseForRpcStatusResponseAndRpcStatusError.serializer(),
+        RpcStatusError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcStatusResponseAndRpcStatusError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcStatusResponseAndRpcStatusError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcStatusError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcStatusError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcStatusResponseAndRpcStatusError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcStatusResponseAndRpcStatusError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcStatusResponseAndRpcStatusError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcStatusError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -2708,58 +1299,18 @@ public class NearClient(
       params = rpcTransactionStatusRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForTx.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForTx.serializer(),
+        JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.serializer(),
+        RpcTransactionError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcTransactionError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcTransactionError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcTransactionError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 
@@ -2779,58 +1330,18 @@ public class NearClient(
       params = rpcValidatorRequest
     )
 
-    try {
-        val httpResponse = httpClient.post(baseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(JsonRpcRequestForValidators.serializer(), request))
+    return callRpc(
+        httpClient,
+        rpcUrls,
+        request,
+        JsonRpcRequestForValidators.serializer(),
+        JsonRpcResponseForRpcValidatorResponseAndRpcValidatorError.serializer(),
+        RpcValidatorError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcValidatorResponseAndRpcValidatorError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcValidatorResponseAndRpcValidatorError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
-
-        val status = httpResponse.status.value
-        val respBody = httpResponse.bodyAsText()
-
-        if (status in 500..599) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                if (root.containsKey("error")) {
-                    val rpcErr = json.decodeFromString(RpcValidatorError.serializer(), root["error"].toString())
-                    return RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr))
-                }
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl!!.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcValidatorError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Http(status, respBody))
-        }
-
-        try {
-            val decoded = json.decodeFromString(JsonRpcResponseForRpcValidatorResponseAndRpcValidatorError.serializer(), respBody)
-            return when (decoded) {
-                is JsonRpcResponseForRpcValidatorResponseAndRpcValidatorError.Result -> RpcResponse.Success(decoded.result)
-                is JsonRpcResponseForRpcValidatorResponseAndRpcValidatorError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
-            }
-        } catch (serEx: Exception) {
-            try {
-                val root = json.parseToJsonElement(respBody).jsonObject
-                val resultEl = root["result"]
-                if (resultEl?.jsonObject?.containsKey("error") == true) {
-                    val errJson = resultEl.jsonObject["error"].toString()
-                    val rpcErr = runCatching { json.decodeFromString(RpcValidatorError.serializer(), errJson) }.getOrNull()
-                    return if (rpcErr != null) RpcResponse.Failure(ErrorResult.Rpc(error = rpcErr)) else RpcResponse.Failure(ErrorResult.RpcRuntime(errJson))
-                }
-            } catch (_: Exception) { /* ignore parse error */ }
-            return RpcResponse.Failure(ErrorResult.Deserialization(serEx, respBody))
-        }
-    } catch (e: Throwable) {
-        val mapped = when (e) {
-            is java.util.concurrent.CancellationException -> ErrorResult.Cancellation(e)
-            is java.net.SocketTimeoutException, is io.ktor.client.plugins.HttpRequestTimeoutException -> ErrorResult.Timeout(e)
-            is java.io.IOException -> ErrorResult.Network(e)
-            else -> ErrorResult.Unknown(e.message ?: "Unknown", e)
-        }
-        return RpcResponse.Failure(mapped)
     }
   }
 }

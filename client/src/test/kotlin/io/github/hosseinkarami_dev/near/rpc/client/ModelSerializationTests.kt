@@ -952,22 +952,6 @@ class ModelSerializationTests {
     }
 
     @Test
-    fun testDynamicReshardingConfigViewEncodeDecode() {
-        val data = loadMockJson("DynamicReshardingConfigView.json")
-        assertNotNull(data, "Mock file DynamicReshardingConfigView.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.DynamicReshardingConfigView.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.DynamicReshardingConfigView.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.DynamicReshardingConfigView.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for DynamicReshardingConfigView: ${e.message}")
-        }
-    }
-
-    @Test
     fun testEpochIdEncodeDecode() {
         val data = loadMockJson("EpochId.json")
         assertNotNull(data, "Mock file EpochId.json does not exist!")
@@ -1636,6 +1620,22 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for GCConfig: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testGasKeyInfoEncodeDecode() {
+        val data = loadMockJson("GasKeyInfo.json")
+        assertNotNull(data, "Mock file GasKeyInfo.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.GasKeyInfo.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.GasKeyInfo.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.GasKeyInfo.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for GasKeyInfo: ${e.message}")
         }
     }
 
@@ -4984,6 +4984,22 @@ class ModelSerializationTests {
     }
 
     @Test
+    fun testTransferToGasKeyActionEncodeDecode() {
+        val data = loadMockJson("TransferToGasKeyAction.json")
+        assertNotNull(data, "Mock file TransferToGasKeyAction.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.TransferToGasKeyAction.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.TransferToGasKeyAction.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.TransferToGasKeyAction.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for TransferToGasKeyAction: ${e.message}")
+        }
+    }
+
+    @Test
     fun testTxExecutionErrorEncodeDecode() {
         val data = loadMockJson("TxExecutionError.json")
         assertNotNull(data, "Mock file TxExecutionError.json does not exist!")
@@ -5188,6 +5204,22 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for WasmTrap: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testWithdrawFromGasKeyActionEncodeDecode() {
+        val data = loadMockJson("WithdrawFromGasKeyAction.json")
+        assertNotNull(data, "Mock file WithdrawFromGasKeyAction.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.WithdrawFromGasKeyAction.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.WithdrawFromGasKeyAction.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.WithdrawFromGasKeyAction.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for WithdrawFromGasKeyAction: ${e.message}")
         }
     }
 
