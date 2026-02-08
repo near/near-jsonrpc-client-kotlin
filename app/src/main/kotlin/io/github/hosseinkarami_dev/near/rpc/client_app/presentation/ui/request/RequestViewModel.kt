@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import io.github.hosseinkarami_dev.near.rpc.client.ErrorResult
 import io.github.hosseinkarami_dev.near.rpc.client.NearClient
 import io.github.hosseinkarami_dev.near.rpc.client.RpcResponse
+import io.github.hosseinkarami_dev.near.rpc.client.RpcUrls
 import io.github.hosseinkarami_dev.near.rpc.client_app.data.UserPreferencesRepository
 import io.github.hosseinkarami_dev.near.rpc.models.AccountId
 import io.github.hosseinkarami_dev.near.rpc.models.BlockId
@@ -129,7 +130,7 @@ class RequestViewModel(
             isLoading = true
             val currentNetworkUrl =
                 userPreferencesRepository.userPreferencesFlow.first().network.url
-            val nearClient = NearClient(httpClient, currentNetworkUrl)
+            val nearClient = NearClient(httpClient, RpcUrls.Single(currentNetworkUrl))
             try {
                 response = when (endpointName) {
                     "view_account" -> {
