@@ -1,6 +1,7 @@
 package io.github.hosseinkarami_dev.near.rpc.models
 
 import kotlin.ULong
+import kotlin.UShort
 import kotlin.collections.List
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -18,6 +19,15 @@ public data class SignedTransactionView(
   @SerialName("nonce")
   public val nonce: ULong,
   /**
+   *  * Minimum: 0.0
+   *  * Maximum: 65535.0
+   *  * Format: uint16
+   *  * Nullable: true
+   */
+  @SerialName("nonce_index")
+  public val nonceIndex: UShort? = null,
+  /**
+   *  * Deprecated, retained for backward compatibility.
    *  * Minimum: 0.0
    *  * Format: uint64
    */
