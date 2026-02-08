@@ -15,9 +15,9 @@ object Utils {
     inline fun <reified E : ErrorResult> RpcResponse<*>.getErrorOrNull(): E? = (this as? RpcResponse.Failure)?.error as? E
 }
 
-suspend fun <Req, Wrapper, Res, Err> callRpc(
+internal suspend fun <Req, Wrapper, Res, Err> callRpc(
     httpClient: HttpClient,
-    baseUrl: String,
+    rpcUrls: RpcUrls,
     request: Req,
     requestSerializer: KSerializer<Req>,
     responseSerializer: KSerializer<Wrapper>,
@@ -25,6 +25,12 @@ suspend fun <Req, Wrapper, Res, Err> callRpc(
     mapResponse: Function1<Wrapper, RpcResponse<Res>>,
 ): RpcResponse<Res> {
     val json = Json { ignoreUnknownKeys = true }
+
+    val baseUrl = when (rpcUrls) {
+        is RpcUrls.Single -> rpcUrls.url
+        is RpcUrls.Multiple -> rpcUrls.urls.random()
+    }
+
     try {
         val httpResponse = httpClient.post(baseUrl) {
             contentType(ContentType.Application.Json)

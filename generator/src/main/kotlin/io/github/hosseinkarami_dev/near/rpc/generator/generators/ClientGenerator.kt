@@ -27,7 +27,7 @@ import java.io.File
 import kotlin.collections.iterator
 import kotlin.system.exitProcess
 
-// PathGenerator: generates a NearClient class with typed suspend functions for each operation.
+// ClientGenerator: generates a NearClient class with typed suspend functions for each operation.
 object ClientGenerator {
 
     fun generateNearClientFile(
@@ -38,6 +38,7 @@ object ClientGenerator {
         clientClassName: String = "NearClient"
     ) {
         val httpClientClass = ClassName("io.ktor.client", "HttpClient")
+        val rpcUrlsClass = ClassName(clientPackage, "RpcUrls")
         val stringClass = ClassName("kotlin", "String")
         val uuidClass = ClassName("java.util", "UUID")
 
@@ -49,7 +50,7 @@ object ClientGenerator {
 
         val ctor = FunSpec.constructorBuilder()
             .addParameter("httpClient", httpClientClass)
-            .addParameter("baseUrl", stringClass)
+            .addParameter("rpcUrls", rpcUrlsClass)
             .build()
         classBuilder.primaryConstructor(ctor)
 
@@ -60,9 +61,9 @@ object ClientGenerator {
                 .build()
         )
         classBuilder.addProperty(
-            PropertySpec.builder("baseUrl", stringClass)
+            PropertySpec.builder("rpcUrls", rpcUrlsClass)
                 .addModifiers(KModifier.PRIVATE)
-                .initializer("baseUrl")
+                .initializer("rpcUrls")
                 .build()
         )
         val nextIdFun = FunSpec.builder("nextId")
@@ -235,7 +236,7 @@ object ClientGenerator {
 
             cb.addStatement("return callRpc(")
             cb.addStatement("    httpClient,")
-            cb.addStatement("    baseUrl,")
+            cb.addStatement("    rpcUrls,")
             cb.addStatement("    request,")
             cb.addStatement("    %T.serializer(),", reqWrapperClassName)
             cb.addStatement("    %T.serializer(),", respWrapperClassName)
