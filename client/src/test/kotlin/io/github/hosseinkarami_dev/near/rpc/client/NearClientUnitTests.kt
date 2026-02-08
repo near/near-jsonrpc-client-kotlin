@@ -9,6 +9,7 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.http.*
 import kotlinx.coroutines.test.runTest
+import io.github.hosseinkarami_dev.near.rpc.client.RpcUrls
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.decodeFromString
 import java.io.File
@@ -41,7 +42,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalCallFunction.serializer(), data)
@@ -68,7 +69,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalChanges.serializer(), data)
@@ -95,7 +96,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalChangesInBlock.serializer(), data)
@@ -122,7 +123,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalCongestionLevel.serializer(), data)
@@ -149,7 +150,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalGenesisConfig.serializer(), data)
@@ -176,7 +177,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientBlockProof.serializer(), data)
@@ -203,7 +204,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientProof.serializer(), data)
@@ -230,7 +231,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalMaintenanceWindows.serializer(), data)
@@ -257,7 +258,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalProtocolConfig.serializer(), data)
@@ -284,7 +285,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalReceipt.serializer(), data)
@@ -311,7 +312,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalSplitStorageInfo.serializer(), data)
@@ -338,7 +339,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalTxStatus.serializer(), data)
@@ -365,7 +366,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalValidatorsOrdered.serializer(), data)
@@ -392,7 +393,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewAccessKey.serializer(), data)
@@ -419,7 +420,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewAccessKeyList.serializer(), data)
@@ -446,7 +447,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewAccount.serializer(), data)
@@ -473,7 +474,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewCode.serializer(), data)
@@ -500,7 +501,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalViewState.serializer(), data)
@@ -527,7 +528,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForBlock.serializer(), data)
@@ -554,7 +555,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForBlockEffects.serializer(), data)
@@ -581,7 +582,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForBroadcastTxAsync.serializer(), data)
@@ -608,7 +609,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForBroadcastTxCommit.serializer(), data)
@@ -635,7 +636,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForChanges.serializer(), data)
@@ -662,7 +663,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForChunk.serializer(), data)
@@ -689,7 +690,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForClientConfig.serializer(), data)
@@ -716,7 +717,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForGasPrice.serializer(), data)
@@ -743,7 +744,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForGenesisConfig.serializer(), data)
@@ -770,7 +771,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForHealth.serializer(), data)
@@ -797,7 +798,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForLightClientProof.serializer(), data)
@@ -824,7 +825,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForMaintenanceWindows.serializer(), data)
@@ -851,7 +852,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForNetworkInfo.serializer(), data)
@@ -878,7 +879,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForNextLightClientBlock.serializer(), data)
@@ -905,7 +906,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForQuery.serializer(), data)
@@ -932,7 +933,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForSendTx.serializer(), data)
@@ -959,7 +960,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForStatus.serializer(), data)
@@ -986,7 +987,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForTx.serializer(), data)
@@ -1013,7 +1014,7 @@ class NearClientUnitTests {
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
 
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock", json)
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client,RpcUrls.Single( "http://mock"))
 
         try {
             val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForValidators.serializer(), data)
