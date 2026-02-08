@@ -48,7 +48,6 @@ object ClientTestGenerator {
             appendLine("import io.ktor.serialization.kotlinx.json.*")
             appendLine("import io.ktor.http.*")
             appendLine("import kotlinx.coroutines.test.runTest")
-            appendLine("import io.github.hosseinkarami_dev.near.rpc.client.RpcUrls")
             appendLine("import kotlinx.serialization.json.Json")
             appendLine("import kotlinx.serialization.decodeFromString")
             appendLine("import java.io.File")
@@ -93,7 +92,7 @@ object ClientTestGenerator {
                 appendLine("            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }")
                 appendLine("        }")
                 appendLine()
-            appendLine("        val nearClient = $clientPackage.NearClient(client,RpcUrls.Single( \"http://mock\"))")
+            appendLine("        val nearClient = $clientPackage.NearClient(client,listOf( \"http://mock\"))")
                 appendLine()
                 appendLine("        try {")
                 // decode wrapper request

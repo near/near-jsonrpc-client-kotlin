@@ -7,6 +7,7 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
@@ -24,8 +25,6 @@ import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import java.io.File
-import kotlin.collections.iterator
-import kotlin.system.exitProcess
 
 // ClientGenerator: generates a NearClient class with typed suspend functions for each operation.
 object ClientGenerator {
@@ -38,19 +37,22 @@ object ClientGenerator {
         clientClassName: String = "NearClient"
     ) {
         val httpClientClass = ClassName("io.ktor.client", "HttpClient")
-        val rpcUrlsClass = ClassName(clientPackage, "RpcUrls")
+        val listClass = ClassName("kotlin.collections", "List")
         val stringClass = ClassName("kotlin", "String")
         val uuidClass = ClassName("java.util", "UUID")
 
+        val parameterizedListType = listClass.parameterizedBy(stringClass)
+
         val rpcResponseClass = ClassName(clientPackage, "RpcResponse")
         val errorResultClass = ClassName(clientPackage, "ErrorResult")
+
 
         val classBuilder = TypeSpec.classBuilder(clientClassName)
             .addModifiers(KModifier.PUBLIC)
 
         val ctor = FunSpec.constructorBuilder()
             .addParameter("httpClient", httpClientClass)
-            .addParameter("rpcUrls", rpcUrlsClass)
+            .addParameter("rpcUrls", parameterizedListType)
             .build()
         classBuilder.primaryConstructor(ctor)
 
@@ -61,7 +63,7 @@ object ClientGenerator {
                 .build()
         )
         classBuilder.addProperty(
-            PropertySpec.builder("rpcUrls", rpcUrlsClass)
+            PropertySpec.builder("rpcUrls", parameterizedListType)
                 .addModifiers(KModifier.PRIVATE)
                 .initializer("rpcUrls")
                 .build()

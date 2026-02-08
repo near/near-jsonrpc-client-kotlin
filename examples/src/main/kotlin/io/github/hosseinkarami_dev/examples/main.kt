@@ -3,7 +3,6 @@ package io.github.hosseinkarami_dev.examples
 import io.github.hosseinkarami_dev.near.rpc.client.ErrorResult
 import io.github.hosseinkarami_dev.near.rpc.client.NearClient
 import io.github.hosseinkarami_dev.near.rpc.client.RpcResponse
-import io.github.hosseinkarami_dev.near.rpc.client.RpcUrls
 import io.github.hosseinkarami_dev.near.rpc.client.Utils.getResultOrNull
 import io.github.hosseinkarami_dev.near.rpc.models.AccountId
 import io.github.hosseinkarami_dev.near.rpc.models.BlockId
@@ -39,7 +38,7 @@ fun main() = runBlocking {
 
     val nearClient = NearClient(
         httpClient = httpClient,
-        rpcUrls = RpcUrls.Single("https://rpc.mainnet.near.org")
+        rpcUrls = listOf("https://rpc.mainnet.near.org")
     )
 
     // Block Details
