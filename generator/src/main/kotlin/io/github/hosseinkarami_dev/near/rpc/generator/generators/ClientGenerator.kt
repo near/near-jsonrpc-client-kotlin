@@ -37,11 +37,8 @@ object ClientGenerator {
         clientClassName: String = "NearClient"
     ) {
         val httpClientClass = ClassName("io.ktor.client", "HttpClient")
-        val listClass = ClassName("kotlin.collections", "List")
         val stringClass = ClassName("kotlin", "String")
         val uuidClass = ClassName("java.util", "UUID")
-
-        val parameterizedListType = listClass.parameterizedBy(stringClass)
 
         val rpcResponseClass = ClassName(clientPackage, "RpcResponse")
         val errorResultClass = ClassName(clientPackage, "ErrorResult")
@@ -52,7 +49,7 @@ object ClientGenerator {
 
         val ctor = FunSpec.constructorBuilder()
             .addParameter("httpClient", httpClientClass)
-            .addParameter("rpcUrls", parameterizedListType)
+            .addParameter("baseUrl", stringClass)
             .build()
         classBuilder.primaryConstructor(ctor)
 
@@ -63,9 +60,9 @@ object ClientGenerator {
                 .build()
         )
         classBuilder.addProperty(
-            PropertySpec.builder("rpcUrls", parameterizedListType)
+            PropertySpec.builder("baseUrl", stringClass)
                 .addModifiers(KModifier.PRIVATE)
-                .initializer("rpcUrls")
+                .initializer("baseUrl")
                 .build()
         )
         val nextIdFun = FunSpec.builder("nextId")
@@ -238,7 +235,7 @@ object ClientGenerator {
 
             cb.addStatement("return callRpc(")
             cb.addStatement("    httpClient,")
-            cb.addStatement("    rpcUrls,")
+            cb.addStatement("    baseUrl,")
             cb.addStatement("    request,")
             cb.addStatement("    %T.serializer(),", reqWrapperClassName)
             cb.addStatement("    %T.serializer(),", respWrapperClassName)

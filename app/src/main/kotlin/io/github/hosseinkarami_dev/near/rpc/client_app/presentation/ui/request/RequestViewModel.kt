@@ -129,7 +129,7 @@ class RequestViewModel(
             isLoading = true
             val currentNetworkUrl =
                 userPreferencesRepository.userPreferencesFlow.first().network.url
-            val nearClient = NearClient(httpClient, rpcUrls = listOf(currentNetworkUrl))
+            val nearClient = NearClient(httpClient, baseUrl = currentNetworkUrl)
             try {
                 response = when (endpointName) {
                     "view_account" -> {
@@ -221,10 +221,10 @@ class RequestViewModel(
 
                     "validators" -> {
                         val epochId = params["epoch_id"]
-                        val request = if (epochId != null) {
+                        val request = (if (epochId != null) {
                             RpcValidatorRequest.EpochId(epochId = EpochId(epochId))
                         } else
-                            RpcValidatorRequest.Latest
+                            RpcValidatorRequest.Latest) as RpcValidatorRequest
 
                         nearClient.validators(request)
                     }

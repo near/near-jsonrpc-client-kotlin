@@ -92,7 +92,7 @@ object ClientTestGenerator {
                 appendLine("            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }")
                 appendLine("        }")
                 appendLine()
-            appendLine("        val nearClient = $clientPackage.NearClient(client,listOf( \"http://mock\"))")
+                appendLine("        val nearClient = $clientPackage.NearClient(client, \"http://mock\")")
                 appendLine()
                 appendLine("        try {")
                 // decode wrapper request

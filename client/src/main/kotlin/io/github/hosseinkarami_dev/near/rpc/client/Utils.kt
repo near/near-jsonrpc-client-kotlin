@@ -17,7 +17,7 @@ object Utils {
 
 internal suspend fun <Req, Wrapper, Res, Err> callRpc(
     httpClient: HttpClient,
-    rpcUrls: List<String>,
+    baseUrl: String,
     request: Req,
     requestSerializer: KSerializer<Req>,
     responseSerializer: KSerializer<Wrapper>,
@@ -25,8 +25,6 @@ internal suspend fun <Req, Wrapper, Res, Err> callRpc(
     mapResponse: Function1<Wrapper, RpcResponse<Res>>,
 ): RpcResponse<Res> {
     val json = Json { ignoreUnknownKeys = true }
-
-    val baseUrl = rpcUrls.random()
 
     try {
         val httpResponse = httpClient.post(baseUrl) {

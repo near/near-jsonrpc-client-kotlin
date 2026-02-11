@@ -138,7 +138,7 @@ val httpClient = HttpClient(CIO) {
 
 val nearClient = NearClient(
     httpClient = httpClient,
-    rpcUrls = listOf("https://rpc.mainnet.near.org") // or "https://rpc.testnet.near.org"
+    baseUrl = "https://rpc.mainnet.near.org" // or "https://rpc.testnet.near.org"
 )
 
 lifecycleScope.launch {

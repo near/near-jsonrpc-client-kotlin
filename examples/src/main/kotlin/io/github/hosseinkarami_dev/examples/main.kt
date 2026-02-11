@@ -38,7 +38,7 @@ fun main() = runBlocking {
 
     val nearClient = NearClient(
         httpClient = httpClient,
-        rpcUrls = listOf("https://rpc.mainnet.near.org")
+        baseUrl = "https://rpc.mainnet.near.org"
     )
 
     // Block Details
