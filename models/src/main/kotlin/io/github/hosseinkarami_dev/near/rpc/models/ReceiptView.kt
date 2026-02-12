@@ -9,6 +9,7 @@ public data class ReceiptView(
   @SerialName("predecessor_id")
   public val predecessorId: AccountId,
   /**
+   *  * Deprecated, retained for backward compatibility.
    *  * Minimum: 0.0
    *  * Format: uint64
    */

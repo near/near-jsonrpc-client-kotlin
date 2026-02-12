@@ -27,7 +27,7 @@ public sealed class RpcTransactionResponse {
      * FinalExecutionStatus::SuccessValue - the result of the first leaf receipt_id
      */
     @SerialName("status")
-    public val status: FinalExecutionStatus,
+    public val status: io.github.hosseinkarami_dev.near.rpc.models.FinalExecutionStatus,
     /**
      *  * Signed Transaction
      */
@@ -57,7 +57,7 @@ public sealed class RpcTransactionResponse {
      * FinalExecutionStatus::SuccessValue - the result of the first leaf receipt_id
      */
     @SerialName("status")
-    public val status: FinalExecutionStatus,
+    public val status: io.github.hosseinkarami_dev.near.rpc.models.FinalExecutionStatus,
     /**
      *  * Signed Transaction
      */
@@ -68,6 +68,12 @@ public sealed class RpcTransactionResponse {
      */
     @SerialName("transaction_outcome")
     public val transactionOutcome: ExecutionOutcomeWithIdView,
+    @SerialName("final_execution_status")
+    public val finalExecutionStatus: TxExecutionStatus,
+  ) : RpcTransactionResponse()
+
+  @Serializable
+  public data class FinalExecutionStatus(
     @SerialName("final_execution_status")
     public val finalExecutionStatus: TxExecutionStatus,
   ) : RpcTransactionResponse()
