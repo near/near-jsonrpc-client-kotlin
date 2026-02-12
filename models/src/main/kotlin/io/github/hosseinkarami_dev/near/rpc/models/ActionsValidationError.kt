@@ -4,6 +4,7 @@ import io.github.hosseinkarami_dev.near.rpc.serializers.ActionsValidationErrorSe
 import kotlin.String
 import kotlin.UInt
 import kotlin.ULong
+import kotlin.UShort
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -327,4 +328,48 @@ public sealed class ActionsValidationError {
       public val limit: ULong,
     )
   }
+
+  @Serializable
+  public data class GasKeyInvalidNumNonces(
+    @SerialName("GasKeyInvalidNumNonces")
+    public val gasKeyInvalidNumNonces: GasKeyInvalidNumNoncesPayload,
+  ) : ActionsValidationError() {
+    @Serializable
+    public data class GasKeyInvalidNumNoncesPayload(
+      /**
+       *  * Minimum: 0.0
+       *  * Maximum: 65535.0
+       *  * Format: uint16
+       */
+      @SerialName("limit")
+      public val limit: UShort,
+      /**
+       *  * Minimum: 0.0
+       *  * Maximum: 65535.0
+       *  * Format: uint16
+       */
+      @SerialName("requested_nonces")
+      public val requestedNonces: UShort,
+    )
+  }
+
+  @Serializable
+  public data class AddGasKeyWithNonZeroBalance(
+    @SerialName("AddGasKeyWithNonZeroBalance")
+    public val addGasKeyWithNonZeroBalance: AddGasKeyWithNonZeroBalancePayload,
+  ) : ActionsValidationError() {
+    @Serializable
+    public data class AddGasKeyWithNonZeroBalancePayload(
+      @SerialName("balance")
+      public val balance: NearToken,
+    )
+  }
+
+  /**
+   *  * Gas keys with FunctionCall permission cannot have an allowance set.
+   *  * Possible values: GasKeyFunctionCallAllowanceNotAllowed
+   */
+  @Serializable
+  @SerialName("GasKeyFunctionCallAllowanceNotAllowed")
+  public data object GasKeyFunctionCallAllowanceNotAllowed : ActionsValidationError()
 }
