@@ -411,4 +411,26 @@ public sealed class ActionErrorKind {
       public val required: NearToken,
     )
   }
+
+  /**
+   *  * Gas key balance is too high to burn during deletion
+   */
+  @Serializable
+  public data class GasKeyBalanceTooHigh(
+    @SerialName("GasKeyBalanceTooHigh")
+    public val gasKeyBalanceTooHigh: GasKeyBalanceTooHighPayload,
+  ) : ActionErrorKind() {
+    @Serializable
+    public data class GasKeyBalanceTooHighPayload(
+      @SerialName("account_id")
+      public val accountId: AccountId,
+      @SerialName("balance")
+      public val balance: NearToken,
+      /**
+       *  * Set for DeleteKey (specific key), None for DeleteAccount (aggregate)
+       */
+      @SerialName("public_key")
+      public val publicKey: PublicKey? = null,
+    )
+  }
 }
