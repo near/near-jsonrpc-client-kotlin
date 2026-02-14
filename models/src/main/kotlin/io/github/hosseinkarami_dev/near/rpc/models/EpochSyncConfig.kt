@@ -7,15 +7,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 public data class EpochSyncConfig(
   /**
-   *  * This serves as two purposes: (1) the node will not epoch sync and instead resort to
-   * header sync, if the genesis block is within this many blocks from the current block;
-   * (2) the node will reject an epoch sync proof if the provided proof is for an epoch
-   * that is more than this many blocks behind the current block.
+   *  * Number of epochs behind the network head beyond which the node will use
+   * epoch sync instead of header sync. Also the maximum age (in epochs) of
+   * accepted epoch sync proofs. At the consumption site, this is multiplied
+   * by epoch_length to get the horizon in blocks.
    *  * Minimum: 0.0
    *  * Format: uint64
    */
-  @SerialName("epoch_sync_horizon")
-  public val epochSyncHorizon: ULong? = null,
+  @SerialName("epoch_sync_horizon_num_epochs")
+  public val epochSyncHorizonNumEpochs: ULong? = 4.toULong(),
   /**
    *  * Timeout for epoch sync requests. The node will continue retrying indefinitely even
    * if this timeout is exceeded.
