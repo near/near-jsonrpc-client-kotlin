@@ -51,6 +51,14 @@ public data class ChunkHeaderView(
   @SerialName("prev_state_root")
   public val prevStateRoot: CryptoHash,
   /**
+   *  * Proposed trie split for dynamic resharding
+   * `None`: field missing (`ShardChunkHeaderInnerV4` or earlier)
+   * `Some(None)`: field present, but not set (`ChunkHeaderInnerV5` or later)
+   * `Some(Some(split))`: field present and set
+   */
+  @SerialName("proposed_split")
+  public val proposedSplit: TrieSplit? = null,
+  /**
    *  * TODO(2271): deprecated.
    */
   @SerialName("rent_paid")
