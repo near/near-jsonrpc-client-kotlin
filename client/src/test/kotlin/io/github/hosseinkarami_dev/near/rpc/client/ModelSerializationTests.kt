@@ -5016,6 +5016,22 @@ class ModelSerializationTests {
     }
 
     @Test
+    fun testTrieSplitEncodeDecode() {
+        val data = loadMockJson("TrieSplit.json")
+        assertNotNull(data, "Mock file TrieSplit.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.TrieSplit.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.TrieSplit.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.TrieSplit.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for TrieSplit: ${e.message}")
+        }
+    }
+
+    @Test
     fun testTxExecutionErrorEncodeDecode() {
         val data = loadMockJson("TxExecutionError.json")
         assertNotNull(data, "Mock file TxExecutionError.json does not exist!")
