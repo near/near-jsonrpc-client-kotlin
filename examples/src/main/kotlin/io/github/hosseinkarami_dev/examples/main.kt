@@ -107,7 +107,7 @@ fun main() = runBlocking {
         }
 
         is RpcResponse.Success -> {
-            val result = response.getResultOrNull<RpcQueryResponse.BlockHashBlockHeight>()
+            val result = response.getResultOrNull<RpcQueryResponse.CallResult>()
             println("Result: $result")
 
         }
