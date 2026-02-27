@@ -352,6 +352,7 @@ This project is licensed under the **Apache-2.0 License**. See [LICENSE](./LICEN
 
 - JSON-RPC interface: https://docs.near.org/api/rpc/introduction  
 - Other References:
+  - Python client: https://github.com/hosseinkarami-dev/near-jsonrpc-client-py/
   - Rust client: https://github.com/PolyProgrammist/near-openapi-client  
   - TypeScript client: https://github.com/near/near-jsonrpc-client-ts
   - Swift client: https://github.com/near/near-jsonrpc-client-swift
