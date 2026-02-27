@@ -82,4 +82,16 @@ public sealed class NonDelegateAction {
     @SerialName("DeterministicStateInit")
     public val deterministicStateInit: DeterministicStateInitAction,
   ) : NonDelegateAction()
+
+  @Serializable
+  public data class TransferToGasKey(
+    @SerialName("TransferToGasKey")
+    public val transferToGasKey: TransferToGasKeyAction,
+  ) : NonDelegateAction()
+
+  @Serializable
+  public data class WithdrawFromGasKey(
+    @SerialName("WithdrawFromGasKey")
+    public val withdrawFromGasKey: WithdrawFromGasKeyAction,
+  ) : NonDelegateAction()
 }

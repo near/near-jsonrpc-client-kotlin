@@ -3,6 +3,7 @@ package io.github.hosseinkarami_dev.near.rpc.models
 import io.github.hosseinkarami_dev.near.rpc.serializers.ReceiptEnumViewSerializer
 import kotlin.Boolean
 import kotlin.String
+import kotlin.ULong
 import kotlin.collections.List
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -67,6 +68,13 @@ public sealed class ReceiptEnumView {
       public val code: String,
       @SerialName("id")
       public val id: GlobalContractIdentifier,
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       *  * Nullable: true
+       */
+      @SerialName("nonce")
+      public val nonce: ULong? = null,
       @SerialName("target_shard")
       public val targetShard: ShardId,
     )
