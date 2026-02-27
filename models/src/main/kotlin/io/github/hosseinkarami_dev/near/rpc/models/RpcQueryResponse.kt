@@ -126,4 +126,18 @@ public sealed class RpcQueryResponse {
     @SerialName("block_height")
     public val blockHeight: ULong,
   ) : RpcQueryResponse()
+
+  @Serializable
+  public data class GasKeyNoncesView(
+    @SerialName("nonces")
+    public val nonces: List<ULong>,
+    @SerialName("block_hash")
+    public val blockHash: CryptoHash,
+    /**
+     *  * Minimum: 0.0
+     *  * Format: uint64
+     */
+    @SerialName("block_height")
+    public val blockHeight: ULong,
+  ) : RpcQueryResponse()
 }

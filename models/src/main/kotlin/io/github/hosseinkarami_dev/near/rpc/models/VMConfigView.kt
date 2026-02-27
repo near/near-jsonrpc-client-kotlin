@@ -24,6 +24,11 @@ public data class VMConfigView(
   @SerialName("eth_implicit_accounts")
   public val ethImplicitAccounts: Boolean? = null,
   /**
+   *  * See [VMConfig::eth_implicit_global_contract](crate::vm::Config::eth_implicit_global_contract).
+   */
+  @SerialName("eth_implicit_global_contract")
+  public val ethImplicitGlobalContract: Boolean? = null,
+  /**
    *  * Costs for runtime externals
    */
   @SerialName("ext_costs")
