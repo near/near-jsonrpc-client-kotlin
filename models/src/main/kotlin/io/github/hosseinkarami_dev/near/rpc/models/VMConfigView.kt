@@ -39,6 +39,11 @@ public data class VMConfigView(
   @SerialName("fix_contract_loading_cost")
   public val fixContractLoadingCost: Boolean? = null,
   /**
+   *  * See [VMConfig::gas_key_host_fns](crate::vm::Config::gas_key_host_fns).
+   */
+  @SerialName("gas_key_host_fns")
+  public val gasKeyHostFns: Boolean? = null,
+  /**
    *  * See [VMConfig::global_contract_host_fns](crate::vm::Config::global_contract_host_fns).
    */
   @SerialName("global_contract_host_fns")
