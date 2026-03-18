@@ -26,6 +26,8 @@ public data class SignedTransactionView(
    */
   @SerialName("nonce_index")
   public val nonceIndex: UShort? = null,
+  @SerialName("nonce_mode")
+  public val nonceMode: NonceMode? = null,
   /**
    *  * Deprecated, retained for backward compatibility.
    *  * Minimum: 0.0
