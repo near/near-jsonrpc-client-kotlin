@@ -423,6 +423,15 @@ public data class RpcClientConfigResponse(
   @SerialName("transaction_pool_size_limit")
   public val transactionPoolSizeLimit: ULong? = null,
   /**
+   *  * TTL in blocks for gapped strict-nonce transactions in the pool. Transactions with a
+   * nonce gap whose block_hash is older than this many blocks are evicted during
+   * prepare_transactions.
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   */
+  @SerialName("transaction_pool_strict_nonce_ttl_blocks")
+  public val transactionPoolStrictNonceTtlBlocks: ULong? = null,
+  /**
    *  * Minimum: 0.0
    *  * Format: uint
    */

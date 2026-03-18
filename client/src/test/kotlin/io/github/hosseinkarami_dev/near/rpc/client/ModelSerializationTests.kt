@@ -3112,6 +3112,22 @@ class ModelSerializationTests {
     }
 
     @Test
+    fun testNonceModeEncodeDecode() {
+        val data = loadMockJson("NonceMode.json")
+        assertNotNull(data, "Mock file NonceMode.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.NonceMode.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.NonceMode.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.NonceMode.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for NonceMode: ${e.message}")
+        }
+    }
+
+    @Test
     fun testPeerIdEncodeDecode() {
         val data = loadMockJson("PeerId.json")
         assertNotNull(data, "Mock file PeerId.json does not exist!")
