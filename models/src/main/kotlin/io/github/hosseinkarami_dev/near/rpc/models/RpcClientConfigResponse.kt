@@ -295,6 +295,11 @@ public data class RpcClientConfigResponse(
   @SerialName("save_latest_witnesses")
   public val saveLatestWitnesses: Boolean? = null,
   /**
+   *  * Whether to persist receipt-to-tx origin mappings to disk or not.
+   */
+  @SerialName("save_receipt_to_tx")
+  public val saveReceiptToTx: Boolean? = null,
+  /**
    *  * Whether to persist state changes on disk or not.
    */
   @SerialName("save_state_changes")
