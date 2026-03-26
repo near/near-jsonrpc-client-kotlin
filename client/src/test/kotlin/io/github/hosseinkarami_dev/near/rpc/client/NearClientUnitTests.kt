@@ -296,6 +296,33 @@ class NearClientUnitTests {
     }
 
     @Test
+    fun testExperimentalReceiptToTx() = runTest {
+        val data = loadMockJson("JsonRpcRequestForExperimentalReceiptToTx.json")
+        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalReceiptToTx.json does not exist!")
+
+
+        val mockEngine = MockEngine { req ->
+            when (req.url.fullPath) {
+                else -> respond(data, headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())))
+            }
+        }
+
+        val client = HttpClient(mockEngine) {
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+        }
+
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock")
+
+        try {
+            val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalReceiptToTx.serializer(), data)
+            val response = nearClient.experimentalReceiptToTx(requestObj.params)
+            assertNotNull(response)
+        } catch (e: Exception) {
+            fail("Test for ExperimentalReceiptToTx failed: ${e.message}")
+        }
+    }
+
+    @Test
     fun testExperimentalSplitStorageInfo() = runTest {
         val data = loadMockJson("JsonRpcRequestForExperimentalSplitStorageInfo.json")
         assertNotNull(data, "Mock file JsonRpcRequestForExperimentalSplitStorageInfo.json does not exist!")

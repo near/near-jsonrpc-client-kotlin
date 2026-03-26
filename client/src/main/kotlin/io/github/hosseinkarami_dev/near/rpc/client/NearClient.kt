@@ -21,6 +21,7 @@ import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimental
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalMaintenanceWindows
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalProtocolConfig
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalReceipt
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalReceiptToTx
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalSplitStorageInfo
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalTxStatus
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalValidatorsOrdered
@@ -59,6 +60,7 @@ import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcNetworkI
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcProtocolConfigResponseAndRpcProtocolConfigError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcQueryResponseAndRpcQueryError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcReceiptResponseAndRpcReceiptError
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcReceiptToTxResponseAndRpcReceiptToTxError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcSplitStorageInfoResponseAndRpcSplitStorageInfoError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcStateChangesInBlockByTypeResponseAndRpcStateChangesError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcStateChangesInBlockResponseAndRpcStateChangesError
@@ -109,6 +111,9 @@ import io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcReceiptError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcReceiptRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcReceiptResponse
+import io.github.hosseinkarami_dev.near.rpc.models.RpcReceiptToTxError
+import io.github.hosseinkarami_dev.near.rpc.models.RpcReceiptToTxRequest
+import io.github.hosseinkarami_dev.near.rpc.models.RpcReceiptToTxResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcSendTransactionRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcSplitStorageInfoError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcSplitStorageInfoRequest
@@ -482,6 +487,37 @@ public class NearClient(
         when (decoded) {
             is JsonRpcResponseForRpcReceiptResponseAndRpcReceiptError.Result -> RpcResponse.Success(decoded.result)
             is JsonRpcResponseForRpcReceiptResponseAndRpcReceiptError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
+        }
+    }
+  }
+
+  /**
+   * Resolves a receipt ID back to the originating transaction hash and sender account
+   *
+   * @see path: /EXPERIMENTAL_receipt_to_tx (method: post) — operationId: EXPERIMENTAL_receipt_to_tx
+   *
+   * @param rpcReceiptToTxRequest Request parameters: `io.github.hosseinkarami_dev.near.rpc.models.RpcReceiptToTxRequest` (required).
+   * @return Response: `RpcResponse<RpcReceiptToTxResponse>`.
+   */
+  public suspend fun experimentalReceiptToTx(rpcReceiptToTxRequest: RpcReceiptToTxRequest): RpcResponse<RpcReceiptToTxResponse> {
+    val request = JsonRpcRequestForExperimentalReceiptToTx(
+      id = nextId(),
+      jsonrpc = "2.0",
+      method = JsonRpcRequestForExperimentalReceiptToTx.Method.EXPERIMENTAL_RECEIPT_TO_TX,
+      params = rpcReceiptToTxRequest
+    )
+
+    return callRpc(
+        httpClient,
+        baseUrl,
+        request,
+        JsonRpcRequestForExperimentalReceiptToTx.serializer(),
+        JsonRpcResponseForRpcReceiptToTxResponseAndRpcReceiptToTxError.serializer(),
+        RpcReceiptToTxError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcReceiptToTxResponseAndRpcReceiptToTxError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcReceiptToTxResponseAndRpcReceiptToTxError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
     }
   }
