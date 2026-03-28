@@ -103,4 +103,20 @@ public sealed class PrepareError {
   @Serializable
   @SerialName("TooManyTableElements")
   public data object TooManyTableElements : PrepareError()
+
+  /**
+   *  * A function body in the contract exceeds the size limit.
+   *  * Possible values: FunctionBodyTooLarge
+   */
+  @Serializable
+  @SerialName("FunctionBodyTooLarge")
+  public data object FunctionBodyTooLarge : PrepareError()
+
+  /**
+   *  * The instrumented code exceeds the size limit.
+   *  * Possible values: InstrumentedCodeTooLarge
+   */
+  @Serializable
+  @SerialName("InstrumentedCodeTooLarge")
+  public data object InstrumentedCodeTooLarge : PrepareError()
 }
