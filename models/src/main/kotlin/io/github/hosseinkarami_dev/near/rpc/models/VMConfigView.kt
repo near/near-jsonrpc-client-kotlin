@@ -83,6 +83,11 @@ public data class VMConfigView(
   @SerialName("linear_op_unit_cost")
   public val linearOpUnitCost: ULong? = null,
   /**
+   *  * See [VMConfig::one_yocto_on_promise](crate::vm::Config::one_yocto_on_promise).
+   */
+  @SerialName("one_yocto_on_promise")
+  public val oneYoctoOnPromise: Boolean? = null,
+  /**
    *  * See [VMConfig::reftypes_bulk_memory](crate::vm::Config::reftypes_bulk_memory).
    */
   @SerialName("reftypes_bulk_memory")

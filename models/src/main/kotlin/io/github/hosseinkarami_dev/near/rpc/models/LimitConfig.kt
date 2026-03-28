@@ -56,6 +56,14 @@ public data class LimitConfig(
   @SerialName("max_elements_per_contract_table")
   public val maxElementsPerContractTable: UInt? = null,
   /**
+   *  * If present, stores max byte size of a single function body in a contract
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   *  * Nullable: true
+   */
+  @SerialName("max_function_body_size")
+  public val maxFunctionBodySize: ULong? = null,
+  /**
    *  * If present, stores max number of functions in one contract
    *  * Minimum: 0.0
    *  * Format: uint64
@@ -68,6 +76,16 @@ public data class LimitConfig(
    */
   @SerialName("max_gas_burnt")
   public val maxGasBurnt: NearGas? = null,
+  /**
+   *  * If present, stores max byte size of the wasm code after gas instrumentation.
+   * This prevents Cranelift's 24-bit SSA counter from overflowing on
+   * pathologically large contracts.
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   *  * Nullable: true
+   */
+  @SerialName("max_instrumented_code_size")
+  public val maxInstrumentedCodeSize: ULong? = null,
   /**
    *  * Max length of any method name (without terminating character).
    *  * Minimum: 0.0
