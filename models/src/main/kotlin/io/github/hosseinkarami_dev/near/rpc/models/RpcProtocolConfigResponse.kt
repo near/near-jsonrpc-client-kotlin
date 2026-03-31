@@ -13,11 +13,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 public data class RpcProtocolConfigResponse(
   /**
-   *  * Expected number of hidden validators per shard.
-   */
-  @SerialName("avg_hidden_validator_seats_per_shard")
-  public val avgHiddenValidatorSeatsPerShard: List<ULong>? = null,
-  /**
    *  * Threshold for kicking out block producers, between 0 and 100.
    *  * Minimum: 0.0
    *  * Maximum: 255.0
@@ -143,11 +138,6 @@ public data class RpcProtocolConfigResponse(
    */
   @SerialName("num_block_producer_seats")
   public val numBlockProducerSeats: ULong? = null,
-  /**
-   *  * Defines number of shards and number of block producer seats per each shard at genesis.
-   */
-  @SerialName("num_block_producer_seats_per_shard")
-  public val numBlockProducerSeatsPerShard: List<ULong>? = null,
   /**
    *  * Expected number of blocks per year
    *  * Minimum: 0.0
