@@ -13,11 +13,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 public data class GenesisConfig(
   /**
-   *  * Expected number of hidden validators per shard.
-   */
-  @SerialName("avg_hidden_validator_seats_per_shard")
-  public val avgHiddenValidatorSeatsPerShard: List<ULong>,
-  /**
    *  * Threshold for kicking out block producers, between 0 and 100.
    *  * Minimum: 0.0
    *  * Maximum: 255.0
@@ -150,26 +145,12 @@ public data class GenesisConfig(
   @SerialName("num_block_producer_seats")
   public val numBlockProducerSeats: ULong,
   /**
-   *  * Defines number of shards and number of block producer seats per each shard at genesis.
-   * Note: not used with protocol_feature_chunk_only_producers -- replaced by minimum_validators_per_shard
-   * Note: not used before as all block producers produce chunks for all shards
-   */
-  @SerialName("num_block_producer_seats_per_shard")
-  public val numBlockProducerSeatsPerShard: List<ULong>,
-  /**
    *  * Expected number of blocks per year
    *  * Minimum: 0.0
    *  * Format: uint64
    */
   @SerialName("num_blocks_per_year")
   public val numBlocksPerYear: ULong,
-  /**
-   *  * Deprecated.
-   *  * Minimum: 0.0
-   *  * Format: uint64
-   */
-  @SerialName("num_chunk_only_producer_seats")
-  public val numChunkOnlyProducerSeats: ULong? = 300.toULong(),
   /**
    *  * Number of chunk producers.
    * Don't mess it up with chunk-only producers feature which is deprecated.
