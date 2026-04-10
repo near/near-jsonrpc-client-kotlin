@@ -119,4 +119,20 @@ public sealed class PrepareError {
   @Serializable
   @SerialName("InstrumentedCodeTooLarge")
   public data object InstrumentedCodeTooLarge : PrepareError()
+
+  /**
+   *  * A function contains too many basic blocks.
+   *  * Possible values: TooManyBlocksPerFunction
+   */
+  @Serializable
+  @SerialName("TooManyBlocksPerFunction")
+  public data object TooManyBlocksPerFunction : PrepareError()
+
+  /**
+   *  * A contract contains too many basic blocks.
+   *  * Possible values: TooManyBlocksPerContract
+   */
+  @Serializable
+  @SerialName("TooManyBlocksPerContract")
+  public data object TooManyBlocksPerContract : PrepareError()
 }
