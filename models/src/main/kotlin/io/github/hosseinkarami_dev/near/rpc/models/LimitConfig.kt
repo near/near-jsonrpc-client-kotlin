@@ -41,6 +41,24 @@ public data class LimitConfig(
   @SerialName("max_arguments_length")
   public val maxArgumentsLength: ULong? = null,
   /**
+   *  * If present, stores max total number of basic blocks across all functions in a contract.
+   * This caps total compilation time for a contract.
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   *  * Nullable: true
+   */
+  @SerialName("max_blocks_per_contract")
+  public val maxBlocksPerContract: ULong? = null,
+  /**
+   *  * If present, stores max number of basic blocks (block/loop/if) in a single function.
+   * This caps per-function compilation time in Cranelift.
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   *  * Nullable: true
+   */
+  @SerialName("max_blocks_per_function")
+  public val maxBlocksPerFunction: ULong? = null,
+  /**
    *  * Max contract size
    *  * Minimum: 0.0
    *  * Format: uint64
