@@ -140,6 +140,16 @@ public data class ExtCostsConfigView(
   @SerialName("log_byte")
   public val logByte: NearGas? = null,
   /**
+   *  * Cost of P-256 ECDSA signature verification base
+   */
+  @SerialName("p256_verify_base")
+  public val p256VerifyBase: NearGas? = null,
+  /**
+   *  * Cost of P-256 ECDSA signature verification per byte
+   */
+  @SerialName("p256_verify_byte")
+  public val p256VerifyByte: NearGas? = null,
+  /**
    *  * Cost for calling `promise_and`
    */
   @SerialName("promise_and_base")

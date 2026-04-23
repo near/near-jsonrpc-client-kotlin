@@ -88,6 +88,11 @@ public data class VMConfigView(
   @SerialName("one_yocto_on_promise")
   public val oneYoctoOnPromise: Boolean? = null,
   /**
+   *  * See [VMConfig::p256_verify_host_fn](crate::vm::Config::p256_verify_host_fn).
+   */
+  @SerialName("p256_verify_host_fn")
+  public val p256VerifyHostFn: Boolean? = null,
+  /**
    *  * See [VMConfig::reftypes_bulk_memory](crate::vm::Config::reftypes_bulk_memory).
    */
   @SerialName("reftypes_bulk_memory")
