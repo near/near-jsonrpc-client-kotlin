@@ -511,4 +511,21 @@ public sealed class HostError {
       public val msg: String,
     )
   }
+
+  /**
+   *  * Input length mismatch for p256 signature verification (signature is not 64
+   * bytes or public key is not 33 bytes). Parse failures of otherwise
+   * well-sized inputs return 0 from the host function instead of aborting.
+   */
+  @Serializable
+  public data class P256VerifyInvalidInput(
+    @SerialName("P256VerifyInvalidInput")
+    public val p256VerifyInvalidInput: P256VerifyInvalidInputPayload,
+  ) : HostError() {
+    @Serializable
+    public data class P256VerifyInvalidInputPayload(
+      @SerialName("msg")
+      public val msg: String,
+    )
+  }
 }
