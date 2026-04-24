@@ -71,4 +71,30 @@ public sealed class RpcStateChangesError {
       INTERNAL_ERROR,
     }
   }
+
+  @Serializable
+  public data class ShardNotApplied(
+    @SerialName("info")
+    public val info: InfoPayload,
+    /**
+     *  * Possible values: SHARD_NOT_APPLIED
+     */
+    @SerialName("name")
+    public val name: Name,
+  ) : RpcStateChangesError() {
+    @Serializable
+    public data class InfoPayload(
+      @SerialName("shard_id")
+      public val shardId: ShardId,
+    )
+
+    /**
+     *  * Possible values: SHARD_NOT_APPLIED
+     */
+    @Serializable
+    public enum class Name {
+      @SerialName("SHARD_NOT_APPLIED")
+      SHARD_NOT_APPLIED,
+    }
+  }
 }

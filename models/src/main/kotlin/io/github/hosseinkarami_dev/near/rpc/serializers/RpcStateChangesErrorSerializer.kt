@@ -17,7 +17,8 @@ object RpcStateChangesErrorSerializer : KSerializer<RpcStateChangesError> {
         variants = listOf(
             Variant(serialName = "UNKNOWN_BLOCK", kind = VariantKind.DEFAULT, isInstance = { it is io.github.hosseinkarami_dev.near.rpc.models.RpcStateChangesError.UnknownBlock }, fullSerializer = serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcStateChangesError.UnknownBlock>() as KSerializer<Any?>, fields = listOf("info", "name")),
             Variant(serialName = "NOT_SYNCED_YET", kind = VariantKind.DEFAULT, isInstance = { it is io.github.hosseinkarami_dev.near.rpc.models.RpcStateChangesError.NotSyncedYet }, fullSerializer = serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcStateChangesError.NotSyncedYet>() as KSerializer<Any?>, fields = listOf("name")),
-            Variant(serialName = "INTERNAL_ERROR", kind = VariantKind.DEFAULT, isInstance = { it is io.github.hosseinkarami_dev.near.rpc.models.RpcStateChangesError.InternalError }, fullSerializer = serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcStateChangesError.InternalError>() as KSerializer<Any?>, fields = listOf("info", "name"))
+            Variant(serialName = "INTERNAL_ERROR", kind = VariantKind.DEFAULT, isInstance = { it is io.github.hosseinkarami_dev.near.rpc.models.RpcStateChangesError.InternalError }, fullSerializer = serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcStateChangesError.InternalError>() as KSerializer<Any?>, fields = listOf("info", "name")),
+            Variant(serialName = "SHARD_NOT_APPLIED", kind = VariantKind.DEFAULT, isInstance = { it is io.github.hosseinkarami_dev.near.rpc.models.RpcStateChangesError.ShardNotApplied }, fullSerializer = serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcStateChangesError.ShardNotApplied>() as KSerializer<Any?>, fields = listOf("info", "name"))
         )
     )
 
