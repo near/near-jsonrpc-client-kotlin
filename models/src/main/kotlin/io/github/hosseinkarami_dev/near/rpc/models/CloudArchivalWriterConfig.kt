@@ -1,6 +1,7 @@
 package io.github.hosseinkarami_dev.near.rpc.models
 
 import kotlin.Boolean
+import kotlin.ULong
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -22,4 +23,12 @@ public data class CloudArchivalWriterConfig(
   @SerialName("polling_interval")
   public val pollingInterval:
       DurationAsStdSchemaProvider? = DurationAsStdSchemaProvider(nanos = 0.toInt(), secs = 1L),
+  /**
+   *  * Cadence of state snapshots, in epochs. Higher values reduce bucket cost at
+   * the expense of potentially longer delta replay during reader bootstrap.
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   */
+  @SerialName("snapshot_every_n_epochs")
+  public val snapshotEveryNEpochs: ULong? = 10.toULong(),
 )
