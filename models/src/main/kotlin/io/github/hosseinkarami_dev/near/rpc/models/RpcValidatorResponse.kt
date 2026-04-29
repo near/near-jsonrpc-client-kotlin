@@ -1,7 +1,9 @@
 package io.github.hosseinkarami_dev.near.rpc.models
 
+import kotlin.String
 import kotlin.ULong
 import kotlin.collections.List
+import kotlin.collections.Map
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -54,4 +56,12 @@ public data class RpcValidatorResponse(
    */
   @SerialName("prev_epoch_kickout")
   public val prevEpochKickout: List<ValidatorKickoutView>,
+  /**
+   *  * Per-validator rewards paid out at the start of the previous epoch.
+   * For epoch E, this contains the rewards earned in epoch E-2 that were
+   * added to validator and treasury balances at the first block of epoch
+   * E-1 (via `ValidatorAccountsUpdate`).
+   */
+  @SerialName("validator_reward_paid_prev_epoch")
+  public val validatorRewardPaidPrevEpoch: Map<String, NearToken>? = mapOf(),
 )
