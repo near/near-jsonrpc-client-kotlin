@@ -372,4 +372,30 @@ public sealed class ActionsValidationError {
   @Serializable
   @SerialName("GasKeyFunctionCallAllowanceNotAllowed")
   public data object GasKeyFunctionCallAllowanceNotAllowed : ActionsValidationError()
+
+  /**
+   *  * The combined number of `DeployContract` and `DeployGlobalContract`
+   * actions in one receipt exceeded the limit.
+   */
+  @Serializable
+  public data class TotalNumberOfDeployActionsExceeded(
+    @SerialName("TotalNumberOfDeployActionsExceeded")
+    public val totalNumberOfDeployActionsExceeded: TotalNumberOfDeployActionsExceededPayload,
+  ) : ActionsValidationError() {
+    @Serializable
+    public data class TotalNumberOfDeployActionsExceededPayload(
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("limit")
+      public val limit: ULong,
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("number_of_deploy_actions")
+      public val numberOfDeployActions: ULong,
+    )
+  }
 }
