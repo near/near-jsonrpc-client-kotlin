@@ -66,6 +66,14 @@ public data class LimitConfig(
   @SerialName("max_contract_size")
   public val maxContractSize: ULong? = null,
   /**
+   *  * Max number of `DeployContract` and `DeployGlobalContract` actions
+   * combined within a single receipt.
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   */
+  @SerialName("max_deploy_actions_per_receipt")
+  public val maxDeployActionsPerReceipt: ULong? = null,
+  /**
    *  * If present, stores max number of elements in a single contract's table
    *  * Minimum: 0.0
    *  * Format: uint
