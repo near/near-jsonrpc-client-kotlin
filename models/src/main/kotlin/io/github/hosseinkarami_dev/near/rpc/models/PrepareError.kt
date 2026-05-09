@@ -135,4 +135,12 @@ public sealed class PrepareError {
   @Serializable
   @SerialName("TooManyBlocksPerContract")
   public data object TooManyBlocksPerContract : PrepareError()
+
+  /**
+   *  * Contract declares too many entries in the wasm type section.
+   *  * Possible values: TooManyTypes
+   */
+  @Serializable
+  @SerialName("TooManyTypes")
+  public data object TooManyTypes : PrepareError()
 }
