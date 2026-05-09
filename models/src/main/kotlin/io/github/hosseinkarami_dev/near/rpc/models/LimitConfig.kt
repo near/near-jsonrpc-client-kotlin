@@ -247,6 +247,15 @@ public data class LimitConfig(
   @SerialName("max_transaction_size")
   public val maxTransactionSize: ULong? = null,
   /**
+   *  * If present, stores max number of entries in the wasm type section that
+   * a contract may declare.
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   *  * Nullable: true
+   */
+  @SerialName("max_types_per_contract")
+  public val maxTypesPerContract: ULong? = null,
+  /**
    *  * Maximum number of bytes for payload passed over a yield resume.
    *  * Minimum: 0.0
    *  * Format: uint64
