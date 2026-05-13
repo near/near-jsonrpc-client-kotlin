@@ -189,6 +189,20 @@ public data class LimitConfig(
   @SerialName("max_number_registers")
   public val maxNumberRegisters: ULong? = null,
   /**
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   *  * Nullable: true
+   */
+  @SerialName("max_params_per_contract")
+  public val maxParamsPerContract: ULong? = null,
+  /**
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   *  * Nullable: true
+   */
+  @SerialName("max_params_per_function")
+  public val maxParamsPerFunction: ULong? = null,
+  /**
    *  * Max number of promises that a function call can create
    *  * Minimum: 0.0
    *  * Format: uint64

@@ -143,4 +143,20 @@ public sealed class PrepareError {
   @Serializable
   @SerialName("TooManyTypes")
   public data object TooManyTypes : PrepareError()
+
+  /**
+   *  * All contract functions combined have more than `max_params_per_contract` parameters.
+   *  * Possible values: TooManyParamsPerFunction
+   */
+  @Serializable
+  @SerialName("TooManyParamsPerFunction")
+  public data object TooManyParamsPerFunction : PrepareError()
+
+  /**
+   *  * A function has more than `max_params_per_function` parameters.
+   *  * Possible values: TooManyParamsPerContract
+   */
+  @Serializable
+  @SerialName("TooManyParamsPerContract")
+  public data object TooManyParamsPerContract : PrepareError()
 }
