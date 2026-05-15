@@ -159,4 +159,13 @@ public sealed class PrepareError {
   @Serializable
   @SerialName("TooManyParamsPerContract")
   public data object TooManyParamsPerContract : PrepareError()
+
+  /**
+   *  * A function's max operand-stack size (in bytes) exceeds
+   * `max_operand_stack_bytes_per_function`.
+   *  * Possible values: OperandStackTooLarge
+   */
+  @Serializable
+  @SerialName("OperandStackTooLarge")
+  public data object OperandStackTooLarge : PrepareError()
 }

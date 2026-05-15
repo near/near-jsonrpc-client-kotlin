@@ -189,6 +189,16 @@ public data class LimitConfig(
   @SerialName("max_number_registers")
   public val maxNumberRegisters: ULong? = null,
   /**
+   *  * If present, stores the max operand stack size (in bytes) at any point
+   * during the execution of a single function. Per-function: not summed
+   * across recursion. Computed by `finite_wasm::max_stack`.
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   *  * Nullable: true
+   */
+  @SerialName("max_operand_stack_bytes_per_function")
+  public val maxOperandStackBytesPerFunction: ULong? = null,
+  /**
    *  * Minimum: 0.0
    *  * Format: uint64
    *  * Nullable: true
