@@ -9,11 +9,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 public data class VMConfigView(
   /**
-   *  * See [VMConfig::deterministic_account_ids](crate::vm::Config::deterministic_account_ids).
-   */
-  @SerialName("deterministic_account_ids")
-  public val deterministicAccountIds: Boolean? = null,
-  /**
    *  * See [VMConfig::discard_custom_sections](crate::vm::Config::discard_custom_sections).
    */
   @SerialName("discard_custom_sections")
