@@ -2,6 +2,7 @@ package io.github.hosseinkarami_dev.near.rpc.models
 
 import io.github.hosseinkarami_dev.near.rpc.serializers.RpcViewStateRequestSerializer
 import kotlin.Boolean
+import kotlin.UInt
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -13,8 +14,17 @@ public sealed class RpcViewStateRequest {
     public val blockId: io.github.hosseinkarami_dev.near.rpc.models.BlockId,
     @SerialName("account_id")
     public val accountId: AccountId,
+    @SerialName("after_key_base64")
+    public val afterKeyBase64: StoreKey? = null,
     @SerialName("include_proof")
     public val includeProof: Boolean? = false,
+    /**
+     *  * Minimum: 1.0
+     *  * Format: uint32
+     *  * Nullable: true
+     */
+    @SerialName("limit")
+    public val limit: UInt? = null,
     @SerialName("prefix_base64")
     public val prefixBase64: StoreKey,
   ) : RpcViewStateRequest()
@@ -25,8 +35,17 @@ public sealed class RpcViewStateRequest {
     public val finality: io.github.hosseinkarami_dev.near.rpc.models.Finality,
     @SerialName("account_id")
     public val accountId: AccountId,
+    @SerialName("after_key_base64")
+    public val afterKeyBase64: StoreKey? = null,
     @SerialName("include_proof")
     public val includeProof: Boolean? = false,
+    /**
+     *  * Minimum: 1.0
+     *  * Format: uint32
+     *  * Nullable: true
+     */
+    @SerialName("limit")
+    public val limit: UInt? = null,
     @SerialName("prefix_base64")
     public val prefixBase64: StoreKey,
   ) : RpcViewStateRequest()
@@ -37,8 +56,17 @@ public sealed class RpcViewStateRequest {
     public val syncCheckpoint: io.github.hosseinkarami_dev.near.rpc.models.SyncCheckpoint,
     @SerialName("account_id")
     public val accountId: AccountId,
+    @SerialName("after_key_base64")
+    public val afterKeyBase64: StoreKey? = null,
     @SerialName("include_proof")
     public val includeProof: Boolean? = false,
+    /**
+     *  * Minimum: 1.0
+     *  * Format: uint32
+     *  * Nullable: true
+     */
+    @SerialName("limit")
+    public val limit: UInt? = null,
     @SerialName("prefix_base64")
     public val prefixBase64: StoreKey,
   ) : RpcViewStateRequest()

@@ -3,6 +3,7 @@ package io.github.hosseinkarami_dev.near.rpc.models
 import io.github.hosseinkarami_dev.near.rpc.serializers.RpcQueryRequestSerializer
 import kotlin.Boolean
 import kotlin.String
+import kotlin.UInt
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -58,8 +59,17 @@ public sealed class RpcQueryRequest {
     public val blockId: BlockId,
     @SerialName("account_id")
     public val accountId: AccountId,
+    @SerialName("after_key_base64")
+    public val afterKeyBase64: StoreKey? = null,
     @SerialName("include_proof")
     public val includeProof: Boolean? = null,
+    /**
+     *  * Minimum: 1.0
+     *  * Format: uint32
+     *  * Nullable: true
+     */
+    @SerialName("limit")
+    public val limit: UInt? = null,
     @SerialName("prefix_base64")
     public val prefixBase64: StoreKey,
     /**
@@ -268,8 +278,17 @@ public sealed class RpcQueryRequest {
     public val finality: Finality,
     @SerialName("account_id")
     public val accountId: AccountId,
+    @SerialName("after_key_base64")
+    public val afterKeyBase64: StoreKey? = null,
     @SerialName("include_proof")
     public val includeProof: Boolean? = null,
+    /**
+     *  * Minimum: 1.0
+     *  * Format: uint32
+     *  * Nullable: true
+     */
+    @SerialName("limit")
+    public val limit: UInt? = null,
     @SerialName("prefix_base64")
     public val prefixBase64: StoreKey,
     /**
@@ -478,8 +497,17 @@ public sealed class RpcQueryRequest {
     public val syncCheckpoint: SyncCheckpoint,
     @SerialName("account_id")
     public val accountId: AccountId,
+    @SerialName("after_key_base64")
+    public val afterKeyBase64: StoreKey? = null,
     @SerialName("include_proof")
     public val includeProof: Boolean? = null,
+    /**
+     *  * Minimum: 1.0
+     *  * Format: uint32
+     *  * Nullable: true
+     */
+    @SerialName("limit")
+    public val limit: UInt? = null,
     @SerialName("prefix_base64")
     public val prefixBase64: StoreKey,
     /**
