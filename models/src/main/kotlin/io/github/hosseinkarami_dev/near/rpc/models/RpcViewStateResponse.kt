@@ -19,6 +19,8 @@ public data class RpcViewStateResponse(
    */
   @SerialName("block_height")
   public val blockHeight: ULong,
+  @SerialName("last_key")
+  public val lastKey: StoreKey? = null,
   @SerialName("proof")
   public val proof: List<String>? = null,
   @SerialName("values")

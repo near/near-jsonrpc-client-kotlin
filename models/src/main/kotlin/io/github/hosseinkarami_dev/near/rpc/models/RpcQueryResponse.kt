@@ -63,6 +63,8 @@ public sealed class RpcQueryResponse {
 
   @Serializable
   public data class ViewStateResult(
+    @SerialName("last_key")
+    public val lastKey: StoreKey? = null,
     @SerialName("proof")
     public val proof: List<String>? = null,
     @SerialName("values")

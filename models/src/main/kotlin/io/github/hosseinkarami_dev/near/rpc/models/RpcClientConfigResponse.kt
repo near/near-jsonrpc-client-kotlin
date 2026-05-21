@@ -1,7 +1,6 @@
 package io.github.hosseinkarami_dev.near.rpc.models
 
 import kotlin.Boolean
-import kotlin.Int
 import kotlin.String
 import kotlin.UInt
 import kotlin.ULong
@@ -28,11 +27,9 @@ public data class RpcClientConfigResponse(
   public val blockHeaderFetchHorizon: ULong? = null,
   /**
    *  * Duration to check for producing / skipping block.
-   *  * Min Items: 2
-   *  * Max Items: 2
    */
   @SerialName("block_production_tracking_delay")
-  public val blockProductionTrackingDelay: List<ULong>? = null,
+  public val blockProductionTrackingDelay: MutableConfigValue? = null,
   /**
    *  * Time between check to perform catchup.
    *  * Min Items: 2
@@ -69,11 +66,9 @@ public data class RpcClientConfigResponse(
   public val chunkValidationThreads: UInt? = null,
   /**
    *  * Multiplier for the wait time for all chunks to be received.
-   *  * Min Items: 2
-   *  * Max Items: 2
    */
   @SerialName("chunk_wait_mult")
-  public val chunkWaitMult: List<Int>? = null,
+  public val chunkWaitMult: MutableConfigValue? = null,
   /**
    *  * Height horizon for the chunk cache. A chunk is removed from the cache
    * if its height + chunks_cache_height_horizon < largest_seen_height.
@@ -124,11 +119,9 @@ public data class RpcClientConfigResponse(
   public val disableTxRouting: Boolean? = null,
   /**
    *  * Time between running doomslug timer.
-   *  * Min Items: 2
-   *  * Max Items: 2
    */
   @SerialName("doomslug_step_period")
-  public val doomslugStepPeriod: List<ULong>? = null,
+  public val doomslugStepPeriod: MutableConfigValue? = null,
   /**
    *  * If true, transactions for the next chunk will be prepared early, right after the previous chunk's
    * post-state is ready. This can help produce chunks faster, for high-throughput chains.
@@ -208,18 +201,14 @@ public data class RpcClientConfigResponse(
   public val logSummaryStyle: LogSummaryStyle? = null,
   /**
    *  * Maximum wait for approvals before producing block.
-   *  * Min Items: 2
-   *  * Max Items: 2
    */
   @SerialName("max_block_production_delay")
-  public val maxBlockProductionDelay: List<ULong>? = null,
+  public val maxBlockProductionDelay: MutableConfigValue? = null,
   /**
    *  * Maximum duration before skipping given height.
-   *  * Min Items: 2
-   *  * Max Items: 2
    */
   @SerialName("max_block_wait_delay")
-  public val maxBlockWaitDelay: List<ULong>? = null,
+  public val maxBlockWaitDelay: MutableConfigValue? = null,
   /**
    *  * Max burnt gas per view method.  If present, overrides value stored in
    * genesis file.  The value only affects the RPCs without influencing the
@@ -229,11 +218,9 @@ public data class RpcClientConfigResponse(
   public val maxGasBurntView: NearGas? = null,
   /**
    *  * Minimum duration before producing block.
-   *  * Min Items: 2
-   *  * Max Items: 2
    */
   @SerialName("min_block_production_delay")
-  public val minBlockProductionDelay: List<ULong>? = null,
+  public val minBlockProductionDelay: MutableConfigValue? = null,
   /**
    *  * Minimum number of peers to start syncing.
    *  * Minimum: 0.0
@@ -487,10 +474,6 @@ public data class RpcClientConfigResponse(
   public val viewClientThreads: UInt? = null,
 ) {
   init {
-    require((blockProductionTrackingDelay?.size ?: 0) >= 2) { "RpcClientConfigResponse.blockProductionTrackingDelay must contain at least 2 items (minItems = 2)" }}
-  init {
-    require((blockProductionTrackingDelay?.size ?: 0) <= 2) { "RpcClientConfigResponse.blockProductionTrackingDelay must contain no more than 2 items (maxItems = 2)" }}
-  init {
     require((catchupStepPeriod?.size ?: 0) >= 2) { "RpcClientConfigResponse.catchupStepPeriod must contain at least 2 items (minItems = 2)" }}
   init {
     require((catchupStepPeriod?.size ?: 0) <= 2) { "RpcClientConfigResponse.catchupStepPeriod must contain no more than 2 items (maxItems = 2)" }}
@@ -498,14 +481,6 @@ public data class RpcClientConfigResponse(
     require((chunkRequestRetryPeriod?.size ?: 0) >= 2) { "RpcClientConfigResponse.chunkRequestRetryPeriod must contain at least 2 items (minItems = 2)" }}
   init {
     require((chunkRequestRetryPeriod?.size ?: 0) <= 2) { "RpcClientConfigResponse.chunkRequestRetryPeriod must contain no more than 2 items (maxItems = 2)" }}
-  init {
-    require((chunkWaitMult?.size ?: 0) >= 2) { "RpcClientConfigResponse.chunkWaitMult must contain at least 2 items (minItems = 2)" }}
-  init {
-    require((chunkWaitMult?.size ?: 0) <= 2) { "RpcClientConfigResponse.chunkWaitMult must contain no more than 2 items (maxItems = 2)" }}
-  init {
-    require((doomslugStepPeriod?.size ?: 0) >= 2) { "RpcClientConfigResponse.doomslugStepPeriod must contain at least 2 items (minItems = 2)" }}
-  init {
-    require((doomslugStepPeriod?.size ?: 0) <= 2) { "RpcClientConfigResponse.doomslugStepPeriod must contain no more than 2 items (maxItems = 2)" }}
   init {
     require((headerSyncInitialTimeout?.size ?: 0) >= 2) { "RpcClientConfigResponse.headerSyncInitialTimeout must contain at least 2 items (minItems = 2)" }}
   init {
@@ -522,18 +497,6 @@ public data class RpcClientConfigResponse(
     require((logSummaryPeriod?.size ?: 0) >= 2) { "RpcClientConfigResponse.logSummaryPeriod must contain at least 2 items (minItems = 2)" }}
   init {
     require((logSummaryPeriod?.size ?: 0) <= 2) { "RpcClientConfigResponse.logSummaryPeriod must contain no more than 2 items (maxItems = 2)" }}
-  init {
-    require((maxBlockProductionDelay?.size ?: 0) >= 2) { "RpcClientConfigResponse.maxBlockProductionDelay must contain at least 2 items (minItems = 2)" }}
-  init {
-    require((maxBlockProductionDelay?.size ?: 0) <= 2) { "RpcClientConfigResponse.maxBlockProductionDelay must contain no more than 2 items (maxItems = 2)" }}
-  init {
-    require((maxBlockWaitDelay?.size ?: 0) >= 2) { "RpcClientConfigResponse.maxBlockWaitDelay must contain at least 2 items (minItems = 2)" }}
-  init {
-    require((maxBlockWaitDelay?.size ?: 0) <= 2) { "RpcClientConfigResponse.maxBlockWaitDelay must contain no more than 2 items (maxItems = 2)" }}
-  init {
-    require((minBlockProductionDelay?.size ?: 0) >= 2) { "RpcClientConfigResponse.minBlockProductionDelay must contain at least 2 items (minItems = 2)" }}
-  init {
-    require((minBlockProductionDelay?.size ?: 0) <= 2) { "RpcClientConfigResponse.minBlockProductionDelay must contain no more than 2 items (maxItems = 2)" }}
   init {
     require((stateRequestThrottlePeriod?.size ?: 0) >= 2) { "RpcClientConfigResponse.stateRequestThrottlePeriod must contain at least 2 items (minItems = 2)" }}
   init {
