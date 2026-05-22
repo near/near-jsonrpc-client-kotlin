@@ -106,6 +106,8 @@ public data class BlockHeaderView(
    */
   @SerialName("prev_height")
   public val prevHeight: ULong? = null,
+  @SerialName("prev_last_certified_block_epoch_id")
+  public val prevLastCertifiedBlockEpochId: EpochId? = null,
   @SerialName("prev_state_root")
   public val prevStateRoot: CryptoHash,
   @SerialName("random_value")

@@ -2936,6 +2936,22 @@ class ModelSerializationTests {
     }
 
     @Test
+    fun testKeyHandleEncodeDecode() {
+        val data = loadMockJson("KeyHandle.json")
+        assertNotNull(data, "Mock file KeyHandle.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.KeyHandle.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.KeyHandle.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.KeyHandle.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for KeyHandle: ${e.message}")
+        }
+    }
+
+    @Test
     fun testKnownProducerViewEncodeDecode() {
         val data = loadMockJson("KnownProducerView.json")
         assertNotNull(data, "Mock file KnownProducerView.json does not exist!")
