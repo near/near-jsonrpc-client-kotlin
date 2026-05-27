@@ -113,7 +113,7 @@ public sealed class StateChangeWithCauseView {
       @SerialName("account_id")
       public val accountId: AccountId,
       @SerialName("public_key")
-      public val publicKey: KeyHandle,
+      public val publicKey: PublicKeyHandle,
     )
 
     /**
@@ -143,7 +143,7 @@ public sealed class StateChangeWithCauseView {
       @SerialName("account_id")
       public val accountId: AccountId,
       @SerialName("public_key")
-      public val publicKey: KeyHandle,
+      public val publicKey: PublicKeyHandle,
     )
 
     /**
@@ -186,7 +186,7 @@ public sealed class StateChangeWithCauseView {
       @SerialName("nonce")
       public val nonce: ULong,
       @SerialName("public_key")
-      public val publicKey: KeyHandle,
+      public val publicKey: PublicKeyHandle,
     )
 
     /**
