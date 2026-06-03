@@ -109,4 +109,9 @@ public data class VMConfigView(
    */
   @SerialName("vm_kind")
   public val vmKind: VMKind? = null,
+  /**
+   *  * See [VMConfig::yield_with_id_host_fns](crate::vm::Config::yield_with_id_host_fns).
+   */
+  @SerialName("yield_with_id_host_fns")
+  public val yieldWithIdHostFns: Boolean? = null,
 )

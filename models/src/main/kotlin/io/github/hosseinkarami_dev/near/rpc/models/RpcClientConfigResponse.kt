@@ -273,6 +273,47 @@ public data class RpcClientConfigResponse(
    */
   @SerialName("protocol_version_check")
   public val protocolVersionCheck: ProtocolVersionCheckConfig? = null,
+  /**
+   *  * Max `±window` accepted on `EXPERIMENTAL_receipt_to_tx` requests.
+   * Caps caller's `window`. Applies to pre-first-scan `CenterOut`
+   * against caller's literal hint; ancestor scans use
+   * `receipt_to_tx_max_hop_distance` instead. Operators raising this
+   * should also raise `receipt_to_tx_max_hop_distance` so backward reach
+   * matches caller's wider hint scope. Requests with `window` over this
+   * rejected with `WindowTooLarge`.
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   */
+  @SerialName("receipt_to_tx_max_hint_window")
+  public val receiptToTxMaxHintWindow: ULong? = null,
+  /**
+   *  * Max block-distance ancestor scan walks per hop once any scan in
+   * walk refreshed `current_height`. Subsequent column-miss scans visit
+   * `h, h-1, ..., h-max_hop_distance` from most-recent scan-refreshed
+   * anchor, regardless of column hits between. Anchor included —
+   * same-shard local receipts execute in same block as producing
+   * outcome. Raise if cold archival traffic shows ancestor misses —
+   * gap = scan-refreshed anchor to producer-outcome height of receipt
+   * with missing column row (column hits don't reset anchor). Default
+   * 20 (matches `receipt_to_tx_max_hint_window`).
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   */
+  @SerialName("receipt_to_tx_max_hop_distance")
+  public val receiptToTxMaxHopDistance: ULong? = null,
+  /**
+   *  * Per-request ceiling on outcome rows the `EXPERIMENTAL_receipt_to_tx`
+   * hint-fallback scanner reads across hops + shards. Caps cold-RocksDB
+   * worst case on unauthenticated public endpoint. Default 20_000.
+   * Operators serving cold archival traffic with deep walks or sparse
+   * outcomes may raise; benchmark first (see TODO in
+   * `view_client_actor.rs`). Mid-scan exhaustion fails with
+   * `BudgetExceeded { scanned, limit }`.
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   */
+  @SerialName("receipt_to_tx_max_outcomes_per_request")
+  public val receiptToTxMaxOutcomesPerRequest: ULong? = null,
   @SerialName("resharding_config")
   public val reshardingConfig: MutableConfigValue? = null,
   /**
