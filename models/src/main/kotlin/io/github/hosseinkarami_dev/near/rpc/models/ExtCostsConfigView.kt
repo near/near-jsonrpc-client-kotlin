@@ -385,6 +385,12 @@ public data class ExtCostsConfigView(
   @SerialName("yield_create_byte")
   public val yieldCreateByte: NearGas? = null,
   /**
+   *  * Base cost for creating a yield promise with a user-provided yield ID
+   * (covers the additional trie writes for the yield_id<->data_id mapping).
+   */
+  @SerialName("yield_create_with_id_base")
+  public val yieldCreateWithIdBase: NearGas? = null,
+  /**
    *  * Base cost for resuming a yield receipt.
    */
   @SerialName("yield_resume_base")
