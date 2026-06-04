@@ -9,6 +9,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 public data class VMConfigView(
   /**
+   *  * See [VMConfig::chain_id_host_fn](crate::vm::Config::chain_id_host_fn).
+   */
+  @SerialName("chain_id_host_fn")
+  public val chainIdHostFn: Boolean? = null,
+  /**
    *  * See [VMConfig::discard_custom_sections](crate::vm::Config::discard_custom_sections).
    */
   @SerialName("discard_custom_sections")
