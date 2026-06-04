@@ -92,27 +92,6 @@ public data class RpcClientConfigResponse(
   @SerialName("cloud_archival_writer")
   public val cloudArchivalWriter: CloudArchivalWriterConfig? = null,
   /**
-   *  * Max warming submissions allowed in the pool's queue. Submissions
-   * over the cap bump `near_contract_cache_warming_dropped_total`. `0`
-   * disables warming (same as setting
-   * `contract_cache_warming_pool_thread_count` to 0).
-   *  * Minimum: 0.0
-   *  * Format: uint
-   */
-  @SerialName("contract_cache_warming_max_item_count")
-  public val contractCacheWarmingMaxItemCount: UInt? = null,
-  /**
-   *  * Number of worker threads in the contract cache-warming pool. The
-   * pool runs at the lowest realtime priority of any near pool, so the
-   * threads yield to chunk application and witness work. Setting this
-   * to 0 disables warming (the pool is never instantiated). See
-   * [`contract_cache_warming_max_item_count`] for the other disable knob.
-   *  * Minimum: 0.0
-   *  * Format: uint
-   */
-  @SerialName("contract_cache_warming_pool_thread_count")
-  public val contractCacheWarmingPoolThreadCount: UInt? = null,
-  /**
    *  * If true, the node won't forward transactions to next the chunk producers.
    */
   @SerialName("disable_tx_routing")
