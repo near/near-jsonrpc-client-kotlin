@@ -9,6 +9,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 public data class VMConfigView(
   /**
+   *  * See [VMConfig::bls12381_not_in_group_fix](crate::vm::Config::bls12381_not_in_group_fix).
+   */
+  @SerialName("bls12381_not_in_group_fix")
+  public val bls12381NotInGroupFix: Boolean? = null,
+  /**
    *  * See [VMConfig::chain_id_host_fn](crate::vm::Config::chain_id_host_fn).
    */
   @SerialName("chain_id_host_fn")
