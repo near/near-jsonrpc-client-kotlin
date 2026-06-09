@@ -37,6 +37,12 @@ public data class RuntimeFeesConfigView(
   @SerialName("data_receipt_creation_config")
   public val dataReceiptCreationConfig: DataReceiptCreationConfigView? = null,
   /**
+   *  * Describes the extra cost of verifying an ML-DSA-65 signature above the
+   * cost of verifying the standard signature types.
+   */
+  @SerialName("ml_dsa_65_verification_cost")
+  public val mlDsa65VerificationCost: NearGas? = null,
+  /**
    *  * Pessimistic gas price inflation ratio.
    *  * Min Items: 2
    *  * Max Items: 2
