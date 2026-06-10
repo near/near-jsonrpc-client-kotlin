@@ -4856,6 +4856,22 @@ class ModelSerializationTests {
     }
 
     @Test
+    fun testSpiceChunkEndorsementStatsEncodeDecode() {
+        val data = loadMockJson("SpiceChunkEndorsementStats.json")
+        assertNotNull(data, "Mock file SpiceChunkEndorsementStats.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.SpiceChunkEndorsementStats.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.SpiceChunkEndorsementStats.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.SpiceChunkEndorsementStats.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for SpiceChunkEndorsementStats: ${e.message}")
+        }
+    }
+
+    @Test
     fun testStakeActionEncodeDecode() {
         val data = loadMockJson("StakeAction.json")
         assertNotNull(data, "Mock file StakeAction.json does not exist!")
