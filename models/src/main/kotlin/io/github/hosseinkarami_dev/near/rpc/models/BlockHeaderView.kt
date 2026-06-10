@@ -130,6 +130,11 @@ public data class BlockHeaderView(
   @SerialName("signature")
   public val signature: Signature,
   /**
+   *  * Nullable: true
+   */
+  @SerialName("spice_chunk_endorsement_stats")
+  public val spiceChunkEndorsementStats: List<SpiceChunkEndorsementStats>? = null,
+  /**
    *  * Legacy json number. Should not be used.
    *  * Minimum: 0.0
    *  * Format: uint64
