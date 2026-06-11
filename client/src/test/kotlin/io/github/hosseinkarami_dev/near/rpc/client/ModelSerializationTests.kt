@@ -136,6 +136,22 @@ class ModelSerializationTests {
     }
 
     @Test
+    fun testAccountContractViewEncodeDecode() {
+        val data = loadMockJson("AccountContractView.json")
+        assertNotNull(data, "Mock file AccountContractView.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.AccountContractView.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.AccountContractView.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.AccountContractView.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for AccountContractView: ${e.message}")
+        }
+    }
+
+    @Test
     fun testAccountCreationConfigViewEncodeDecode() {
         val data = loadMockJson("AccountCreationConfigView.json")
         assertNotNull(data, "Mock file AccountCreationConfigView.json does not exist!")
