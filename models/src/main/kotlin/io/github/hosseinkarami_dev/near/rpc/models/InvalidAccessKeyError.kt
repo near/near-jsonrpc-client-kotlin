@@ -92,4 +92,13 @@ public sealed class InvalidAccessKeyError {
   @Serializable
   @SerialName("DepositWithFunctionCall")
   public data object DepositWithFunctionCall : InvalidAccessKeyError()
+
+  /**
+   *  * Gas keys track nonces per index in dedicated storage, which the delegate
+   * action path does not support, so a gas key can't sign a delegate action.
+   *  * Possible values: DelegateActionRequiresNonGasKey
+   */
+  @Serializable
+  @SerialName("DelegateActionRequiresNonGasKey")
+  public data object DelegateActionRequiresNonGasKey : InvalidAccessKeyError()
 }
