@@ -792,6 +792,22 @@ class ModelSerializationTests {
     }
 
     @Test
+    fun testDelegateActionV2EncodeDecode() {
+        val data = loadMockJson("DelegateActionV2.json")
+        assertNotNull(data, "Mock file DelegateActionV2.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.DelegateActionV2.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.DelegateActionV2.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.DelegateActionV2.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for DelegateActionV2: ${e.message}")
+        }
+    }
+
+    @Test
     fun testDeleteAccountActionEncodeDecode() {
         val data = loadMockJson("DeleteAccountAction.json")
         assertNotNull(data, "Mock file DeleteAccountAction.json does not exist!")
@@ -5160,6 +5176,22 @@ class ModelSerializationTests {
     }
 
     @Test
+    fun testTransactionNonceEncodeDecode() {
+        val data = loadMockJson("TransactionNonce.json")
+        assertNotNull(data, "Mock file TransactionNonce.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.TransactionNonce.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.TransactionNonce.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.TransactionNonce.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for TransactionNonce: ${e.message}")
+        }
+    }
+
+    @Test
     fun testTransferActionEncodeDecode() {
         val data = loadMockJson("TransferAction.json")
         assertNotNull(data, "Mock file TransferAction.json does not exist!")
@@ -5380,6 +5412,38 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for Version: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testVersionedDelegateActionPayloadEncodeDecode() {
+        val data = loadMockJson("VersionedDelegateActionPayload.json")
+        assertNotNull(data, "Mock file VersionedDelegateActionPayload.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.VersionedDelegateActionPayload.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.VersionedDelegateActionPayload.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.VersionedDelegateActionPayload.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for VersionedDelegateActionPayload: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testVersionedSignedDelegateActionEncodeDecode() {
+        val data = loadMockJson("VersionedSignedDelegateAction.json")
+        assertNotNull(data, "Mock file VersionedSignedDelegateAction.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.VersionedSignedDelegateAction.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.VersionedSignedDelegateAction.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.VersionedSignedDelegateAction.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for VersionedSignedDelegateAction: ${e.message}")
         }
     }
 
