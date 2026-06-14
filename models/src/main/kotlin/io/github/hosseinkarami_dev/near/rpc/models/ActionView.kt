@@ -127,6 +127,20 @@ public sealed class ActionView {
   }
 
   @Serializable
+  public data class DelegateV2(
+    @SerialName("DelegateV2")
+    public val delegateV2: DelegateV2Payload,
+  ) : ActionView() {
+    @Serializable
+    public data class DelegateV2Payload(
+      @SerialName("delegate_action")
+      public val delegateAction: VersionedDelegateActionPayload,
+      @SerialName("signature")
+      public val signature: Signature,
+    )
+  }
+
+  @Serializable
   public data class DeployGlobalContract(
     @SerialName("DeployGlobalContract")
     public val deployGlobalContract: DeployGlobalContractPayload,
