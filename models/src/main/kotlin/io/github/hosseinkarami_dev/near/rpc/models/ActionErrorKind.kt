@@ -2,6 +2,7 @@ package io.github.hosseinkarami_dev.near.rpc.models
 
 import io.github.hosseinkarami_dev.near.rpc.serializers.ActionErrorKindSerializer
 import kotlin.ULong
+import kotlin.UShort
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -431,6 +432,33 @@ public sealed class ActionErrorKind {
        */
       @SerialName("public_key")
       public val publicKey: PublicKey? = null,
+    )
+  }
+
+  /**
+   *  * DelegateAction nonce index is outside the gas key's nonce range
+   */
+  @Serializable
+  public data class DelegateActionInvalidNonceIndex(
+    @SerialName("DelegateActionInvalidNonceIndex")
+    public val delegateActionInvalidNonceIndex: DelegateActionInvalidNonceIndexPayload,
+  ) : ActionErrorKind() {
+    @Serializable
+    public data class DelegateActionInvalidNonceIndexPayload(
+      /**
+       *  * Minimum: 0.0
+       *  * Maximum: 65535.0
+       *  * Format: uint16
+       */
+      @SerialName("nonce_index")
+      public val nonceIndex: UShort,
+      /**
+       *  * Minimum: 0.0
+       *  * Maximum: 65535.0
+       *  * Format: uint16
+       */
+      @SerialName("num_nonces")
+      public val numNonces: UShort,
     )
   }
 }
