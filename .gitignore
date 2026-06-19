@@ -50,8 +50,6 @@ captures/
 ###############################################################################
 # Gradle (build system)
 ###############################################################################
-gradle/wrapper/gradle-wrapper.jar
-!gradle/wrapper/gradle-wrapper.jar?  # Keep the .properties, ignore .jar
 target/
 *.class
 *.log
