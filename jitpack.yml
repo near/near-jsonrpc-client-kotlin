@@ -1,0 +1,8 @@
+jdk:
+  - openjdk21
+before_install:
+  - sdk install java 21.0.4-tem && sdk use java 21.0.4-tem
+  - java -version
+  - ./gradlew :generator:run
+install:
+  - ./gradlew clean publishToMavenLocal

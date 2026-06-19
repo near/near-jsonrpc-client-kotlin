@@ -1,0 +1,301 @@
+name: Regenerate NEAR RPC Client (auto PR, merge & release)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *" # daily at midnight
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  regenerate-merge-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Exit if triggered by GitHub Actions bot
+        if: github.actor == 'github-actions[bot]'
+        run: |
+          echo "Triggered by GitHub Actions bot; exiting to avoid loop."
+          exit 0
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Grant execute permission for Gradlew
+        run: chmod +x ./gradlew
+
+      - name: Run Generator (safe mode)
+        id: generator
+        run: |
+          set +e
+          ./gradlew :generator:run --args="--openapi-url https://raw.githubusercontent.com/near/nearcore/master/chain/jsonrpc/openapi/openapi.json" --no-daemon
+          EXIT_CODE=$?
+          set -e
+          if [ $EXIT_CODE -ne 0 ]; then
+            echo "⚠️ OpenAPI generation failed. Skipping regeneration."
+            echo "pr_required=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "Generator completed successfully."
+          echo "pr_required=true" >> "$GITHUB_OUTPUT"
+
+      - name: Build project (without tests)
+        run: ./gradlew build -x test --stacktrace --no-daemon
+
+      - name: Prepare branch, commit regenerated sources
+        id: commit
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config --local user.email "automation@github.com"
+          git config --local user.name "GitHub Actions Bot"
+
+          SHORT_SHA=${GITHUB_SHA:0:8}
+          BRANCH="regenerate-openapi-${GITHUB_RUN_NUMBER}-${SHORT_SHA}"
+          git checkout -b "$BRANCH"
+
+          git add -A
+
+          echo "=== GIT STATUS ==="
+          git status
+
+          echo "=== GIT DIFF SUMMARY ==="
+          git diff --cached --stat || true
+          echo "=== GIT DIFF FULL (trimmed to 100 lines) ==="
+          git diff --cached | head -n 100 || true
+
+          if git diff --cached --name-status | grep -q '^[AM]'; then
+            echo "Changes detected, creating PR."
+            echo "pr_required=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No meaningful changes detected — skipping regeneration."
+            echo "pr_required=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git commit -m "chore: regenerate client from OpenAPI"
+          git push https://x-access-token:${PAT_TOKEN}@github.com/${GITHUB_REPOSITORY}.git "$BRANCH"
+
+          echo "pr_required=true" >> "$GITHUB_OUTPUT"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+
+      - name: Auto-create and merge PR (capture merge SHA)
+        if: steps.commit.outputs.pr_required == 'true'
+        id: auto_merge
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.PAT_TOKEN }}
+          script: |
+            const fs = require('fs');
+
+            const branch = '${{ steps.commit.outputs.branch }}';
+            const title = `chore: regenerate client from OpenAPI (${branch})`;
+            const body = `This PR regenerates the NEAR RPC client and models from the latest OpenAPI spec.\n\nAutomatically merged after generation.`;
+
+            // Create PR
+            const pr = await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              head: branch,
+              base: "main",
+              body
+            });
+
+            // Merge PR (squash)
+            const mergeRes = await github.rest.pulls.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.data.number,
+              merge_method: "squash"
+            });
+
+            let merge_sha = mergeRes.data && mergeRes.data.sha ? mergeRes.data.sha : '';
+            if (!merge_sha) {
+              // fallback: read PR info to get merge_commit_sha (or head.sha)
+              const prInfo = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.data.number
+              });
+              merge_sha = prInfo.data.merge_commit_sha || prInfo.data.head.sha || '';
+            }
+
+            if (!merge_sha) {
+              throw new Error('Could not determine merge commit SHA after merging PR.');
+            }
+
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `merge_sha=${merge_sha}\n`);
+            console.log(`Merged PR #${pr.data.number} -> ${merge_sha}`);
+
+      - name: Output when no changes
+        if: steps.commit.outputs.pr_required != 'true'
+        run: echo "No regenerated changes — nothing to create a PR for."
+
+      - name: Sync main after merge (wait for origin/main to point to merge SHA)
+        if: steps.commit.outputs.pr_required == 'true'
+        env:
+          MERGE_SHA: ${{ steps.auto_merge.outputs.merge_sha }}
+        run: |
+          set -euo pipefail
+          echo "Waiting for GitHub to update merge state..."
+          if [ -z "${MERGE_SHA:-}" ]; then
+            echo "ERROR: merge SHA not found. Aborting to avoid tagging wrong commit."
+            exit 1
+          fi
+
+          ATTEMPTS=30
+          SLEEP_SECONDS=2
+          i=0
+          while [ $i -lt $ATTEMPTS ]; do
+            git fetch origin main --force
+            REMOTE_MAIN_SHA=$(git ls-remote origin refs/heads/main | awk '{print $1}')
+            echo "remote main sha: ${REMOTE_MAIN_SHA}, expected: ${MERGE_SHA}"
+            if [ "${REMOTE_MAIN_SHA}" = "${MERGE_SHA}" ]; then
+              echo "origin/main is synced to merge SHA."
+              break
+            fi
+            i=$((i+1))
+            echo "origin/main not synced yet. retry ${i}/${ATTEMPTS}"
+            sleep $SLEEP_SECONDS
+          done
+
+          if [ "${REMOTE_MAIN_SHA}" != "${MERGE_SHA}" ]; then
+            echo "::error::origin/main did not update to merge SHA within timeout. Aborting to avoid tagging incorrect commit."
+            exit 1
+          fi
+
+          git fetch origin --tags --force
+          git checkout main
+          git reset --hard origin/main
+          echo "Main branch and tags synced successfully."
+
+      - name: Determine new tag version (initial suggestion)
+        if: steps.commit.outputs.pr_required == 'true'
+        id: tag
+        run: |
+          set -euo pipefail
+          git fetch origin --tags --force
+
+          TAGS=$(git ls-remote --tags origin | awk '{print $2}' | sed 's|refs/tags/||' | sed 's/\^{}//g' | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' || true)
+
+          if [ -z "${TAGS:-}" ]; then
+            LAST_TAG="v1.0.0"
+          else
+            LAST_TAG=$(echo "$TAGS" | sort -V | tail -n1)
+          fi
+
+          echo "Last tag detected: ${LAST_TAG}"
+
+          IFS='.' read -r MAJOR MINOR PATCH <<<"${LAST_TAG#v}"
+          MAJOR=${MAJOR:-1}
+          MINOR=${MINOR:-1}
+          PATCH=${PATCH:-0}
+
+          PATCH=$((PATCH+1))
+          NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+
+          echo "Determined candidate tag: ${NEW_TAG}"
+          echo "new_tag=${NEW_TAG}" >> $GITHUB_OUTPUT
+
+      - name: Create tag via GitHub API (robust, retries and bump on conflict)
+        id: create_tag_api
+        if: steps.commit.outputs.pr_required == 'true'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.PAT_TOKEN }}
+          script: |
+            const fs = require('fs');
+
+            let candidateTag = '${{ steps.tag.outputs.new_tag }}';
+            const MERGE_SHA = '${{ steps.auto_merge.outputs.merge_sha }}';
+            if (!candidateTag) throw new Error('No candidate tag supplied.');
+            if (!MERGE_SHA) throw new Error('MERGE_SHA missing.');
+
+            // helper to bump patch: vA.B.C -> vA.B.(C+1)
+            function bumpPatch(tag) {
+              const m = tag.match(/^v(\d+)\.(\d+)\.(\d+)$/);
+              if (!m) throw new Error('Invalid semver tag: ' + tag);
+              const major = parseInt(m[1], 10);
+              const minor = parseInt(m[2], 10);
+              const patch = parseInt(m[3], 10) + 1;
+              return `v${major}.${minor}.${patch}`;
+            }
+
+            const MAX_ATTEMPTS = 8;
+            let created = false;
+            let finalTag = candidateTag;
+
+            for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+              try {
+                // Check if tag exists
+                try {
+                  await github.rest.git.getRef({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    ref: `tags/${finalTag}`
+                  });
+                  // exists => bump and retry
+                  console.log(`Tag ${finalTag} already exists. Bumping...`);
+                  finalTag = bumpPatch(finalTag);
+                  continue;
+                } catch (err) {
+                  if (err.status !== 404) throw err;
+                  // 404 means not found => proceed to create
+                }
+
+                // create the ref pointing to MERGE_SHA
+                await github.rest.git.createRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: `refs/tags/${finalTag}`,
+                  sha: MERGE_SHA
+                });
+
+                console.log(`Created tag ${finalTag} -> ${MERGE_SHA}`);
+                created = true;
+                break;
+              } catch (err) {
+                // If conflict (already created by parallel run) -> bump and retry
+                if (err.status === 422 || err.status === 409) {
+                  console.log(`CreateRef conflict on ${finalTag} (attempt ${attempt}). Bumping and retrying...`);
+                  finalTag = bumpPatch(finalTag);
+                  continue;
+                }
+                // other errors -> rethrow
+                throw err;
+              }
+            }
+
+            if (!created) {
+              console.log('Failed to create tag after retries. Tagging skipped.');
+              fs.appendFileSync(process.env.GITHUB_OUTPUT, `tag_created=false\n`);
+              fs.appendFileSync(process.env.GITHUB_OUTPUT, `created_tag=\n`);
+            } else {
+              fs.appendFileSync(process.env.GITHUB_OUTPUT, `tag_created=true\n`);
+              fs.appendFileSync(process.env.GITHUB_OUTPUT, `created_tag=${finalTag}\n`);
+            }
+
+      - name: Create GitHub Release
+        if: steps.create_tag_api.outputs.tag_created == 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.create_tag_api.outputs.created_tag }}
+          name: "Release ${{ steps.create_tag_api.outputs.created_tag }}"
+          body: |
+            🚀 Automated release generated by workflow.
+            This release was created automatically after merging the regenerated client into main.
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}

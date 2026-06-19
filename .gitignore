@@ -1,0 +1,175 @@
+###############################################################################
+# Operating System / Finder junk
+###############################################################################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+###############################################################################
+# Android Studio / IntelliJ IDEA (project settings)
+###############################################################################
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/assetWizardSettings.xml
+.idea/dictionaries/
+.idea/libraries/
+.idea/caches/
+.idea/modules.xml
+.idea/compiler.xml
+.idea/misc.xml
+.idea/vcs.xml
+.idea/inspectionProfiles/
+.idea/jarRepositories.xml
+.idea/runConfigurations.xml
+.idea/navEditor.xml
+.idea/deploymentTargetDropDown.xml
+.idea/codeStyles/Project.xml
+
+*/build/
+build/
+.gradle/
+local.properties
+
+# Android Studio capture folder
+captures/
+
+# Navigation / safe args (if generated locally)
+.navigation/
+
+###############################################################################
+# Gradle (build system)
+###############################################################################
+gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.jar?  # Keep the .properties, ignore .jar
+target/
+*.class
+*.log
+.gradletasknamecache
+gradle-app.setting
+
+# Gradle properties (local – never commit)
+gradle.properties.local
+
+###############################################################################
+# Android (app & library build outputs)
+###############################################################################
+androidApp/build/
+shared/build/
+*.apk
+*.ap_
+*.aab
+*.dex
+*.aar
+
+# Keystore & signing
+*.jks
+*.keystore
+keystore.properties
+secrets.properties
+
+# Lint reports
+lint-results-*.xml
+lint-results-*.html
+outputs/
+
+###############################################################################
+# Kotlin Multiplatform (specific generated files)
+###############################################################################
+commonMain/build/
+jsMain/build/
+jvmMain/build/
+wasmMain/build/
+nativeMain/build/
+iosMain/build/
+
+# Kotlin/Native interop
+*.klib
+*.kexe
+*.knm
+cinterop/
+.idea/kotlin-*.xml
+
+# KSP / KAPT generated sources
+ksp/
+kapt/
+generated/
+build/generated/
+
+# Compose compiler reports (if using Compose)
+compose-reports/
+
+###############################################################################
+# iOS / Xcode (since it's a KMP project – minimal)
+###############################################################################
+iosApp/Pods/
+iosApp/Podfile.lock
+iosApp/*.xcworkspace
+iosApp/*.xcodeproj/project.xcworkspace
+iosApp/iosApp.xcworkspace
+iosApp/DerivedData/
+
+# iOS build outputs
+*.app
+*.ipa
+*.dSYM
+*.framework
+*.xcframework
+iosApp/build/
+*.mobileprovision
+*.provisionprofile
+
+# Xcode user data
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcuserstate
+*.xcuserdatad/
+
+###############################################################################
+# Environment / secrets
+###############################################################################
+.env
+.env.local
+.env.*.local
+*.properties.local
+sentry.properties
+
+###############################################################################
+# Version control / editor leftovers
+###############################################################################
+*.orig
+*.rej
+*.patch
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+*.temp
+
+# VS Code (if you ever open it alongside Android Studio)
+.vscode/
+*.code-workspace
+
+.kotlin
+
+shared/schemas
+
+.gradle
+/local.properties
+/.idea/*
+/.kotlin
+/build
+/captures
+.externalNativeBuild
+.cxx
