@@ -309,8 +309,8 @@ This structured approach to error handling makes it easy to differentiate betwee
 
 ```bash
 # Run all tests
-./gradlew :generator:test
-./gradlew :client:test
+./gradlew jvmTest
+./gradlew test
 ```
 
 ### Test Structure
@@ -338,8 +338,8 @@ Contributions welcome!
 4. Run:
 ```bash
 ./gradlew build
-./gradlew :generator:test
-./gradlew :client:test
+./gradlew jvmTest
+./gradlew test
 ```
 5. Open a PR with clear description.
 6. **More details:** see the [Contributing Overview](https://github.com/near/near-jsonrpc-client-kotlin?tab=contributing-ov-file) tab in this repository.
