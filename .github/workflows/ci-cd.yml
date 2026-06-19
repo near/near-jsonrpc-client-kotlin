@@ -50,6 +50,9 @@ jobs:
           echo "Generator completed successfully."
           echo "pr_required=true" >> "$GITHUB_OUTPUT"
 
+      - name: Unit & Integration Tests
+        run: ./gradlew jvmTest
+
       - name: Build project (without tests)
         run: ./gradlew build -x test --stacktrace --no-daemon
 
