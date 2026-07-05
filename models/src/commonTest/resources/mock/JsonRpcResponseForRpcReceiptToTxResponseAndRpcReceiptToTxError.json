@@ -1,0 +1,8 @@
+{
+    "id": "s",
+    "jsonrpc": "s",
+    "result": {
+        "sender_account_id": "s",
+        "transaction_hash": "s"
+    }
+}

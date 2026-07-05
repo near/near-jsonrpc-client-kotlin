@@ -1,0 +1,8 @@
+{
+    "id": "s",
+    "jsonrpc": "s",
+    "method": "validators",
+    "params": {
+        "epoch_id": "s"
+    }
+}

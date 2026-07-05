@@ -1,0 +1,7 @@
+{
+    "epoch_sync_horizon_num_epochs": 2,
+    "timeout_for_epoch_sync": {
+        "nanos": 0,
+        "secs": 0
+    }
+}

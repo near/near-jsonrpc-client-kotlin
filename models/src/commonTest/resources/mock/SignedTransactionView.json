@@ -1,0 +1,14 @@
+{
+    "actions": [
+        "CreateAccount"
+    ],
+    "hash": "s",
+    "nonce": 0,
+    "nonce_index": 0,
+    "nonce_mode": "monotonic",
+    "priority_fee": 0,
+    "public_key": "s",
+    "receiver_id": "s",
+    "signature": "s",
+    "signer_id": "s"
+}

@@ -1,0 +1,8 @@
+{
+    "archive_block_data": false,
+    "polling_interval": {
+        "nanos": 0,
+        "secs": 1
+    },
+    "snapshot_every_n_epochs": 10
+}

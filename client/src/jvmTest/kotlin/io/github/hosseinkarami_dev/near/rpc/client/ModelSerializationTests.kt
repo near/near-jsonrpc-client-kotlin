@@ -1,12 +1,14 @@
 package io.github.hosseinkarami_dev.near.rpc.client
 
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
+import kotlinx.serialization.builtins.serializer
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.fail
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.serializer
 import java.io.File
 
 /**
@@ -1496,22 +1498,6 @@ class ModelSerializationTests {
     }
 
     @Test
-    fun testExternalStorageConfigEncodeDecode() {
-        val data = loadMockJson("ExternalStorageConfig.json")
-        assertNotNull(data, "Mock file ExternalStorageConfig.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ExternalStorageConfig.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.ExternalStorageConfig.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ExternalStorageConfig.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for ExternalStorageConfig: ${e.message}")
-        }
-    }
-
-    @Test
     fun testExternalStorageLocationEncodeDecode() {
         val data = loadMockJson("ExternalStorageLocation.json")
         assertNotNull(data, "Mock file ExternalStorageLocation.json does not exist!")
@@ -1741,9 +1727,9 @@ class ModelSerializationTests {
         assertNotNull(data, "Mock file GenesisConfigError.json does not exist!")
 
         try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.GenesisConfigError.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.GenesisConfigError.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.GenesisConfigError.serializer(), encoded)
+            val decoded = json.decodeFromString(serializer<kotlin.Unit?>(), data)
+            val encoded = json.encodeToString(serializer<kotlin.Unit?>(), decoded)
+            val decoded2 = json.decodeFromString(serializer<kotlin.Unit?>(), encoded)
             assertEquals(decoded, decoded2)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -1757,9 +1743,9 @@ class ModelSerializationTests {
         assertNotNull(data, "Mock file GenesisConfigRequest.json does not exist!")
 
         try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.GenesisConfigRequest.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.GenesisConfigRequest.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.GenesisConfigRequest.serializer(), encoded)
+            val decoded = json.decodeFromString(serializer<kotlin.Unit?>(), data)
+            val encoded = json.encodeToString(serializer<kotlin.Unit?>(), decoded)
+            val decoded2 = json.decodeFromString(serializer<kotlin.Unit?>(), encoded)
             assertEquals(decoded, decoded2)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -3533,9 +3519,9 @@ class ModelSerializationTests {
         assertNotNull(data, "Mock file RpcClientConfigRequest.json does not exist!")
 
         try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcClientConfigRequest.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcClientConfigRequest.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcClientConfigRequest.serializer(), encoded)
+            val decoded = json.decodeFromString(serializer<kotlin.Unit?>(), data)
+            val encoded = json.encodeToString(serializer<kotlin.Unit?>(), decoded)
+            val decoded2 = json.decodeFromString(serializer<kotlin.Unit?>(), encoded)
             assertEquals(decoded, decoded2)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -3645,9 +3631,9 @@ class ModelSerializationTests {
         assertNotNull(data, "Mock file RpcHealthRequest.json does not exist!")
 
         try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcHealthRequest.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcHealthRequest.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcHealthRequest.serializer(), encoded)
+            val decoded = json.decodeFromString(serializer<kotlin.Unit?>(), data)
+            val encoded = json.encodeToString(serializer<kotlin.Unit?>(), decoded)
+            val decoded2 = json.decodeFromString(serializer<kotlin.Unit?>(), encoded)
             assertEquals(decoded, decoded2)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -3661,9 +3647,9 @@ class ModelSerializationTests {
         assertNotNull(data, "Mock file RpcHealthResponse.json does not exist!")
 
         try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcHealthResponse.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcHealthResponse.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcHealthResponse.serializer(), encoded)
+            val decoded = json.decodeFromString(serializer<kotlin.Unit?>(), data)
+            val encoded = json.encodeToString(serializer<kotlin.Unit?>(), decoded)
+            val decoded2 = json.decodeFromString(serializer<kotlin.Unit?>(), encoded)
             assertEquals(decoded, decoded2)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -3869,9 +3855,9 @@ class ModelSerializationTests {
         assertNotNull(data, "Mock file RpcNetworkInfoRequest.json does not exist!")
 
         try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcNetworkInfoRequest.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcNetworkInfoRequest.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcNetworkInfoRequest.serializer(), encoded)
+            val decoded = json.decodeFromString(serializer<kotlin.Unit?>(), data)
+            val encoded = json.encodeToString(serializer<kotlin.Unit?>(), decoded)
+            val decoded2 = json.decodeFromString(serializer<kotlin.Unit?>(), encoded)
             assertEquals(decoded, decoded2)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -4285,9 +4271,9 @@ class ModelSerializationTests {
         assertNotNull(data, "Mock file RpcStatusRequest.json does not exist!")
 
         try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcStatusRequest.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcStatusRequest.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcStatusRequest.serializer(), encoded)
+            val decoded = json.decodeFromString(serializer<kotlin.Unit?>(), data)
+            val encoded = json.encodeToString(serializer<kotlin.Unit?>(), decoded)
+            val decoded2 = json.decodeFromString(serializer<kotlin.Unit?>(), encoded)
             assertEquals(decoded, decoded2)
         } catch (e: Exception) {
             e.printStackTrace()

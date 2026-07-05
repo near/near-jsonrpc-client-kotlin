@@ -1,0 +1,11 @@
+{
+    "id": "s",
+    "jsonrpc": "s",
+    "method": "EXPERIMENTAL_receipt_to_tx",
+    "params": {
+        "block_height": 0,
+        "receipt_id": "s",
+        "shard_id": 0,
+        "window": 0
+    }
+}

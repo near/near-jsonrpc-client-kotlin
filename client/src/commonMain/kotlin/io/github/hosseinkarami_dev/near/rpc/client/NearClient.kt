@@ -2,8 +2,31 @@ package io.github.hosseinkarami_dev.near.rpc.client
 
 import io.github.hosseinkarami_dev.near.rpc.client.callRpc
 import io.github.hosseinkarami_dev.near.rpc.models.CryptoHash
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForGenesisConfigError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcBlockError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcCallFunctionError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcChunkError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcClientConfigError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcGasPriceError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcLightClientNextBlockError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcLightClientProofError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcMaintenanceWindowsError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcNetworkInfoError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcProtocolConfigError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcQueryError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcReceiptError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcReceiptToTxError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcSplitStorageInfoError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcStateChangesError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcStatusError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcTransactionError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcValidatorError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcViewAccessKeyError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcViewAccessKeyListError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcViewAccountError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcViewCodeError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcViewStateError
 import io.github.hosseinkarami_dev.near.rpc.models.GenesisConfig
-import io.github.hosseinkarami_dev.near.rpc.models.GenesisConfigError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForBlock
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForBlockEffects
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForBroadcastTxAsync
@@ -73,20 +96,15 @@ import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcViewAcco
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcViewCodeResponseAndRpcViewCodeError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcViewStateResponseAndRpcViewStateError
 import io.github.hosseinkarami_dev.near.rpc.models.RangeOfUint64
-import io.github.hosseinkarami_dev.near.rpc.models.RpcBlockError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcBlockRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcBlockResponse
-import io.github.hosseinkarami_dev.near.rpc.models.RpcCallFunctionError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcCallFunctionRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcCallFunctionResponse
-import io.github.hosseinkarami_dev.near.rpc.models.RpcChunkError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcChunkRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcChunkResponse
-import io.github.hosseinkarami_dev.near.rpc.models.RpcClientConfigError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcClientConfigResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcCongestionLevelRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcCongestionLevelResponse
-import io.github.hosseinkarami_dev.near.rpc.models.RpcGasPriceError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcGasPriceRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcGasPriceResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcHealthResponse
@@ -94,57 +112,39 @@ import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientBlockProofReque
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientBlockProofResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientExecutionProofRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientExecutionProofResponse
-import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientNextBlockError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientNextBlockRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientNextBlockResponse
-import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientProofError
-import io.github.hosseinkarami_dev.near.rpc.models.RpcMaintenanceWindowsError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcMaintenanceWindowsRequest
-import io.github.hosseinkarami_dev.near.rpc.models.RpcNetworkInfoError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcNetworkInfoResponse
-import io.github.hosseinkarami_dev.near.rpc.models.RpcProtocolConfigError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcProtocolConfigRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcProtocolConfigResponse
-import io.github.hosseinkarami_dev.near.rpc.models.RpcQueryError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcQueryRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcQueryResponse
-import io.github.hosseinkarami_dev.near.rpc.models.RpcReceiptError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcReceiptRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcReceiptResponse
-import io.github.hosseinkarami_dev.near.rpc.models.RpcReceiptToTxError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcReceiptToTxRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcReceiptToTxResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcSendTransactionRequest
-import io.github.hosseinkarami_dev.near.rpc.models.RpcSplitStorageInfoError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcSplitStorageInfoRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcSplitStorageInfoResponse
-import io.github.hosseinkarami_dev.near.rpc.models.RpcStateChangesError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcStateChangesInBlockByTypeRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcStateChangesInBlockByTypeResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcStateChangesInBlockRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcStateChangesInBlockResponse
-import io.github.hosseinkarami_dev.near.rpc.models.RpcStatusError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcStatusResponse
-import io.github.hosseinkarami_dev.near.rpc.models.RpcTransactionError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcTransactionResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcTransactionStatusRequest
-import io.github.hosseinkarami_dev.near.rpc.models.RpcValidatorError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcValidatorRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcValidatorResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcValidatorsOrderedRequest
-import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyError
-import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyResponse
-import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccountError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccountRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccountResponse
-import io.github.hosseinkarami_dev.near.rpc.models.RpcViewCodeError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcViewCodeRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcViewCodeResponse
-import io.github.hosseinkarami_dev.near.rpc.models.RpcViewStateError
 import io.github.hosseinkarami_dev.near.rpc.models.RpcViewStateRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcViewStateResponse
 import io.github.hosseinkarami_dev.near.rpc.models.ValidatorStakeView
@@ -183,7 +183,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalCallFunction.serializer(),
         JsonRpcResponseForRpcCallFunctionResponseAndRpcCallFunctionError.serializer(),
-        RpcCallFunctionError.serializer()
+        ErrorWrapperForRpcCallFunctionError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcCallFunctionResponseAndRpcCallFunctionError.Result -> RpcResponse.Success(decoded.result)
@@ -219,7 +219,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalChanges.serializer(),
         JsonRpcResponseForRpcStateChangesInBlockResponseAndRpcStateChangesError.serializer(),
-        RpcStateChangesError.serializer()
+        ErrorWrapperForRpcStateChangesError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcStateChangesInBlockResponseAndRpcStateChangesError.Result -> RpcResponse.Success(decoded.result)
@@ -255,7 +255,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalChangesInBlock.serializer(),
         JsonRpcResponseForRpcStateChangesInBlockByTypeResponseAndRpcStateChangesError.serializer(),
-        RpcStateChangesError.serializer()
+        ErrorWrapperForRpcStateChangesError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcStateChangesInBlockByTypeResponseAndRpcStateChangesError.Result -> RpcResponse.Success(decoded.result)
@@ -286,7 +286,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalCongestionLevel.serializer(),
         JsonRpcResponseForRpcCongestionLevelResponseAndRpcChunkError.serializer(),
-        RpcChunkError.serializer()
+        ErrorWrapperForRpcChunkError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcCongestionLevelResponseAndRpcChunkError.Result -> RpcResponse.Success(decoded.result)
@@ -321,7 +321,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalGenesisConfig.serializer(),
         JsonRpcResponseForGenesisConfigAndGenesisConfigError.serializer(),
-        GenesisConfigError.serializer()
+        ErrorWrapperForGenesisConfigError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForGenesisConfigAndGenesisConfigError.Result -> RpcResponse.Success(decoded.result)
@@ -352,7 +352,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalLightClientBlockProof.serializer(),
         JsonRpcResponseForRpcLightClientBlockProofResponseAndRpcLightClientProofError.serializer(),
-        RpcLightClientProofError.serializer()
+        ErrorWrapperForRpcLightClientProofError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcLightClientBlockProofResponseAndRpcLightClientProofError.Result -> RpcResponse.Success(decoded.result)
@@ -383,7 +383,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalLightClientProof.serializer(),
         JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.serializer(),
-        RpcLightClientProofError.serializer()
+        ErrorWrapperForRpcLightClientProofError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.Result -> RpcResponse.Success(decoded.result)
@@ -419,7 +419,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalMaintenanceWindows.serializer(),
         JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError.serializer(),
-        RpcMaintenanceWindowsError.serializer()
+        ErrorWrapperForRpcMaintenanceWindowsError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError.Result -> RpcResponse.Success(decoded.result)
@@ -450,7 +450,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalProtocolConfig.serializer(),
         JsonRpcResponseForRpcProtocolConfigResponseAndRpcProtocolConfigError.serializer(),
-        RpcProtocolConfigError.serializer()
+        ErrorWrapperForRpcProtocolConfigError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcProtocolConfigResponseAndRpcProtocolConfigError.Result -> RpcResponse.Success(decoded.result)
@@ -481,7 +481,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalReceipt.serializer(),
         JsonRpcResponseForRpcReceiptResponseAndRpcReceiptError.serializer(),
-        RpcReceiptError.serializer()
+        ErrorWrapperForRpcReceiptError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcReceiptResponseAndRpcReceiptError.Result -> RpcResponse.Success(decoded.result)
@@ -512,7 +512,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalReceiptToTx.serializer(),
         JsonRpcResponseForRpcReceiptToTxResponseAndRpcReceiptToTxError.serializer(),
-        RpcReceiptToTxError.serializer()
+        ErrorWrapperForRpcReceiptToTxError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcReceiptToTxResponseAndRpcReceiptToTxError.Result -> RpcResponse.Success(decoded.result)
@@ -543,7 +543,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalSplitStorageInfo.serializer(),
         JsonRpcResponseForRpcSplitStorageInfoResponseAndRpcSplitStorageInfoError.serializer(),
-        RpcSplitStorageInfoError.serializer()
+        ErrorWrapperForRpcSplitStorageInfoError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcSplitStorageInfoResponseAndRpcSplitStorageInfoError.Result -> RpcResponse.Success(decoded.result)
@@ -574,7 +574,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalTxStatus.serializer(),
         JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.serializer(),
-        RpcTransactionError.serializer()
+        ErrorWrapperForRpcTransactionError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
@@ -605,7 +605,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalValidatorsOrdered.serializer(),
         JsonRpcResponseForArrayOfValidatorStakeViewAndRpcValidatorError.serializer(),
-        RpcValidatorError.serializer()
+        ErrorWrapperForRpcValidatorError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForArrayOfValidatorStakeViewAndRpcValidatorError.Result -> RpcResponse.Success(decoded.result)
@@ -636,7 +636,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalViewAccessKey.serializer(),
         JsonRpcResponseForRpcViewAccessKeyResponseAndRpcViewAccessKeyError.serializer(),
-        RpcViewAccessKeyError.serializer()
+        ErrorWrapperForRpcViewAccessKeyError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcViewAccessKeyResponseAndRpcViewAccessKeyError.Result -> RpcResponse.Success(decoded.result)
@@ -667,7 +667,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalViewAccessKeyList.serializer(),
         JsonRpcResponseForRpcViewAccessKeyListResponseAndRpcViewAccessKeyListError.serializer(),
-        RpcViewAccessKeyListError.serializer()
+        ErrorWrapperForRpcViewAccessKeyListError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcViewAccessKeyListResponseAndRpcViewAccessKeyListError.Result -> RpcResponse.Success(decoded.result)
@@ -698,7 +698,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalViewAccount.serializer(),
         JsonRpcResponseForRpcViewAccountResponseAndRpcViewAccountError.serializer(),
-        RpcViewAccountError.serializer()
+        ErrorWrapperForRpcViewAccountError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcViewAccountResponseAndRpcViewAccountError.Result -> RpcResponse.Success(decoded.result)
@@ -729,7 +729,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalViewCode.serializer(),
         JsonRpcResponseForRpcViewCodeResponseAndRpcViewCodeError.serializer(),
-        RpcViewCodeError.serializer()
+        ErrorWrapperForRpcViewCodeError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcViewCodeResponseAndRpcViewCodeError.Result -> RpcResponse.Success(decoded.result)
@@ -760,7 +760,7 @@ public class NearClient(
         request,
         JsonRpcRequestForExperimentalViewState.serializer(),
         JsonRpcResponseForRpcViewStateResponseAndRpcViewStateError.serializer(),
-        RpcViewStateError.serializer()
+        ErrorWrapperForRpcViewStateError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcViewStateResponseAndRpcViewStateError.Result -> RpcResponse.Success(decoded.result)
@@ -791,7 +791,7 @@ public class NearClient(
         request,
         JsonRpcRequestForBlock.serializer(),
         JsonRpcResponseForRpcBlockResponseAndRpcBlockError.serializer(),
-        RpcBlockError.serializer()
+        ErrorWrapperForRpcBlockError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcBlockResponseAndRpcBlockError.Result -> RpcResponse.Success(decoded.result)
@@ -822,7 +822,7 @@ public class NearClient(
         request,
         JsonRpcRequestForBlockEffects.serializer(),
         JsonRpcResponseForRpcStateChangesInBlockByTypeResponseAndRpcStateChangesError.serializer(),
-        RpcStateChangesError.serializer()
+        ErrorWrapperForRpcStateChangesError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcStateChangesInBlockByTypeResponseAndRpcStateChangesError.Result -> RpcResponse.Success(decoded.result)
@@ -858,7 +858,7 @@ public class NearClient(
         request,
         JsonRpcRequestForBroadcastTxAsync.serializer(),
         JsonRpcResponseForCryptoHashAndRpcTransactionError.serializer(),
-        RpcTransactionError.serializer()
+        ErrorWrapperForRpcTransactionError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForCryptoHashAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
@@ -894,7 +894,7 @@ public class NearClient(
         request,
         JsonRpcRequestForBroadcastTxCommit.serializer(),
         JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.serializer(),
-        RpcTransactionError.serializer()
+        ErrorWrapperForRpcTransactionError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
@@ -925,7 +925,7 @@ public class NearClient(
         request,
         JsonRpcRequestForChanges.serializer(),
         JsonRpcResponseForRpcStateChangesInBlockResponseAndRpcStateChangesError.serializer(),
-        RpcStateChangesError.serializer()
+        ErrorWrapperForRpcStateChangesError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcStateChangesInBlockResponseAndRpcStateChangesError.Result -> RpcResponse.Success(decoded.result)
@@ -956,7 +956,7 @@ public class NearClient(
         request,
         JsonRpcRequestForChunk.serializer(),
         JsonRpcResponseForRpcChunkResponseAndRpcChunkError.serializer(),
-        RpcChunkError.serializer()
+        ErrorWrapperForRpcChunkError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcChunkResponseAndRpcChunkError.Result -> RpcResponse.Success(decoded.result)
@@ -987,7 +987,7 @@ public class NearClient(
         request,
         JsonRpcRequestForClientConfig.serializer(),
         JsonRpcResponseForRpcClientConfigResponseAndRpcClientConfigError.serializer(),
-        RpcClientConfigError.serializer()
+        ErrorWrapperForRpcClientConfigError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcClientConfigResponseAndRpcClientConfigError.Result -> RpcResponse.Success(decoded.result)
@@ -1018,7 +1018,7 @@ public class NearClient(
         request,
         JsonRpcRequestForGasPrice.serializer(),
         JsonRpcResponseForRpcGasPriceResponseAndRpcGasPriceError.serializer(),
-        RpcGasPriceError.serializer()
+        ErrorWrapperForRpcGasPriceError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcGasPriceResponseAndRpcGasPriceError.Result -> RpcResponse.Success(decoded.result)
@@ -1049,7 +1049,7 @@ public class NearClient(
         request,
         JsonRpcRequestForGenesisConfig.serializer(),
         JsonRpcResponseForGenesisConfigAndGenesisConfigError.serializer(),
-        GenesisConfigError.serializer()
+        ErrorWrapperForGenesisConfigError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForGenesisConfigAndGenesisConfigError.Result -> RpcResponse.Success(decoded.result)
@@ -1064,9 +1064,9 @@ public class NearClient(
    * @see path: /health (method: post) — operationId: health
    *
    * @param unit This method does not require params; the generator will send a default instance of the params wrapper in the JSON-RPC request.
-   * @return Response: `RpcResponse<RpcHealthResponse?>`.
+   * @return Response: `RpcResponse<RpcHealthResponse>`.
    */
-  public suspend fun health(): RpcResponse<RpcHealthResponse?> {
+  public suspend fun health(): RpcResponse<RpcHealthResponse> {
     val request = JsonRpcRequestForHealth(
       id = nextId(),
       jsonrpc = "2.0",
@@ -1080,7 +1080,7 @@ public class NearClient(
         request,
         JsonRpcRequestForHealth.serializer(),
         JsonRpcResponseForNullableRpcHealthResponseAndRpcStatusError.serializer(),
-        RpcStatusError.serializer()
+        ErrorWrapperForRpcStatusError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForNullableRpcHealthResponseAndRpcStatusError.Result -> RpcResponse.Success(decoded.result)
@@ -1111,7 +1111,7 @@ public class NearClient(
         request,
         JsonRpcRequestForLightClientProof.serializer(),
         JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.serializer(),
-        RpcLightClientProofError.serializer()
+        ErrorWrapperForRpcLightClientProofError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.Result -> RpcResponse.Success(decoded.result)
@@ -1142,7 +1142,7 @@ public class NearClient(
         request,
         JsonRpcRequestForMaintenanceWindows.serializer(),
         JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError.serializer(),
-        RpcMaintenanceWindowsError.serializer()
+        ErrorWrapperForRpcMaintenanceWindowsError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError.Result -> RpcResponse.Success(decoded.result)
@@ -1173,7 +1173,7 @@ public class NearClient(
         request,
         JsonRpcRequestForNetworkInfo.serializer(),
         JsonRpcResponseForRpcNetworkInfoResponseAndRpcNetworkInfoError.serializer(),
-        RpcNetworkInfoError.serializer()
+        ErrorWrapperForRpcNetworkInfoError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcNetworkInfoResponseAndRpcNetworkInfoError.Result -> RpcResponse.Success(decoded.result)
@@ -1204,7 +1204,7 @@ public class NearClient(
         request,
         JsonRpcRequestForNextLightClientBlock.serializer(),
         JsonRpcResponseForRpcLightClientNextBlockResponseAndRpcLightClientNextBlockError.serializer(),
-        RpcLightClientNextBlockError.serializer()
+        ErrorWrapperForRpcLightClientNextBlockError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcLightClientNextBlockResponseAndRpcLightClientNextBlockError.Result -> RpcResponse.Success(decoded.result)
@@ -1247,7 +1247,7 @@ public class NearClient(
         request,
         JsonRpcRequestForQuery.serializer(),
         JsonRpcResponseForRpcQueryResponseAndRpcQueryError.serializer(),
-        RpcQueryError.serializer()
+        ErrorWrapperForRpcQueryError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcQueryResponseAndRpcQueryError.Result -> RpcResponse.Success(decoded.result)
@@ -1278,7 +1278,7 @@ public class NearClient(
         request,
         JsonRpcRequestForSendTx.serializer(),
         JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.serializer(),
-        RpcTransactionError.serializer()
+        ErrorWrapperForRpcTransactionError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
@@ -1309,7 +1309,7 @@ public class NearClient(
         request,
         JsonRpcRequestForStatus.serializer(),
         JsonRpcResponseForRpcStatusResponseAndRpcStatusError.serializer(),
-        RpcStatusError.serializer()
+        ErrorWrapperForRpcStatusError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcStatusResponseAndRpcStatusError.Result -> RpcResponse.Success(decoded.result)
@@ -1340,7 +1340,7 @@ public class NearClient(
         request,
         JsonRpcRequestForTx.serializer(),
         JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.serializer(),
-        RpcTransactionError.serializer()
+        ErrorWrapperForRpcTransactionError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
@@ -1371,7 +1371,7 @@ public class NearClient(
         request,
         JsonRpcRequestForValidators.serializer(),
         JsonRpcResponseForRpcValidatorResponseAndRpcValidatorError.serializer(),
-        RpcValidatorError.serializer()
+        ErrorWrapperForRpcValidatorError.serializer()
     ) { decoded ->
         when (decoded) {
             is JsonRpcResponseForRpcValidatorResponseAndRpcValidatorError.Result -> RpcResponse.Success(decoded.result)
