@@ -25,12 +25,14 @@ object ModelTestGenerator {
             appendLine("package $testsPackage")
             appendLine()
             appendLine("import kotlin.test.Test")
+            appendLine("import kotlinx.serialization.builtins.serializer")
             appendLine("import kotlin.test.assertEquals")
             appendLine("import kotlin.test.assertNotNull")
             appendLine("import kotlin.test.fail")
             appendLine("import kotlinx.serialization.json.Json")
             appendLine("import kotlinx.serialization.decodeFromString")
             appendLine("import kotlinx.serialization.encodeToString")
+            appendLine("import kotlinx.serialization.serializer")
             appendLine("import java.io.File")
             appendLine()
             appendLine("/**")
@@ -51,15 +53,22 @@ object ModelTestGenerator {
             for (schemaName in schemas) {
                 val className = schemaName.pascalCase()
                 val fileName = "${schemaName.pascalCase()}.json"
+                val schema = spec.components.schemas[schemaName]
+                val serializerExpr =
+                    if (schema?.nullable == true && schema.enum?.all { it == null } == true) {
+                        "serializer<kotlin.Unit?>()"
+                    } else {
+                        "$modelsPackage.$className.serializer()"
+                    }
                 appendLine("    @Test")
                 appendLine("    fun test${className}EncodeDecode() {")
                 appendLine("        val data = loadMockJson(\"$fileName\")")
                 appendLine("        assertNotNull(data, \"Mock file $fileName does not exist!\")")
                 appendLine()
                 appendLine("        try {")
-                appendLine("            val decoded = json.decodeFromString($modelsPackage.$className.serializer(), data)")
-                appendLine("            val encoded = json.encodeToString($modelsPackage.$className.serializer(), decoded)")
-                appendLine("            val decoded2 = json.decodeFromString($modelsPackage.$className.serializer(), encoded)")
+                appendLine("            val decoded = json.decodeFromString($serializerExpr, data)")
+                appendLine("            val encoded = json.encodeToString($serializerExpr, decoded)")
+                appendLine("            val decoded2 = json.decodeFromString($serializerExpr, encoded)")
                 appendLine("            assertEquals(decoded, decoded2)")
                 appendLine("        } catch (e: Exception) {")
                 appendLine("            e.printStackTrace()")

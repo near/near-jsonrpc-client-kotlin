@@ -23,6 +23,6 @@ class NearClientGenerationTest {
     }
 
     companion object {
-        private const val NEAR_CLIENT_LOCATION = "../client/src/main/kotlin/io/github/hosseinkarami_dev/near/rpc/client/NearClient.kt"
+        private const val NEAR_CLIENT_LOCATION = "../client/src/commonMain/kotlin/io/github/hosseinkarami_dev/near/rpc/client/NearClient.kt"
     }
 }
