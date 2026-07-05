@@ -29,6 +29,6 @@ class ModelsGenerationTest {
         }
     }
     companion object {
-        const val MODELS_DIR = "../models/src/main/kotlin/io/github/hosseinkarami_dev/near/rpc/models"
+        const val MODELS_DIR = "../models/src/commonMain/kotlin/io/github/hosseinkarami_dev/near/rpc/models"
     }
 }

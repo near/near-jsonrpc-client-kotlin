@@ -15,7 +15,7 @@ A **type-safe**, Kotlin client for the NEAR JSON-RPC API.
 
 ## Table of contents
 
-- [Overview](#-overview)  
+- [Overview](#-overview)
 - [Features](#-features)
 - [Requirements](#-requirements)
 - [Quickstart](#-quickstart)
@@ -25,7 +25,7 @@ A **type-safe**, Kotlin client for the NEAR JSON-RPC API.
 - [Testing](#-testing)
 - [Contributing](#-contributing)
 - [Deployment Guide](#-deployment-guide)
-- [License](#-license)  
+- [License](#-license)
 - [Contact & References](#-contact--references)
 
 ---
@@ -90,8 +90,8 @@ In your **project-level** `build.gradle.kts`:
 
 ```kotlin
 
-repositories { 
-    maven { url = uri("https://jitpack.io") }
+repositories {
+  maven { url = uri("https://jitpack.io") }
 }
 
 ```
@@ -102,7 +102,7 @@ In your **module-level** `build.gradle.kts`:
 ```kotlin
 
 dependencies {
-    implementation("com.github.hosseinkarami-dev:NEAR-RPC-Client-Kotlin:<Version>")
+  implementation("com.github.hosseinkarami-dev:NEAR-RPC-Client-Kotlin:<Version>")
 }
 
 ```
@@ -135,14 +135,14 @@ import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
 
 val httpClient = HttpClient(CIO) {
-    install(ContentNegotiation) {
-        json(Json { ignoreUnknownKeys = true })
-    }
+  install(ContentNegotiation) {
+    json(Json { ignoreUnknownKeys = true })
+  }
 }
 
 val nearClient = NearClient(
-    httpClient = httpClient,
-    baseUrl = "https://rpc.mainnet.near.org" // or "https://rpc.testnet.near.org"
+  httpClient = httpClient,
+  baseUrl = "https://rpc.mainnet.near.org" // or "https://rpc.testnet.near.org"
 )
 
 lifecycleScope.launch {
@@ -192,8 +192,8 @@ Each RPC call returns an instance of `RpcResponse<T>`:
 
 ```kotlin
 sealed class RpcResponse<out T> {
-    data class Success<T>(val result: T): RpcResponse<T>()
-    data class Failure(val error: ErrorResult): RpcResponse<Nothing>()
+  data class Success<T>(val result: T): RpcResponse<T>()
+  data class Failure(val error: ErrorResult): RpcResponse<Nothing>()
 }
 ```
 
@@ -213,14 +213,14 @@ The `ErrorResult` is a sealed class representing different error categories that
 
 ```kotlin
 sealed class ErrorResult {
-    data class Rpc(val error: RpcError): ErrorResult()                  // JSON-RPC level errors
-    data class RpcRuntime(val error: String): ErrorResult()             // RPC runtime-related errors
-    data class Http(val statusCode: Int, val body: String? = null): ErrorResult() // Non-2xx HTTP responses
-    data class Timeout(val cause: Throwable? = null): ErrorResult()     // Request timed out
-    data class Network(val cause: Throwable): ErrorResult()             // Network issues (e.g., UnknownHostException)
-    data class Deserialization(val cause: Throwable, val rawBody: String? = null): ErrorResult() // JSON parsing issues
-    data class Cancellation(val cause: Throwable? = null): ErrorResult() // Request was cancelled
-    data class Unknown(val message: String? = null, val cause: Throwable? = null): ErrorResult() // Catch-all for unexpected errors
+  data class Rpc(val error: RpcError): ErrorResult()                  // JSON-RPC level errors
+  data class RpcRuntime(val error: String): ErrorResult()             // RPC runtime-related errors
+  data class Http(val statusCode: Int, val body: String? = null): ErrorResult() // Non-2xx HTTP responses
+  data class Timeout(val cause: Throwable? = null): ErrorResult()     // Request timed out
+  data class Network(val cause: Throwable): ErrorResult()             // Network issues (e.g., UnknownHostException)
+  data class Deserialization(val cause: Throwable, val rawBody: String? = null): ErrorResult() // JSON parsing issues
+  data class Cancellation(val cause: Throwable? = null): ErrorResult() // Request was cancelled
+  data class Unknown(val message: String? = null, val cause: Throwable? = null): ErrorResult() // Catch-all for unexpected errors
 }
 ```
 
@@ -234,67 +234,67 @@ Here’s how to handle both success and different types of errors in an RPC resp
 val response = rpcClient.callSomeRpcMethod(params)
 
 when (response) {
-    is RpcResponse.Success -> {
-        val result = response.result
-        println("✅ RPC call succeeded: $result")
-    }
-    is RpcResponse.Failure -> {
-        when (val error = response.error) {
-            is ErrorResult.Rpc<*> -> {
-                when (error.error) {
-                    is RpcBlockError -> {
-                        println("🛑 RpcBlockError Error: ${error.error.toString()}")
-                    }
+  is RpcResponse.Success -> {
+    val result = response.result
+    println("✅ RPC call succeeded: $result")
+  }
+  is RpcResponse.Failure -> {
+    when (val error = response.error) {
+      is ErrorResult.Rpc<*> -> {
+        when (error.error) {
+          is RpcBlockError -> {
+            println("🛑 RpcBlockError Error: ${error.error.toString()}")
+          }
 
-                    is RpcChunkError -> {
-                        println("⚠️ RpcChunkError Error: ${error.error.toString()}")
-                    }
+          is RpcChunkError -> {
+            println("⚠️ RpcChunkError Error: ${error.error.toString()}")
+          }
 
-                    is RpcQueryError -> {
-                        println("🔍 RpcQueryError Error: ${error.error.toString()}")
-                    }
+          is RpcQueryError -> {
+            println("🔍 RpcQueryError Error: ${error.error.toString()}")
+          }
 
-                    is RpcReceiptError -> {
-                        println("📄 RpcReceiptError Error: ${error.error.toString()}")
-                    }
+          is RpcReceiptError -> {
+            println("📄 RpcReceiptError Error: ${error.error.toString()}")
+          }
 
-                    is RpcTransactionError -> {
-                        println("💰 RpcTransactionError Error: ${error.error.toString()}")
-                    }
+          is RpcTransactionError -> {
+            println("💰 RpcTransactionError Error: ${error.error.toString()}")
+          }
 
-                    is RpcValidatorError -> {
-                        println("🔒 RpcValidatorError Error: ${error.error.toString()}")
-                    }
+          is RpcValidatorError -> {
+            println("🔒 RpcValidatorError Error: ${error.error.toString()}")
+          }
 
-                    else -> {
-                        println("⚠️ Rpc Error: ${error.error.toString()}")
-                    }
-                }
-            }
-            
-            is ErrorResult.Http -> {
-                println("❌ HTTP Error: Status ${error.statusCode}, body: ${error.body}")
-            }
-            is ErrorResult.Timeout -> {
-                println("⏳ Timeout Error: ${error.cause?.message}")
-            }
-            is ErrorResult.Network -> {
-                println("🌐 Network Error: ${error.cause.message}")
-            }
-            is ErrorResult.Deserialization -> {
-                println("🔄 Deserialization Error: ${error.cause.message}, raw body: ${error.rawBody}")
-            }
-            is ErrorResult.Cancellation -> {
-                println("🚫 Request Cancelled: ${error.cause?.message}")
-            }
-            is ErrorResult.Unknown -> {
-                println("❓ Unknown Error: ${error.message}, cause: ${error.cause?.message}")
-            }
-            is ErrorResult.RpcRuntime -> {
-                println("⚠️ Runtime RPC Error: ${error.error}")
-            }
+          else -> {
+            println("⚠️ Rpc Error: ${error.error.toString()}")
+          }
         }
+      }
+
+      is ErrorResult.Http -> {
+        println("❌ HTTP Error: Status ${error.statusCode}, body: ${error.body}")
+      }
+      is ErrorResult.Timeout -> {
+        println("⏳ Timeout Error: ${error.cause?.message}")
+      }
+      is ErrorResult.Network -> {
+        println("🌐 Network Error: ${error.cause.message}")
+      }
+      is ErrorResult.Deserialization -> {
+        println("🔄 Deserialization Error: ${error.cause.message}, raw body: ${error.rawBody}")
+      }
+      is ErrorResult.Cancellation -> {
+        println("🚫 Request Cancelled: ${error.cause?.message}")
+      }
+      is ErrorResult.Unknown -> {
+        println("❓ Unknown Error: ${error.message}, cause: ${error.cause?.message}")
+      }
+      is ErrorResult.RpcRuntime -> {
+        println("⚠️ Runtime RPC Error: ${error.error}")
+      }
     }
+  }
 }
 ```
 
@@ -309,8 +309,8 @@ This structured approach to error handling makes it easy to differentiate betwee
 
 ```bash
 # Run all tests
-./gradlew :generator:test
-./gradlew :client:test
+./gradlew jvmTest
+./gradlew test
 ```
 
 ### Test Structure
@@ -332,14 +332,14 @@ For detailed instructions on project structure, CI/CD workflow, versioning, and 
 
 Contributions welcome!
 
-1. Fork and create a branch.  
-2. If you modify generator, include resulting generated files or open a separate PR to regenerate.  
-3. Add tests for new behaviors.  
+1. Fork and create a branch.
+2. If you modify generator, include resulting generated files or open a separate PR to regenerate.
+3. Add tests for new behaviors.
 4. Run:
 ```bash
 ./gradlew build
-./gradlew :generator:test
-./gradlew :client:test
+./gradlew jvmTest
+./gradlew test
 ```
 5. Open a PR with clear description.
 6. **More details:** see the [Contributing Overview](https://github.com/near/near-jsonrpc-client-kotlin?tab=contributing-ov-file) tab in this repository.
@@ -354,9 +354,9 @@ This project is licensed under the **Apache-2.0 License**. See [LICENSE](./LICEN
 
 ## 📬 Contact & References
 
-- JSON-RPC interface: https://docs.near.org/api/rpc/introduction  
+- JSON-RPC interface: https://docs.near.org/api/rpc/introduction
 - Other References:
   - Python client: https://github.com/hosseinkarami-dev/near-jsonrpc-client-py/
-  - Rust client: https://github.com/PolyProgrammist/near-openapi-client  
+  - Rust client: https://github.com/PolyProgrammist/near-openapi-client
   - TypeScript client: https://github.com/near/near-jsonrpc-client-ts
   - Swift client: https://github.com/near/near-jsonrpc-client-swift

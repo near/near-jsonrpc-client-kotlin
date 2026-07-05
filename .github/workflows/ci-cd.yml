@@ -39,7 +39,7 @@ jobs:
         id: generator
         run: |
           set +e
-          ./gradlew :generator:run --args="--openapi-url https://raw.githubusercontent.com/near/nearcore/master/chain/jsonrpc/openapi/openapi.json" --no-daemon
+          ./gradlew :generator:run --args="--openapi-url " --no-daemon
           EXIT_CODE=$?
           set -e
           if [ $EXIT_CODE -ne 0 ]; then

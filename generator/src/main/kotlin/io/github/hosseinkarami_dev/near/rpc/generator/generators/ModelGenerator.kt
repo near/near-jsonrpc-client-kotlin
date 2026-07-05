@@ -103,11 +103,8 @@ class ModelGenerator(
         builtTypes: MutableSet<String>
     ) {
 
-        if (schema.enum?.size == 1 && schema.enum.firstOrNull() == null && schema.nullable == true) {
-            val typeAlias = TypeAliasSpec.builder(className, ClassName("kotlinx.serialization.json", "JsonElement").copy(nullable = true))
-                .addModifiers(KModifier.PUBLIC)
-                .build()
-            fileBuilder.addTypeAlias(typeAlias)
+        if (isNullOnlyNullableSchema(schema)) {
+            fileBuilder.addTypeAlias(buildNullableUnitTypeAlias(className, schema))
             builtTypes.add(className)
             return
         }
@@ -124,44 +121,21 @@ class ModelGenerator(
             spec.components.schemas[refName] ?: schema
         } else schema
 
-        //handles RpcHealthResponse - like ones
-        if (schema.enum?.all { it == null } == true && schema.nullable == true) {
-            val typeAliasBuilder =
-                TypeAliasSpec.builder(className, Unit::class.asTypeName().copy(nullable = true))
-                    .addModifiers(KModifier.PUBLIC)
-            schema.generateKdoc()?.let { typeAliasBuilder.addKdoc(it) }
-
-            fileBuilder.addTypeAlias(typeAliasBuilder.build())
-            return
-        }
-
         // 1) enum top-level
         if (!topSchema.enum.isNullOrEmpty()) {
             val nonNullLiterals = topSchema.enum.filterNotNull()
             if (nonNullLiterals.isEmpty()) {
-                val objBuilder = TypeSpec.objectBuilder(className).addAnnotation(Serializable::class)
-                topSchema.generateKdoc()?.let { objBuilder.addKdoc(it) }
-                fileBuilder.addType(objBuilder.build())
+                fileBuilder.addType(
+                    TypeSpec.objectBuilder(className).addAnnotation(Serializable::class).also {
+                        topSchema.generateKdoc()?.let { doc -> it.addKdoc(doc) }
+                    }.build()
+                )
                 builtTypes.add(className)
                 buildingTypes.remove(className)
                 return
             }
 
-            val enumBuilder = TypeSpec.enumBuilder(className).addAnnotation(Serializable::class)
-            topSchema.generateKdoc()?.let { enumBuilder.addKdoc(it) }
-            val used = mutableMapOf<String, Int>()
-            topSchema.enum.filterNotNull().forEach { lit ->
-                var constName = lit.constantName()
-                val c = used.getOrDefault(constName, 0)
-                if (c > 0) constName = "${constName}_$c"
-                used[constName] = c + 1
-                val ann = AnnotationSpec.builder(SerialName::class).addMember("%S", lit).build()
-                enumBuilder.addEnumConstant(
-                    constName,
-                    TypeSpec.anonymousClassBuilder().addAnnotation(ann).build()
-                )
-            }
-            fileBuilder.addType(enumBuilder.build())
+            fileBuilder.addType(buildEnumTypeSpec(className, topSchema, nonNullLiterals))
             builtTypes.add(className)
             buildingTypes.remove(className)
             return
@@ -171,6 +145,7 @@ class ModelGenerator(
         val combinedList = (topSchema.oneOf ?: emptyList()) + (topSchema.anyOf ?: emptyList())
         if (combinedList.isNotEmpty()) {
             buildCombinedSchema(fileBuilder, className, topSchema, builtTypes)
+            buildingTypes.remove(className)
             return
         }
 
@@ -214,19 +189,7 @@ class ModelGenerator(
                     .firstOrNull { it != null }
 
                 if (primTypeName != null) {
-                    val ctor =
-                        FunSpec.constructorBuilder().addParameter("value", primTypeName).build()
-                    val cbBuilder = TypeSpec.classBuilder(className)
-                        .addModifiers(KModifier.VALUE)
-                        .addAnnotation(Serializable::class)
-                        .addAnnotation(JvmInline::class)
-                        .primaryConstructor(ctor)
-                        .addProperty(
-                            PropertySpec.builder("value", primTypeName).initializer("value").build()
-                        )
-                    topSchema.generateKdoc()?.let { cbBuilder.addKdoc(it) }
-
-                    fileBuilder.addType(cbBuilder.build())
+                    fileBuilder.addType(buildValueClassSpec(className, primTypeName, topSchema))
                     builtTypes.add(className)
                     buildingTypes.remove(className)
                     return
@@ -434,36 +397,20 @@ class ModelGenerator(
         // 6) primitive fallback
         if (topSchema.isPrimitiveType()) {
             val prim = topSchema.getPrimitiveTypeName() ?: STRING
-            val ctor = FunSpec.constructorBuilder().addParameter("value", prim).build()
-            val cbBuilder = TypeSpec.classBuilder(className)
-                .addModifiers(KModifier.VALUE)
-                .addAnnotation(Serializable::class)
-                .addAnnotation(JvmInline::class)
-                .primaryConstructor(ctor)
-                .addProperty(PropertySpec.builder("value", prim).initializer("value").build())
-            topSchema.generateKdoc()?.let { cbBuilder.addKdoc(it) }
-            fileBuilder.addType(cbBuilder.build())
+            fileBuilder.addType(buildValueClassSpec(className, prim, topSchema))
             builtTypes.add(className)
             buildingTypes.remove(className)
             return
         }
 
         // fallback JsonElement wrapper
-        val ctor = FunSpec.constructorBuilder()
-            .addParameter("value", ClassName("kotlinx.serialization.json", "JsonElement")).build()
-        val cbBuilder = TypeSpec.classBuilder(className)
-            .addModifiers(KModifier.VALUE)
-            .addAnnotation(Serializable::class)
-            .addAnnotation(JvmInline::class)
-            .primaryConstructor(ctor)
-            .addProperty(
-                PropertySpec.builder(
-                    "value",
-                    ClassName("kotlinx.serialization.json", "JsonElement")
-                ).initializer("value").build()
+        fileBuilder.addType(
+            buildValueClassSpec(
+                className = className,
+                valueType = ClassName("kotlinx.serialization.json", "JsonElement"),
+                schema = topSchema
             )
-        topSchema.generateKdoc()?.let { cbBuilder.addKdoc(it) }
-        fileBuilder.addType(cbBuilder.build())
+        )
         builtTypes.add(className)
         buildingTypes.remove(className)
     }
@@ -479,9 +426,23 @@ class ModelGenerator(
         schema.anyOf?.let { variants.addAll(it) }
         if (variants.isEmpty()) return
 
-        // If a single variant, keep behavior: merge allOf into it and build object from props
+        // If a single variant, preserve its shape instead of forcing it into an object.
         if (variants.size == 1) {
             val v = variants.first()
+            val nonNullLiterals = v.enum?.filterNotNull().orEmpty()
+            if (nonNullLiterals.isNotEmpty()) {
+                fileBuilder.addType(buildEnumTypeSpec(className, schema, nonNullLiterals))
+                builtTypes.add(className)
+                return
+            }
+
+            if (v.isPrimitiveType()) {
+                val prim = v.getPrimitiveTypeName() ?: STRING
+                fileBuilder.addType(buildValueClassSpec(className, prim, schema))
+                builtTypes.add(className)
+                return
+            }
+
             val (mergedProps, mergedRequired) = mergeAllOfInto(v)
             buildObjectFromProps(
                 fileBuilder,
@@ -616,32 +577,7 @@ class ModelGenerator(
                         )
                         val localized = localizeType(t, nestedTypes)
                         val paramName = pn.camelCase()
-
-                        val paramBuilder = ParameterSpec.builder(paramName, localized)
-                        val dv = defaultValueLiteralForSchema(ps, localized)
-                        if (dv != null) {
-                            paramBuilder.defaultValue("%L", dv)
-                        } else if (localized.isNullable) {
-                            paramBuilder.defaultValue("%L", "null")
-                        }
-                        subCtor.addParameter(paramBuilder.build())
-
-                        val pBuilder = PropertySpec.builder(paramName, localized)
-                            .initializer("%N", paramName)
-                            .addAnnotation(
-                                AnnotationSpec.builder(SerialName::class).addMember("%S", pn)
-                                    .build()
-                            )
-                        ps.generateKdoc()?.let { pBuilder.addKdoc(it) }
-                        subBuilder.addProperty(pBuilder.build())
-
-                        // collect metadata
-                        propsForVariant += PropInfo(
-                            name = paramName,
-                            serialName = pn,
-                            type = localized.toString(),
-                            nullable = localized.isNullable
-                        )
+                        propsForVariant += addSchemaProperty(subCtor, subBuilder, ps, pn, paramName, localized)
                     }
 
                     // add nested types found
@@ -662,32 +598,7 @@ class ModelGenerator(
                         )
                         val localized = localizeType(t, nestedTypes)
                         val paramName = pname.camelCase()
-
-                        val paramBuilder = ParameterSpec.builder(paramName, localized)
-                        val dv = defaultValueLiteralForSchema(pschemaRaw, localized)
-                        if (dv != null) {
-                            paramBuilder.defaultValue("%L", dv)
-                        } else if (localized.isNullable) {
-                            paramBuilder.defaultValue("%L", "null")
-                        }
-                        subCtor.addParameter(paramBuilder.build())
-
-                        val pBuilder = PropertySpec.builder(paramName, localized)
-                            .initializer("%N", paramName)
-                            .addAnnotation(
-                                AnnotationSpec.builder(SerialName::class).addMember("%S", pname)
-                                    .build()
-                            )
-                        pschemaRaw.generateKdoc()?.let { pBuilder.addKdoc(it) }
-                        subBuilder.addProperty(pBuilder.build())
-
-                        // collect metadata for top-level props too
-                        propsForVariant += PropInfo(
-                            name = paramName,
-                            serialName = pname,
-                            type = localized.toString(),
-                            nullable = localized.isNullable
-                        )
+                        propsForVariant += addSchemaProperty(subCtor, subBuilder, pschemaRaw, pname, paramName, localized)
                     }
 
                     subBuilder.primaryConstructor(subCtor.build())
@@ -731,28 +642,7 @@ class ModelGenerator(
                 )
                 val innerType = localizeType(innerTypeRaw, nestedTypes)
                 val paramName = caseKey.camelCase()
-
-                val paramBuilder = ParameterSpec.builder(paramName, innerType)
-                val dv = defaultValueLiteralForSchema(caseSchema, innerType)
-                if (dv != null) {
-                    paramBuilder.defaultValue("%L", dv)
-                } else if (innerType.isNullable) {
-                    paramBuilder.defaultValue("%L", "null")
-                }
-                subCtor.addParameter(paramBuilder.build())
-
-                val pb = PropertySpec.builder(paramName, innerType).initializer("%N", paramName)
-                caseSchema.generateKdoc()?.let { pb.addKdoc(it) }
-                pb.addAnnotation(AnnotationSpec.builder(SerialName::class).addMember("%S", caseKey).build())
-                subBuilder.addProperty(pb.build())
-
-                // collect metadata
-                propsForVariant += PropInfo(
-                    name = paramName,
-                    serialName = caseKey,
-                    type = innerType.toString(),
-                    nullable = innerType.isNullable
-                )
+                propsForVariant += addSchemaProperty(subCtor, subBuilder, caseSchema, caseKey, paramName, innerType)
             }
             // enum string literal variants (keeps them as objects under sealed)
             else if (v.type == "string" && !v.enum.isNullOrEmpty()) {
@@ -811,32 +701,7 @@ class ModelGenerator(
                     )
                     val localized = localizeType(t, nestedTypes)
                     val paramName = pn.camelCase()
-
-                    val paramBuilder = ParameterSpec.builder(paramName, localized)
-                    val dv = defaultValueLiteralForSchema(ps, localized)
-                    if (dv != null) {
-                        paramBuilder.defaultValue("%L", dv)
-                    } else if (localized.isNullable) {
-                        paramBuilder.defaultValue("%L", "null")
-                    }
-                    specificCtor.addParameter(paramBuilder.build())
-
-                    val pBuilder = PropertySpec.builder(paramName, localized)
-                        .initializer("%N", paramName)
-                        .addAnnotation(
-                            AnnotationSpec.builder(SerialName::class).addMember("%S", pn)
-                                .build()
-                        )
-                    ps.generateKdoc()?.let { pBuilder.addKdoc(it) }
-                    specificSubBuilder.addProperty(pBuilder.build())
-
-                    // collect metadata
-                    propsForVariant += PropInfo(
-                        name = paramName,
-                        serialName = pn,
-                        type = localized.toString(),
-                        nullable = localized.isNullable
-                    )
+                    propsForVariant += addSchemaProperty(specificCtor, specificSubBuilder, ps, pn, paramName, localized)
                 }
 
                 nestedTypes.forEach { specificSubBuilder.addType(it) }
@@ -856,32 +721,7 @@ class ModelGenerator(
                     )
                     val localized = localizeType(t, nestedTypes)
                     val paramName = pname.camelCase()
-
-                    val paramBuilder = ParameterSpec.builder(paramName, localized)
-                    val dv = defaultValueLiteralForSchema(pschemaRaw, localized)
-                    if (dv != null) {
-                        paramBuilder.defaultValue("%L", dv)
-                    } else if (localized.isNullable) {
-                        paramBuilder.defaultValue("%L", "null")
-                    }
-                    specificCtor.addParameter(paramBuilder.build())
-
-                    val pBuilder = PropertySpec.builder(paramName, localized)
-                        .initializer("%N", paramName)
-                        .addAnnotation(
-                            AnnotationSpec.builder(SerialName::class).addMember("%S", pname)
-                                .build()
-                        )
-                    pschemaRaw.generateKdoc()?.let { pBuilder.addKdoc(it) }
-                    specificSubBuilder.addProperty(pBuilder.build())
-
-                    // collect metadata for lifted top-level prop
-                    propsForVariant += PropInfo(
-                        name = paramName,
-                        serialName = pname,
-                        type = localized.toString(),
-                        nullable = localized.isNullable
-                    )
+                    propsForVariant += addSchemaProperty(specificCtor, specificSubBuilder, pschemaRaw, pname, paramName, localized)
                 }
 
                 specificSubBuilder.primaryConstructor(specificCtor.build())
@@ -920,31 +760,7 @@ class ModelGenerator(
                         builtTypes
                     )
                     val paramName = pn.camelCase()
-
-                    val paramBuilder = ParameterSpec.builder(paramName, t)
-                    val dv = defaultValueLiteralForSchema(ps, t)
-                    if (dv != null) {
-                        paramBuilder.defaultValue("%L", dv)
-                    } else if (t.isNullable) {
-                        paramBuilder.defaultValue("%L", "null")
-                    }
-                    payloadCtor.addParameter(paramBuilder.build())
-
-                    val pBuilder = PropertySpec.builder(paramName, t).initializer("%N", paramName)
-                        .addAnnotation(
-                            AnnotationSpec.builder(SerialName::class).addMember("%S", pn)
-                                .build()
-                        )
-                    ps.generateKdoc()?.let { pBuilder.addKdoc(it) }
-                    payloadBuilder.addProperty(pBuilder.build())
-
-                    // collect metadata for payload props (they are logically the variant props)
-                    propsForVariant += PropInfo(
-                        name = paramName,
-                        serialName = pn,
-                        type = t.toString(),
-                        nullable = t.isNullable
-                    )
+                    propsForVariant += addSchemaProperty(payloadCtor, payloadBuilder, ps, pn, paramName, t)
 
                     payloadInitChecks.addAll(collectValidationChecksForProperty(paramName, ps, payloadName))
                 }
@@ -987,30 +803,7 @@ class ModelGenerator(
                     builtTypes
                 )
                 val paramName = pname.camelCase()
-
-                val paramBuilder = ParameterSpec.builder(paramName, t)
-                val dv = defaultValueLiteralForSchema(pschemaRaw, t)
-                if (dv != null) {
-                    paramBuilder.defaultValue("%L", dv)
-                } else if (t.isNullable) {
-                    paramBuilder.defaultValue("%L", "null")
-                }
-                subCtor.addParameter(paramBuilder.build())
-
-                val pb = PropertySpec.builder(paramName, t).initializer("%N", paramName)
-                    .addAnnotation(
-                        AnnotationSpec.builder(SerialName::class).addMember("%S", pname).build()
-                    )
-                pschemaRaw.generateKdoc()?.let { pb.addKdoc(it) }
-                subBuilder.addProperty(pb.build())
-
-                // collect metadata for top-level props attached to variant
-                propsForVariant += PropInfo(
-                    name = paramName,
-                    serialName = pname,
-                    type = t.toString(),
-                    nullable = t.isNullable
-                )
+                propsForVariant += addSchemaProperty(subCtor, subBuilder, pschemaRaw, pname, paramName, t)
             }
 
             subBuilder.primaryConstructor(subCtor.build())
@@ -1036,6 +829,82 @@ class ModelGenerator(
             variants = variantInfos.toList()
         )
         collectedSealedInfos += sealedMeta
+    }
+
+    private fun buildNullableUnitTypeAlias(className: String, schema: Schema): TypeAliasSpec {
+        val aliasBuilder = TypeAliasSpec.builder(className, Unit::class.asTypeName().copy(nullable = true))
+            .addModifiers(KModifier.PUBLIC)
+        schema.generateKdoc()?.let { aliasBuilder.addKdoc(it) }
+        return aliasBuilder.build()
+    }
+
+    private fun buildValueClassSpec(className: String, valueType: TypeName, schema: Schema): TypeSpec {
+        val ctor = FunSpec.constructorBuilder().addParameter("value", valueType).build()
+        val builder = TypeSpec.classBuilder(className)
+            .addModifiers(KModifier.VALUE)
+            .addAnnotation(Serializable::class)
+            .addAnnotation(JvmInline::class)
+            .primaryConstructor(ctor)
+            .addProperty(PropertySpec.builder("value", valueType).initializer("value").build())
+        schema.generateKdoc()?.let { builder.addKdoc(it) }
+        return builder.build()
+    }
+
+    private fun buildEnumTypeSpec(className: String, schema: Schema, literals: List<String>): TypeSpec {
+        val enumBuilder = TypeSpec.enumBuilder(className).addAnnotation(Serializable::class)
+        schema.generateKdoc()?.let { enumBuilder.addKdoc(it) }
+
+        val used = mutableMapOf<String, Int>()
+        literals.forEach { lit ->
+            var constName = lit.constantName()
+            val c = used.getOrDefault(constName, 0)
+            if (c > 0) constName = "${constName}_$c"
+            used[constName] = c + 1
+            val ann = AnnotationSpec.builder(SerialName::class).addMember("%S", lit).build()
+            enumBuilder.addEnumConstant(
+                constName,
+                TypeSpec.anonymousClassBuilder().addAnnotation(ann).build()
+            )
+        }
+
+        return enumBuilder.build()
+    }
+
+    private fun isNullOnlyNullableSchema(schema: Schema): Boolean {
+        return schema.nullable == true && schema.enum?.all { it == null } == true
+    }
+
+    private fun addSchemaProperty(
+        ctor: FunSpec.Builder,
+        classBuilder: TypeSpec.Builder,
+        schema: Schema,
+        jsonName: String,
+        propertyName: String,
+        type: TypeName
+    ): PropInfo {
+        val paramBuilder = ParameterSpec.builder(propertyName, type)
+        val dv = defaultValueLiteralForSchema(schema, type)
+        if (dv != null) {
+            paramBuilder.defaultValue("%L", dv)
+        } else if (type.isNullable) {
+            paramBuilder.defaultValue("%L", "null")
+        }
+        ctor.addParameter(paramBuilder.build())
+
+        val propBuilder = PropertySpec.builder(propertyName, type)
+            .initializer("%N", propertyName)
+            .addAnnotation(
+                AnnotationSpec.builder(SerialName::class).addMember("%S", jsonName).build()
+            )
+        schema.generateKdoc()?.let { propBuilder.addKdoc(it) }
+        classBuilder.addProperty(propBuilder.build())
+
+        return PropInfo(
+            name = propertyName,
+            serialName = jsonName,
+            type = type.toString(),
+            nullable = type.isNullable
+        )
     }
 
     fun buildObjectFromProps(
@@ -1074,22 +943,7 @@ class ModelGenerator(
                 ).copy(nullable = !requiredSet.contains(pname) || (pschemaRaw.nullable == true))
 
                 val paramName = pname.camelCase()
-                val paramBuilder = ParameterSpec.builder(paramName, propType)
-                val dv = defaultValueLiteralForSchema(pschemaRaw, propType)
-                if (dv != null) {
-                    paramBuilder.defaultValue("%L", dv)
-                } else if (propType.isNullable) {
-                    paramBuilder.defaultValue("%L", "null")
-                }
-                ctor.addParameter(paramBuilder.build())
-
-                val pBuilder = PropertySpec.builder(paramName, propType)
-                    .initializer("%N", paramName)
-                    .addAnnotation(
-                        AnnotationSpec.builder(SerialName::class).addMember("%S", pname).build()
-                    )
-                pschemaRaw.generateKdoc()?.let { pBuilder.addKdoc(it) }
-                classBuilder.addProperty(pBuilder.build())
+                addSchemaProperty(ctor, classBuilder, pschemaRaw, pname, paramName, propType)
 
                 // add validations if applicable
                 initChecks.addAll(collectValidationChecksForProperty(paramName, pschemaRaw, className))
@@ -1115,23 +969,7 @@ class ModelGenerator(
                     ).copy(nullable = !requiredSet.contains(pname) || (pschemaRaw.nullable == true))
 
                     val paramName = pname.camelCase()
-                    val paramBuilder = ParameterSpec.builder(paramName, propType)
-                    val dv = defaultValueLiteralForSchema(pschemaRaw, propType)
-                    if (dv != null) {
-                        paramBuilder.defaultValue("%L", dv)
-                    } else if (propType.isNullable) {
-                        paramBuilder.defaultValue("%L", "null")
-                    }
-                    ctor.addParameter(paramBuilder.build())
-
-                    val pBuilder = PropertySpec.builder(paramName, propType)
-                        .initializer("%N", paramName)
-                        .addAnnotation(
-                            AnnotationSpec.builder(SerialName::class).addMember("%S", pname)
-                                .build()
-                        )
-                    pschemaRaw.generateKdoc()?.let { pBuilder.addKdoc(it) }
-                    classBuilder.addProperty(pBuilder.build())
+                    addSchemaProperty(ctor, classBuilder, pschemaRaw, pname, paramName, propType)
 
                     // add validations if applicable
                     initChecks.addAll(collectValidationChecksForProperty(paramName, pschemaRaw, className))
@@ -1151,21 +989,7 @@ class ModelGenerator(
                 builtTypes
             )
             val paramName = pname.camelCase()
-            val paramBuilder = ParameterSpec.builder(paramName, resolvedType)
-            val dv = defaultValueLiteralForSchema(pschemaRaw, resolvedType)
-            if (dv != null) {
-                paramBuilder.defaultValue("%L", dv)
-            } else if (resolvedType.isNullable) {
-                paramBuilder.defaultValue("%L", "null")
-            }
-            ctor.addParameter(paramBuilder.build())
-
-            val pBuilder = PropertySpec.builder(paramName, resolvedType)
-                .initializer("%N", paramName).addAnnotation(
-                    AnnotationSpec.builder(SerialName::class).addMember("%S", pname).build()
-                )
-            pschemaRaw.generateKdoc()?.let { pBuilder.addKdoc(it) }
-            classBuilder.addProperty(pBuilder.build())
+            addSchemaProperty(ctor, classBuilder, pschemaRaw, pname, paramName, resolvedType)
 
             // add validations if applicable (for inline-resolved props)
             initChecks.addAll(collectValidationChecksForProperty(paramName, pschemaRaw, className))
@@ -1466,21 +1290,7 @@ class ModelGenerator(
         val nonNullLits = ctxSchema.enum?.filterNotNull() ?: emptyList()
         if (nonNullLits.isNotEmpty()) {
             val enumName = propNameForNested.pascalCase()
-            val enumBuilder = TypeSpec.enumBuilder(enumName).addAnnotation(Serializable::class)
-            ctxSchema.generateKdoc()?.let { enumBuilder.addKdoc(it) }
-            val used = mutableMapOf<String, Int>()
-            nonNullLits.forEach { lit ->
-                var constName = lit.constantName()
-                val c = used.getOrDefault(constName, 0)
-                if (c > 0) constName = "${constName}_$c"
-                used[constName] = c + 1
-                val ann = AnnotationSpec.builder(SerialName::class).addMember("%S", lit).build()
-                enumBuilder.addEnumConstant(
-                    constName,
-                    TypeSpec.anonymousClassBuilder().addAnnotation(ann).build()
-                )
-            }
-            nestedCollector.add(enumBuilder.build())
+            nestedCollector.add(buildEnumTypeSpec(enumName, ctxSchema, nonNullLits))
             return ClassName(fileBuilder.build().packageName, parentClassForNested, enumName).copy(
                 nullable = !isRequired || (ctxSchema.nullable == true)
             )

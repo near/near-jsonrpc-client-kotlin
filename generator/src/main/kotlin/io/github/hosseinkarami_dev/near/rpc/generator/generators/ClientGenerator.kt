@@ -319,7 +319,6 @@ object ClientGenerator {
                         "#/components/schemas/",
                         ""
                     )?.pascalCase()
-                    ?.replace("ErrorWrapperFor", "")
 
                 return toClassNameOrBestGuess("$modelsPackage.$errorClassName")
             }
@@ -558,7 +557,8 @@ object ClientGenerator {
                     if (!refVariant.ref.isNullOrBlank()) {
                         val ref = refVariant.ref.substringAfterLast("/")
                         val refClass = ref.pascalCase()
-                        return "$modelsPackage.${refClass}?"
+                        val refSchema = spec.components.schemas[ref]
+                        return "$modelsPackage.${refClass}" + if (isNullOnlyNullableSchema(refSchema)) "" else "?"
                     }
 
                     if (refVariant.type == "array") {
@@ -605,6 +605,10 @@ object ClientGenerator {
 
         // fallback: if we couldn't find `result` by schema introspection, try to parse the wrapper name itself
         return guessResultTypeFromResponseWrapperName(wrapperRef, modelsPackage)
+    }
+
+    private fun isNullOnlyNullableSchema(schema: Schema?): Boolean {
+        return schema?.nullable == true && schema.enum?.all { it == null } == true
     }
 
     private fun guessResultTypeFromResponseWrapperName(

@@ -48,23 +48,29 @@ fun main(args: Array<String>) {
     val modelPackage = "io.github.hosseinkarami_dev.near.rpc.models"
     val clientPackage = "io.github.hosseinkarami_dev.near.rpc.client"
     val testsPackage = "io.github.hosseinkarami_dev.near.rpc.client"
+    val modelsTestsPackage = "io.github.hosseinkarami_dev.near.rpc.models"
     val serializerPackage = modelPackage.replace(".models", ".serializers")
     val mocksForClient = File("$rootDir/client/src/jvmTest/resources/mock")
+    val mocksForModels = File("$rootDir/models/src/commonTest/resources/mock")
 
     val serializerFiles = File(modelsOut + serializerPackage.replace(".", "/"))
     val modelFiles = File(modelsOut + modelPackage.replace(".", "/"))
     val nearClientFile = File(clientOut + clientPackage.replace(".", "/"))
 
     val testsDirectory = File(testsOut + clientPackage.replace(".", "/"))
+    val modelsTestsDirectory = File("$rootDir/models/src/commonTest/kotlin/" + modelPackage.replace(".", "/"))
 
     serializerFiles.mkdirs()
     modelFiles.mkdirs()
     nearClientFile.mkdirs()
     mocksForClient.mkdirs()
+    modelsTestsDirectory.mkdirs()
+    mocksForModels.mkdirs()
 
     serializerFiles.takeIf { it.exists() }?.listFiles()?.forEach { it.delete() }
     modelFiles.takeIf { it.exists() }?.listFiles()?.forEach { it.delete() }
     mocksForClient.takeIf { it.exists() }?.listFiles()?.filter { it.extension == "json" }?.forEach { it.delete() }
+    mocksForModels.takeIf { it.exists() }?.listFiles()?.filter { it.extension == "json" }?.forEach { it.delete() }
 
     nearClientFile.delete()
 
@@ -101,6 +107,16 @@ fun main(args: Array<String>) {
         modelsPackage = modelPackage
     )
 
+    ModelTestGenerator.generateTestsForModels(
+        spec = spec,
+        output = modelsTestsDirectory,
+        testsPackage = modelsTestsPackage,
+        modelsPackage = modelPackage,
+        resourceDir = "src/commonTest/resources/mock",
+        fileName = "ModelSerializationRuntimeTest.kt",
+        testClassName = "ModelSerializationRuntimeTest"
+    )
+
     ClientTestGenerator.generateTestsForClient(
         spec = spec,
         output = testsDirectory,
@@ -109,7 +125,7 @@ fun main(args: Array<String>) {
         modelsPackage = modelPackage
     )
 
-    MockGenerator.generate(spec, listOf(mocksForClient))
+    MockGenerator.generate(spec, listOf(mocksForClient, mocksForModels))
 }
 
 private fun writeBlindUnionSerializer(outputDir: File, serializerPackage: String) {

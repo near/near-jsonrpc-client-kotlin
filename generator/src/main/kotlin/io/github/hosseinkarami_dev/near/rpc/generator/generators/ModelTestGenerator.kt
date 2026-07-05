@@ -14,7 +14,10 @@ object ModelTestGenerator {
         spec: OpenApiSpec,
         output: File,
         modelsPackage: String,
-        testsPackage: String
+        testsPackage: String,
+        resourceDir: String = "src/jvmTest/resources/mock",
+        fileName: String = "ModelSerializationTests.kt",
+        testClassName: String = "ModelSerializationTests"
     ) {
         val schemas = spec.components.schemas.keys.sorted()
 
@@ -32,15 +35,15 @@ object ModelTestGenerator {
             appendLine()
             appendLine("/**")
             appendLine(" * Generated model (de)serialization tests.")
-            appendLine(" * For each schema we try to load `src/jvmTest/resources/mock/<SchemaName>.json`")
+            appendLine(" * For each schema we try to load `$resourceDir/<SchemaName>.json`")
             appendLine(" * If the file does not exist the test will fail and indicate which file is missing")
             appendLine(" */")
-            appendLine("class ModelSerializationTests {")
+            appendLine("class $testClassName {")
             appendLine()
             appendLine("    private val json = Json { ignoreUnknownKeys = true }")
             appendLine()
             appendLine("    private fun loadMockJson(filename: String): String? {")
-            appendLine("        val f = File(\"src/jvmTest/resources/mock/\$filename\")")
+            appendLine("        val f = File(\"$resourceDir/\$filename\")")
             appendLine("        return if (f.exists()) f.readText() else null")
             appendLine("    }")
             appendLine()
@@ -70,7 +73,7 @@ object ModelTestGenerator {
         }
 
         // write to file
-        val testFile = File(output, "ModelSerializationTests.kt")
+        val testFile = File(output, fileName)
         testFile.parentFile.mkdirs()
         testFile.writeText(fileContent)
         println("✅ Model serialization tests generated at: ${testFile.absolutePath}")

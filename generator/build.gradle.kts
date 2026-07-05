@@ -12,6 +12,11 @@ kotlin {
     compilerOptions {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
     }
+    sourceSets {
+        val test by getting {
+            kotlin.srcDir("test/kotlin")
+        }
+    }
 }
 
 application {
