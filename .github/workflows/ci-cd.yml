@@ -63,10 +63,12 @@ jobs:
           set -euo pipefail
           git config --local user.email "automation@github.com"
           git config --local user.name "GitHub Actions Bot"
+          git fetch origin main --force --tags
 
           SHORT_SHA=${GITHUB_SHA:0:8}
           BRANCH="regenerate-openapi-${GITHUB_RUN_NUMBER}-${SHORT_SHA}"
-          git checkout -b "$BRANCH"
+          BASE_SHA=$(git rev-parse origin/main)
+          git checkout -b "$BRANCH" "$BASE_SHA"
 
           git add -A
 
@@ -78,7 +80,7 @@ jobs:
           echo "=== GIT DIFF FULL (trimmed to 100 lines) ==="
           git diff --cached | head -n 100 || true
 
-          if git diff --cached --name-status | grep -q '^[AM]'; then
+          if ! git diff --cached --quiet --exit-code; then
             echo "Changes detected, creating PR."
             echo "pr_required=true" >> "$GITHUB_OUTPUT"
           else
