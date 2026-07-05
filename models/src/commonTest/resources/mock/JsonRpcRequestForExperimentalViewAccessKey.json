@@ -1,0 +1,10 @@
+{
+    "id": "s",
+    "jsonrpc": "s",
+    "method": "EXPERIMENTAL_view_access_key",
+    "params": {
+        "account_id": "s",
+        "public_key": "s",
+        "block_id": "s"
+    }
+}

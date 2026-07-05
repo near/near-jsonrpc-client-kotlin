@@ -1,0 +1,9 @@
+{
+    "id": "s",
+    "jsonrpc": "s",
+    "method": "EXPERIMENTAL_view_code",
+    "params": {
+        "account_id": "s",
+        "block_id": "s"
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "id": "s",
+    "jsonrpc": "s",
+    "result": {
+        "block_hash": "s",
+        "block_height": 0,
+        "code_base64": "s",
+        "hash": "s"
+    }
+}

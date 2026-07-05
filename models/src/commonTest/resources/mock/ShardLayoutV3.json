@@ -1,0 +1,17 @@
+{
+    "boundary_accounts": [
+        "s"
+    ],
+    "id_to_index_map": {
+        "additionalProp1": 0
+    },
+    "last_split": 0,
+    "shard_ids": [
+        0
+    ],
+    "shards_split_map": {
+        "additionalProp1": [
+            0
+        ]
+    }
+}
