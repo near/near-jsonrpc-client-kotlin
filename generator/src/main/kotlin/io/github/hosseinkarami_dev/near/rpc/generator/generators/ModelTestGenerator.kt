@@ -24,7 +24,7 @@ object ModelTestGenerator {
         val fileContent = buildString {
             appendLine("package $testsPackage")
             appendLine()
-            appendLine("import kotlin.test.Test")
+            appendLine("import org.junit.jupiter.api.Test")
             appendLine("import kotlinx.serialization.builtins.serializer")
             appendLine("import kotlin.test.assertEquals")
             appendLine("import kotlin.test.assertNotNull")

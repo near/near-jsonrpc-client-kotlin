@@ -30,5 +30,15 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
+
+        jvmTest.dependencies {
+            implementation(libs.junit)
+            implementation(libs.junit.jupiter.api)
+            implementation(libs.junit.jupiter.engine)
+        }
     }
+}
+
+tasks.named<Test>("jvmTest") {
+    useJUnitPlatform()
 }

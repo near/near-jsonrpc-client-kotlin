@@ -58,7 +58,7 @@ fun main(args: Array<String>) {
     val nearClientFile = File(clientOut + clientPackage.replace(".", "/"))
 
     val testsDirectory = File(testsOut + clientPackage.replace(".", "/"))
-    val modelsTestsDirectory = File("$rootDir/models/src/commonTest/kotlin/" + modelPackage.replace(".", "/"))
+    val modelsTestsDirectory = File("$rootDir/models/src/jvmTest/kotlin/" + modelPackage.replace(".", "/"))
 
     serializerFiles.mkdirs()
     modelFiles.mkdirs()
