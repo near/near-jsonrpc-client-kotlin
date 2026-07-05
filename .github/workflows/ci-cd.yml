@@ -39,13 +39,12 @@ jobs:
         id: generator
         run: |
           set +e
-          ./gradlew :generator:run --args="--openapi-url " --no-daemon
+          ./gradlew :generator:run --no-daemon
           EXIT_CODE=$?
           set -e
           if [ $EXIT_CODE -ne 0 ]; then
-            echo "⚠️ OpenAPI generation failed. Skipping regeneration."
-            echo "pr_required=false" >> "$GITHUB_OUTPUT"
-            exit 0
+            echo "OpenAPI generation failed. Failing workflow to avoid testing stale generated sources."
+            exit $EXIT_CODE
           fi
           echo "Generator completed successfully."
           echo "pr_required=true" >> "$GITHUB_OUTPUT"
