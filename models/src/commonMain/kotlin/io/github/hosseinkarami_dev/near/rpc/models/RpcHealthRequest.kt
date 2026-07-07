@@ -1,5 +1,9 @@
 package io.github.hosseinkarami_dev.near.rpc.models
 
-import kotlinx.serialization.json.JsonElement
+import kotlin.Unit
 
-public typealias RpcHealthRequest = JsonElement?
+/**
+ *  * Nullable: true
+ *  * Possible values: null
+ */
+public typealias RpcHealthRequest = Unit?

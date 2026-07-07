@@ -1,4 +1,4 @@
-package io.github.hosseinkarami_dev.near.rpc.client
+package io.github.hosseinkarami_dev.near.rpc.models
 
 import org.junit.jupiter.api.Test
 import kotlinx.serialization.builtins.serializer
@@ -13,15 +13,15 @@ import java.io.File
 
 /**
  * Generated model (de)serialization tests.
- * For each schema we try to load `src/jvmTest/resources/mock/<SchemaName>.json`
+ * For each schema we try to load `src/commonTest/resources/mock/<SchemaName>.json`
  * If the file does not exist the test will fail and indicate which file is missing
  */
-class ModelSerializationTests {
+class ModelSerializationRuntimeTest {
 
     private val json = Json { ignoreUnknownKeys = true }
 
     private fun loadMockJson(filename: String): String? {
-        val f = File("src/jvmTest/resources/mock/$filename")
+        val f = File("src/commonTest/resources/mock/$filename")
         return if (f.exists()) f.readText() else null
     }
 
