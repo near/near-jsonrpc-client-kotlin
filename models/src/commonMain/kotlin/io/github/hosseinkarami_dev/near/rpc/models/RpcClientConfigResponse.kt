@@ -376,14 +376,7 @@ public data class RpcClientConfigResponse(
   @SerialName("state_sync")
   public val stateSync: StateSyncConfig? = null,
   /**
-   *  * Additional waiting period after a failed request to external storage
-   *  * Min Items: 2
-   *  * Max Items: 2
-   */
-  @SerialName("state_sync_external_backoff")
-  public val stateSyncExternalBackoff: List<ULong>? = null,
-  /**
-   *  * How long to wait for a response from centralized state sync
+   *  * How long to wait for a state sync block request response
    *  * Min Items: 2
    *  * Max Items: 2
    */
@@ -521,10 +514,6 @@ public data class RpcClientConfigResponse(
     require((stateRequestThrottlePeriod?.size ?: 0) >= 2) { "RpcClientConfigResponse.stateRequestThrottlePeriod must contain at least 2 items (minItems = 2)" }}
   init {
     require((stateRequestThrottlePeriod?.size ?: 0) <= 2) { "RpcClientConfigResponse.stateRequestThrottlePeriod must contain no more than 2 items (maxItems = 2)" }}
-  init {
-    require((stateSyncExternalBackoff?.size ?: 0) >= 2) { "RpcClientConfigResponse.stateSyncExternalBackoff must contain at least 2 items (minItems = 2)" }}
-  init {
-    require((stateSyncExternalBackoff?.size ?: 0) <= 2) { "RpcClientConfigResponse.stateSyncExternalBackoff must contain no more than 2 items (maxItems = 2)" }}
   init {
     require((stateSyncExternalTimeout?.size ?: 0) >= 2) { "RpcClientConfigResponse.stateSyncExternalTimeout must contain at least 2 items (minItems = 2)" }}
   init {
