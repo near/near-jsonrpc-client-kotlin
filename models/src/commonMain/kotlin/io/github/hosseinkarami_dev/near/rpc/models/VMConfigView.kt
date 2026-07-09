@@ -105,6 +105,11 @@ public data class VMConfigView(
   @SerialName("regular_op_cost")
   public val regularOpCost: UInt? = null,
   /**
+   *  * See [VMConfig::sha3_host_fns](crate::vm::Config::sha3_host_fns).
+   */
+  @SerialName("sha3_host_fns")
+  public val sha3HostFns: Boolean? = null,
+  /**
    *  * See [VMConfig::storage_get_mode](crate::vm::Config::storage_get_mode).
    */
   @SerialName("storage_get_mode")

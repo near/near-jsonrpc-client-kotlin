@@ -220,6 +220,26 @@ public data class ExtCostsConfigView(
   @SerialName("sha3_256_byte")
   public val sha3256Byte: NearGas? = null,
   /**
+   *  * Cost of getting sha3-384 base
+   */
+  @SerialName("sha3_384_base")
+  public val sha3384Base: NearGas? = null,
+  /**
+   *  * Cost of getting sha3-384 per byte
+   */
+  @SerialName("sha3_384_byte")
+  public val sha3384Byte: NearGas? = null,
+  /**
+   *  * Cost of getting sha3-512 base
+   */
+  @SerialName("sha3_512_base")
+  public val sha3512Base: NearGas? = null,
+  /**
+   *  * Cost of getting sha3-512 per byte
+   */
+  @SerialName("sha3_512_byte")
+  public val sha3512Byte: NearGas? = null,
+  /**
    *  * Storage trie check for key existence cost base
    */
   @SerialName("storage_has_key_base")
