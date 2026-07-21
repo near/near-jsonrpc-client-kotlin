@@ -118,6 +118,15 @@ public sealed class RpcQueryRequest {
     public val blockId: BlockId,
     @SerialName("account_id")
     public val accountId: AccountId,
+    @SerialName("after_key")
+    public val afterKey: PublicKeyHandle? = null,
+    /**
+     *  * Minimum: 1.0
+     *  * Format: uint32
+     *  * Nullable: true
+     */
+    @SerialName("limit")
+    public val limit: UInt? = null,
     /**
      *  * Possible values: view_access_key_list
      */
@@ -337,6 +346,15 @@ public sealed class RpcQueryRequest {
     public val finality: Finality,
     @SerialName("account_id")
     public val accountId: AccountId,
+    @SerialName("after_key")
+    public val afterKey: PublicKeyHandle? = null,
+    /**
+     *  * Minimum: 1.0
+     *  * Format: uint32
+     *  * Nullable: true
+     */
+    @SerialName("limit")
+    public val limit: UInt? = null,
     /**
      *  * Possible values: view_access_key_list
      */
@@ -556,6 +574,15 @@ public sealed class RpcQueryRequest {
     public val syncCheckpoint: SyncCheckpoint,
     @SerialName("account_id")
     public val accountId: AccountId,
+    @SerialName("after_key")
+    public val afterKey: PublicKeyHandle? = null,
+    /**
+     *  * Minimum: 1.0
+     *  * Format: uint32
+     *  * Nullable: true
+     */
+    @SerialName("limit")
+    public val limit: UInt? = null,
     /**
      *  * Possible values: view_access_key_list
      */
