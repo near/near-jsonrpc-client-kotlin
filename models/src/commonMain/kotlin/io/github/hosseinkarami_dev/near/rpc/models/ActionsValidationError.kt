@@ -398,4 +398,12 @@ public sealed class ActionsValidationError {
       public val numberOfDeployActions: ULong,
     )
   }
+
+  /**
+   *  * The method name in a FunctionCall action must not be empty.
+   *  * Possible values: FunctionCallEmptyMethodName
+   */
+  @Serializable
+  @SerialName("FunctionCallEmptyMethodName")
+  public data object FunctionCallEmptyMethodName : ActionsValidationError()
 }

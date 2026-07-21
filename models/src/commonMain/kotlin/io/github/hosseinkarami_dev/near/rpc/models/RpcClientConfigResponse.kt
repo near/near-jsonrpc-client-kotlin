@@ -479,6 +479,14 @@ public data class RpcClientConfigResponse(
   @SerialName("version")
   public val version: Version? = null,
   /**
+   *  * Upper bound on the number of access keys returned by a `view_access_key_list`
+   * query.
+   *  * Minimum: 0.0
+   *  * Format: uint32
+   */
+  @SerialName("view_access_keys_limit")
+  public val viewAccessKeysLimit: UInt? = null,
+  /**
    *  * Number of threads for ViewClientActor pool.
    *  * Minimum: 0.0
    *  * Format: uint

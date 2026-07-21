@@ -2,6 +2,7 @@ package io.github.hosseinkarami_dev.near.rpc.models
 
 import io.github.hosseinkarami_dev.near.rpc.serializers.RpcQueryErrorSerializer
 import kotlin.String
+import kotlin.UInt
 import kotlin.ULong
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -311,6 +312,46 @@ public sealed class RpcQueryError {
     public enum class Name {
       @SerialName("UNKNOWN_GAS_KEY")
       UNKNOWN_GAS_KEY,
+    }
+  }
+
+  @Serializable
+  public data class TooManyAccessKeys(
+    @SerialName("info")
+    public val info: InfoPayload,
+    /**
+     *  * Possible values: TOO_MANY_ACCESS_KEYS
+     */
+    @SerialName("name")
+    public val name: Name,
+  ) : RpcQueryError() {
+    @Serializable
+    public data class InfoPayload(
+      @SerialName("block_hash")
+      public val blockHash: CryptoHash,
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("block_height")
+      public val blockHeight: ULong,
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint32
+       */
+      @SerialName("limit")
+      public val limit: UInt,
+      @SerialName("requested_account_id")
+      public val requestedAccountId: AccountId,
+    )
+
+    /**
+     *  * Possible values: TOO_MANY_ACCESS_KEYS
+     */
+    @Serializable
+    public enum class Name {
+      @SerialName("TOO_MANY_ACCESS_KEYS")
+      TOO_MANY_ACCESS_KEYS,
     }
   }
 

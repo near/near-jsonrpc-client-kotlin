@@ -15,9 +15,9 @@ object RpcViewAccessKeyListRequestSerializer : KSerializer<RpcViewAccessKeyListR
     private val union: BlindUnionSerializer<RpcViewAccessKeyListRequest> = BlindUnionSerializer(
         serialName = "io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListRequest",
         variants = listOf(
-            Variant(serialName = "block_id", kind = VariantKind.DEFAULT, isInstance = { it is io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListRequest.BlockId }, fullSerializer = serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListRequest.BlockId>() as KSerializer<Any?>, fields = listOf("block_id", "account_id")),
-            Variant(serialName = "finality", kind = VariantKind.DEFAULT, isInstance = { it is io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListRequest.Finality }, fullSerializer = serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListRequest.Finality>() as KSerializer<Any?>, fields = listOf("finality", "account_id")),
-            Variant(serialName = "sync_checkpoint", kind = VariantKind.DEFAULT, isInstance = { it is io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListRequest.SyncCheckpoint }, fullSerializer = serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListRequest.SyncCheckpoint>() as KSerializer<Any?>, fields = listOf("sync_checkpoint", "account_id"))
+            Variant(serialName = "block_id", kind = VariantKind.DEFAULT, isInstance = { it is io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListRequest.BlockId }, fullSerializer = serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListRequest.BlockId>() as KSerializer<Any?>, fields = listOf("block_id", "account_id", "after_key", "limit")),
+            Variant(serialName = "finality", kind = VariantKind.DEFAULT, isInstance = { it is io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListRequest.Finality }, fullSerializer = serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListRequest.Finality>() as KSerializer<Any?>, fields = listOf("finality", "account_id", "after_key", "limit")),
+            Variant(serialName = "sync_checkpoint", kind = VariantKind.DEFAULT, isInstance = { it is io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListRequest.SyncCheckpoint }, fullSerializer = serializer<io.github.hosseinkarami_dev.near.rpc.models.RpcViewAccessKeyListRequest.SyncCheckpoint>() as KSerializer<Any?>, fields = listOf("sync_checkpoint", "account_id", "after_key", "limit"))
         )
     )
 
