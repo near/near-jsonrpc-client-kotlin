@@ -14,11 +14,15 @@ public sealed class RpcViewStateRequest {
     public val blockId: io.github.hosseinkarami_dev.near.rpc.models.BlockId,
     @SerialName("account_id")
     public val accountId: AccountId,
+    /**
+     *  * Resume listing after this key (exclusive); must start with `prefix`.
+     */
     @SerialName("after_key_base64")
     public val afterKeyBase64: StoreKey? = null,
     @SerialName("include_proof")
     public val includeProof: Boolean? = false,
     /**
+     *  * Maximum number of entries to return in this page.
      *  * Minimum: 1.0
      *  * Format: uint32
      *  * Nullable: true
@@ -35,11 +39,15 @@ public sealed class RpcViewStateRequest {
     public val finality: io.github.hosseinkarami_dev.near.rpc.models.Finality,
     @SerialName("account_id")
     public val accountId: AccountId,
+    /**
+     *  * Resume listing after this key (exclusive); must start with `prefix`.
+     */
     @SerialName("after_key_base64")
     public val afterKeyBase64: StoreKey? = null,
     @SerialName("include_proof")
     public val includeProof: Boolean? = false,
     /**
+     *  * Maximum number of entries to return in this page.
      *  * Minimum: 1.0
      *  * Format: uint32
      *  * Nullable: true
@@ -56,11 +64,15 @@ public sealed class RpcViewStateRequest {
     public val syncCheckpoint: io.github.hosseinkarami_dev.near.rpc.models.SyncCheckpoint,
     @SerialName("account_id")
     public val accountId: AccountId,
+    /**
+     *  * Resume listing after this key (exclusive); must start with `prefix`.
+     */
     @SerialName("after_key_base64")
     public val afterKeyBase64: StoreKey? = null,
     @SerialName("include_proof")
     public val includeProof: Boolean? = false,
     /**
+     *  * Maximum number of entries to return in this page.
      *  * Minimum: 1.0
      *  * Format: uint32
      *  * Nullable: true
