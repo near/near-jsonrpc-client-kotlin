@@ -19,6 +19,9 @@ public data class RpcViewStateResponse(
    */
   @SerialName("block_height")
   public val blockHeight: ULong,
+  /**
+   *  * Cursor to resume from: present when more entries remain, absent when the listing is complete.
+   */
   @SerialName("last_key")
   public val lastKey: StoreKey? = null,
   @SerialName("proof")
