@@ -124,8 +124,14 @@ public sealed class RpcTransactionError {
     }
   }
 
+  /**
+   *  * `None` when the response comes from a node running an older version that omitted the
+   * cause, so newer clients can still parse it.
+   */
   @Serializable
   public data class TimeoutError(
+    @SerialName("info")
+    public val info: TimeoutErrorCause? = null,
     /**
      *  * Possible values: TIMEOUT_ERROR
      */
