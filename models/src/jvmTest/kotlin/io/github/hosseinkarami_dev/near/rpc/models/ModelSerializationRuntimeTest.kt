@@ -5146,6 +5146,22 @@ class ModelSerializationRuntimeTest {
     }
 
     @Test
+    fun testTimeoutErrorCauseEncodeDecode() {
+        val data = loadMockJson("TimeoutErrorCause.json")
+        assertNotNull(data, "Mock file TimeoutErrorCause.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.TimeoutErrorCause.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.TimeoutErrorCause.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.TimeoutErrorCause.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for TimeoutErrorCause: ${e.message}")
+        }
+    }
+
+    @Test
     fun testTrackedShardsConfigEncodeDecode() {
         val data = loadMockJson("TrackedShardsConfig.json")
         assertNotNull(data, "Mock file TrackedShardsConfig.json does not exist!")
