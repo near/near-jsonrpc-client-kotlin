@@ -103,6 +103,15 @@ public data class LimitConfig(
   @SerialName("max_gas_burnt")
   public val maxGasBurnt: NearGas? = null,
   /**
+   *  * If present, stores max number of globals (entries in the wasm global
+   * section) a contract may declare.
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   *  * Nullable: true
+   */
+  @SerialName("max_globals_per_contract")
+  public val maxGlobalsPerContract: ULong? = null,
+  /**
    *  * If present, stores max byte size of the wasm code after gas instrumentation.
    * This prevents Cranelift's 24-bit SSA counter from overflowing on
    * pathologically large contracts.

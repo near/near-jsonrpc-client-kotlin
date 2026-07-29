@@ -168,4 +168,12 @@ public sealed class PrepareError {
   @Serializable
   @SerialName("OperandStackTooLarge")
   public data object OperandStackTooLarge : PrepareError()
+
+  /**
+   *  * Contract declares too many entries in the wasm global section.
+   *  * Possible values: TooManyGlobals
+   */
+  @Serializable
+  @SerialName("TooManyGlobals")
+  public data object TooManyGlobals : PrepareError()
 }
