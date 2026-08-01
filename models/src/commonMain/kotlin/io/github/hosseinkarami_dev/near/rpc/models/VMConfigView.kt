@@ -83,6 +83,11 @@ public data class VMConfigView(
   @SerialName("linear_op_unit_cost")
   public val linearOpUnitCost: ULong? = null,
   /**
+   *  * See [VMConfig::ml_dsa_verify_host_fn](crate::vm::Config::ml_dsa_verify_host_fn).
+   */
+  @SerialName("ml_dsa_verify_host_fn")
+  public val mlDsaVerifyHostFn: Boolean? = null,
+  /**
    *  * See [VMConfig::one_yocto_on_promise](crate::vm::Config::one_yocto_on_promise).
    */
   @SerialName("one_yocto_on_promise")

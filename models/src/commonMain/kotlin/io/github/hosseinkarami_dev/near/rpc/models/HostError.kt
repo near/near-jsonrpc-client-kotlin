@@ -528,4 +528,22 @@ public sealed class HostError {
       public val msg: String,
     )
   }
+
+  /**
+   *  * Input length mismatch for ML-DSA-65 signature verification (signature is
+   * not 3309 bytes or public key is not 1952 bytes). Parse failures of
+   * otherwise well-sized inputs return 0 from the host function instead of
+   * aborting.
+   */
+  @Serializable
+  public data class MlDsaVerifyInvalidInput(
+    @SerialName("MlDsaVerifyInvalidInput")
+    public val mlDsaVerifyInvalidInput: MlDsaVerifyInvalidInputPayload,
+  ) : HostError() {
+    @Serializable
+    public data class MlDsaVerifyInvalidInputPayload(
+      @SerialName("msg")
+      public val msg: String,
+    )
+  }
 }

@@ -140,6 +140,16 @@ public data class ExtCostsConfigView(
   @SerialName("log_byte")
   public val logByte: NearGas? = null,
   /**
+   *  * Cost of ML-DSA-65 signature verification base
+   */
+  @SerialName("ml_dsa_verify_base")
+  public val mlDsaVerifyBase: NearGas? = null,
+  /**
+   *  * Cost of ML-DSA-65 signature verification per byte
+   */
+  @SerialName("ml_dsa_verify_byte")
+  public val mlDsaVerifyByte: NearGas? = null,
+  /**
    *  * Cost of P-256 ECDSA signature verification base
    */
   @SerialName("p256_verify_base")
