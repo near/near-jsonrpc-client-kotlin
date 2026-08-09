@@ -50,6 +50,8 @@ public data class BlockHeaderView(
    */
   @SerialName("chunk_endorsements")
   public val chunkEndorsements: List<List<UByte>>? = null,
+  @SerialName("chunk_execution_root")
+  public val chunkExecutionRoot: CryptoHash? = null,
   @SerialName("chunk_headers_root")
   public val chunkHeadersRoot: CryptoHash,
   @SerialName("chunk_mask")

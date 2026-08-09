@@ -72,7 +72,7 @@ public data class RpcClientConfigResponse(
   /**
    *  * Height horizon for the chunk cache. A chunk is removed from the cache
    * if its height + chunks_cache_height_horizon < largest_seen_height.
-   * The default value is DEFAULT_CHUNKS_CACHE_HEIGHT_HORIZON.
+   * The default value is given by default_chunks_cache_height_horizon().
    *  * Minimum: 0.0
    *  * Format: uint64
    */
