@@ -461,4 +461,30 @@ public sealed class ActionErrorKind {
       public val numNonces: UShort,
     )
   }
+
+  /**
+   *  * The combined size of the resolved promise inputs (the `DataReceipt`s
+   * referenced by the receipt's `input_data_ids`) exceeded the limit.
+   */
+  @Serializable
+  public data class TotalPromiseInputSizeExceeded(
+    @SerialName("TotalPromiseInputSizeExceeded")
+    public val totalPromiseInputSizeExceeded: TotalPromiseInputSizeExceededPayload,
+  ) : ActionErrorKind() {
+    @Serializable
+    public data class TotalPromiseInputSizeExceededPayload(
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("limit")
+      public val limit: ULong,
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("size")
+      public val size: ULong,
+    )
+  }
 }
