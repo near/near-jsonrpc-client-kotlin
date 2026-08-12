@@ -18,6 +18,13 @@ public data class CloudArchivalWriterConfig(
   @SerialName("archive_block_data")
   public val archiveBlockData: Boolean? = false,
   /**
+   *  * Delay between consecutive batches while the writer is catching up, pacing
+   * how fast it uploads to the storage backend.
+   */
+  @SerialName("catch_up_throttle")
+  public val catchUpThrottle:
+      DurationAsStdSchemaProvider? = DurationAsStdSchemaProvider(nanos = 100000000.toInt(), secs = 1L),
+  /**
    *  * Interval at which the system checks for new blocks or chunks to archive.
    */
   @SerialName("polling_interval")
