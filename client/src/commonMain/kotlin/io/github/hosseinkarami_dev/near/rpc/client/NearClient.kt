@@ -40,6 +40,7 @@ import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimental
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalCongestionLevel
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalGenesisConfig
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientBlockProof
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientChunkExecutionProof
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientProof
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalMaintenanceWindows
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalProtocolConfig
@@ -77,6 +78,7 @@ import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcClientCo
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcCongestionLevelResponseAndRpcChunkError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcGasPriceResponseAndRpcGasPriceError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientBlockProofResponseAndRpcLightClientProofError
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientChunkExecutionProofResponseAndRpcLightClientProofError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientNextBlockResponseAndRpcLightClientNextBlockError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcNetworkInfoResponseAndRpcNetworkInfoError
@@ -110,6 +112,8 @@ import io.github.hosseinkarami_dev.near.rpc.models.RpcGasPriceResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcHealthResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientBlockProofRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientBlockProofResponse
+import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientChunkExecutionProofRequest
+import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientChunkExecutionProofResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientExecutionProofRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientExecutionProofResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientNextBlockRequest
@@ -357,6 +361,37 @@ public class NearClient(
         when (decoded) {
             is JsonRpcResponseForRpcLightClientBlockProofResponseAndRpcLightClientProofError.Result -> RpcResponse.Success(decoded.result)
             is JsonRpcResponseForRpcLightClientBlockProofResponseAndRpcLightClientProofError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
+        }
+    }
+  }
+
+  /**
+   * Returns a proof that a chunk's certified execution roots are committed by the chain, verifiable against a trusted light client head.
+   *
+   * @see path: /EXPERIMENTAL_light_client_chunk_execution_proof (method: post) — operationId: EXPERIMENTAL_light_client_chunk_execution_proof
+   *
+   * @param rpcLightClientChunkExecutionProofRequest Request parameters: `io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientChunkExecutionProofRequest` (required).
+   * @return Response: `RpcResponse<RpcLightClientChunkExecutionProofResponse>`.
+   */
+  public suspend fun experimentalLightClientChunkExecutionProof(rpcLightClientChunkExecutionProofRequest: RpcLightClientChunkExecutionProofRequest): RpcResponse<RpcLightClientChunkExecutionProofResponse> {
+    val request = JsonRpcRequestForExperimentalLightClientChunkExecutionProof(
+      id = nextId(),
+      jsonrpc = "2.0",
+      method = JsonRpcRequestForExperimentalLightClientChunkExecutionProof.Method.EXPERIMENTAL_LIGHT_CLIENT_CHUNK_EXECUTION_PROOF,
+      params = rpcLightClientChunkExecutionProofRequest
+    )
+
+    return callRpc(
+        httpClient,
+        baseUrl,
+        request,
+        JsonRpcRequestForExperimentalLightClientChunkExecutionProof.serializer(),
+        JsonRpcResponseForRpcLightClientChunkExecutionProofResponseAndRpcLightClientProofError.serializer(),
+        ErrorWrapperForRpcLightClientProofError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcLightClientChunkExecutionProofResponseAndRpcLightClientProofError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcLightClientChunkExecutionProofResponseAndRpcLightClientProofError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
     }
   }
