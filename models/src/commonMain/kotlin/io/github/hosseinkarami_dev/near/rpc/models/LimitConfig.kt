@@ -236,6 +236,14 @@ public data class LimitConfig(
   @SerialName("max_receipt_size")
   public val maxReceiptSize: ULong? = null,
   /**
+   *  * Max combined size (in bytes) of the resolved promise inputs a single
+   * receipt may consume.
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   */
+  @SerialName("max_receipt_total_input_size")
+  public val maxReceiptTotalInputSize: ULong? = null,
+  /**
    *  * Maximum number of bytes that can be stored in a single register.
    *  * Minimum: 0.0
    *  * Format: uint64
