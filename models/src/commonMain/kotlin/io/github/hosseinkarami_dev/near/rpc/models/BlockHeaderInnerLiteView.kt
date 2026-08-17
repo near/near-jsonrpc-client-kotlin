@@ -16,6 +16,12 @@ public data class BlockHeaderInnerLiteView(
   @SerialName("block_merkle_root")
   public val blockMerkleRoot: CryptoHash,
   /**
+   *  * Merkle root over the block's certified chunk execution results.
+   * `None` for pre-spice headers.
+   */
+  @SerialName("chunk_execution_root")
+  public val chunkExecutionRoot: CryptoHash? = null,
+  /**
    *  * The epoch to which the block that is the current known head belongs
    */
   @SerialName("epoch_id")

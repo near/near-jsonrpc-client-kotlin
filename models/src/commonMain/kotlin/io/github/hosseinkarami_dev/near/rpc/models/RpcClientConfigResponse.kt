@@ -31,6 +31,13 @@ public data class RpcClientConfigResponse(
   @SerialName("block_production_tracking_delay")
   public val blockProductionTrackingDelay: MutableConfigValue? = null,
   /**
+   *  * How long to wait for a state sync block request response
+   *  * Min Items: 2
+   *  * Max Items: 2
+   */
+  @SerialName("block_request_timeout")
+  public val blockRequestTimeout: List<ULong>? = null,
+  /**
    *  * Time between check to perform catchup.
    *  * Min Items: 2
    *  * Max Items: 2
@@ -72,7 +79,7 @@ public data class RpcClientConfigResponse(
   /**
    *  * Height horizon for the chunk cache. A chunk is removed from the cache
    * if its height + chunks_cache_height_horizon < largest_seen_height.
-   * The default value is DEFAULT_CHUNKS_CACHE_HEIGHT_HORIZON.
+   * The default value is given by default_chunks_cache_height_horizon().
    *  * Minimum: 0.0
    *  * Format: uint64
    */
@@ -376,13 +383,6 @@ public data class RpcClientConfigResponse(
   @SerialName("state_sync")
   public val stateSync: StateSyncConfig? = null,
   /**
-   *  * How long to wait for a state sync block request response
-   *  * Min Items: 2
-   *  * Max Items: 2
-   */
-  @SerialName("state_sync_external_timeout")
-  public val stateSyncExternalTimeout: List<ULong>? = null,
-  /**
    *  * How long to wait for a response from p2p state sync
    *  * Min Items: 2
    *  * Max Items: 2
@@ -495,6 +495,10 @@ public data class RpcClientConfigResponse(
   public val viewClientThreads: UInt? = null,
 ) {
   init {
+    require((blockRequestTimeout?.size ?: 0) >= 2) { "RpcClientConfigResponse.blockRequestTimeout must contain at least 2 items (minItems = 2)" }}
+  init {
+    require((blockRequestTimeout?.size ?: 0) <= 2) { "RpcClientConfigResponse.blockRequestTimeout must contain no more than 2 items (maxItems = 2)" }}
+  init {
     require((catchupStepPeriod?.size ?: 0) >= 2) { "RpcClientConfigResponse.catchupStepPeriod must contain at least 2 items (minItems = 2)" }}
   init {
     require((catchupStepPeriod?.size ?: 0) <= 2) { "RpcClientConfigResponse.catchupStepPeriod must contain no more than 2 items (maxItems = 2)" }}
@@ -522,10 +526,6 @@ public data class RpcClientConfigResponse(
     require((stateRequestThrottlePeriod?.size ?: 0) >= 2) { "RpcClientConfigResponse.stateRequestThrottlePeriod must contain at least 2 items (minItems = 2)" }}
   init {
     require((stateRequestThrottlePeriod?.size ?: 0) <= 2) { "RpcClientConfigResponse.stateRequestThrottlePeriod must contain no more than 2 items (maxItems = 2)" }}
-  init {
-    require((stateSyncExternalTimeout?.size ?: 0) >= 2) { "RpcClientConfigResponse.stateSyncExternalTimeout must contain at least 2 items (minItems = 2)" }}
-  init {
-    require((stateSyncExternalTimeout?.size ?: 0) <= 2) { "RpcClientConfigResponse.stateSyncExternalTimeout must contain no more than 2 items (maxItems = 2)" }}
   init {
     require((stateSyncP2pTimeout?.size ?: 0) >= 2) { "RpcClientConfigResponse.stateSyncP2pTimeout must contain at least 2 items (minItems = 2)" }}
   init {
