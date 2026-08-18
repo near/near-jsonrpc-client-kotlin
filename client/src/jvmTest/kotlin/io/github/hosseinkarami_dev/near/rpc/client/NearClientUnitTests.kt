@@ -188,6 +188,33 @@ class NearClientUnitTests {
     }
 
     @Test
+    fun testExperimentalLightClientChunkExecutionProof() = runTest {
+        val data = loadMockJson("JsonRpcRequestForExperimentalLightClientChunkExecutionProof.json")
+        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalLightClientChunkExecutionProof.json does not exist!")
+
+
+        val mockEngine = MockEngine { req ->
+            when (req.url.fullPath) {
+                else -> respond(data, headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())))
+            }
+        }
+
+        val client = HttpClient(mockEngine) {
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+        }
+
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock")
+
+        try {
+            val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientChunkExecutionProof.serializer(), data)
+            val response = nearClient.experimentalLightClientChunkExecutionProof(requestObj.params)
+            assertNotNull(response)
+        } catch (e: Exception) {
+            fail("Test for ExperimentalLightClientChunkExecutionProof failed: ${e.message}")
+        }
+    }
+
+    @Test
     fun testExperimentalLightClientProof() = runTest {
         val data = loadMockJson("JsonRpcRequestForExperimentalLightClientProof.json")
         assertNotNull(data, "Mock file JsonRpcRequestForExperimentalLightClientProof.json does not exist!")
