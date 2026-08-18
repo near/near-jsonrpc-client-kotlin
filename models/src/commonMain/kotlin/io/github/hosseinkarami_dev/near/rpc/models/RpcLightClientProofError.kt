@@ -3,6 +3,7 @@ package io.github.hosseinkarami_dev.near.rpc.models
 import io.github.hosseinkarami_dev.near.rpc.serializers.RpcLightClientProofErrorSerializer
 import kotlin.String
 import kotlin.UInt
+import kotlin.ULong
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
@@ -138,6 +139,70 @@ public sealed class RpcLightClientProofError {
     public enum class Name {
       @SerialName("UNAVAILABLE_SHARD")
       UNAVAILABLE_SHARD,
+    }
+  }
+
+  @Serializable
+  public data class ChunkNotCertified(
+    @SerialName("info")
+    public val info: InfoPayload,
+    /**
+     *  * Possible values: CHUNK_NOT_CERTIFIED
+     */
+    @SerialName("name")
+    public val name: Name,
+  ) : RpcLightClientProofError() {
+    @Serializable
+    public data class InfoPayload(
+      @SerialName("chunk_id")
+      public val chunkId: SpiceChunkId,
+    )
+
+    /**
+     *  * Possible values: CHUNK_NOT_CERTIFIED
+     */
+    @Serializable
+    public enum class Name {
+      @SerialName("CHUNK_NOT_CERTIFIED")
+      CHUNK_NOT_CERTIFIED,
+    }
+  }
+
+  @Serializable
+  public data class LightClientHeadTooOld(
+    @SerialName("info")
+    public val info: InfoPayload,
+    /**
+     *  * Possible values: LIGHT_CLIENT_HEAD_TOO_OLD
+     */
+    @SerialName("name")
+    public val name: Name,
+  ) : RpcLightClientProofError() {
+    @Serializable
+    public data class InfoPayload(
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("certifying_block_height")
+      public val certifyingBlockHeight: ULong,
+      @SerialName("chunk_id")
+      public val chunkId: SpiceChunkId,
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("head_height")
+      public val headHeight: ULong,
+    )
+
+    /**
+     *  * Possible values: LIGHT_CLIENT_HEAD_TOO_OLD
+     */
+    @Serializable
+    public enum class Name {
+      @SerialName("LIGHT_CLIENT_HEAD_TOO_OLD")
+      LIGHT_CLIENT_HEAD_TOO_OLD,
     }
   }
 
