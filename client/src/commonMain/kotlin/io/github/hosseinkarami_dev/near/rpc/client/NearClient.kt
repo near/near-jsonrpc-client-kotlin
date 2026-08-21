@@ -41,7 +41,9 @@ import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimental
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalGenesisConfig
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientBlockProof
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientChunkExecutionProof
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientExecutionOutcomeProof
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientProof
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientStateProof
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalMaintenanceWindows
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalProtocolConfig
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalReceipt
@@ -79,8 +81,10 @@ import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcCongesti
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcGasPriceResponseAndRpcGasPriceError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientBlockProofResponseAndRpcLightClientProofError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientChunkExecutionProofResponseAndRpcLightClientProofError
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientExecutionOutcomeProofResponseAndRpcLightClientProofError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientNextBlockResponseAndRpcLightClientNextBlockError
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientStateProofResponseAndRpcLightClientProofError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcNetworkInfoResponseAndRpcNetworkInfoError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcProtocolConfigResponseAndRpcProtocolConfigError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcQueryResponseAndRpcQueryError
@@ -114,10 +118,14 @@ import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientBlockProofReque
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientBlockProofResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientChunkExecutionProofRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientChunkExecutionProofResponse
+import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientExecutionOutcomeProofRequest
+import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientExecutionOutcomeProofResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientExecutionProofRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientExecutionProofResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientNextBlockRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientNextBlockResponse
+import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientStateProofRequest
+import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientStateProofResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcMaintenanceWindowsRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcNetworkInfoResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcProtocolConfigRequest
@@ -397,6 +405,37 @@ public class NearClient(
   }
 
   /**
+   * Returns a transaction or receipt execution outcome together with its proof against the chunk's certified outcome root, verifiable against a trusted light client head.
+   *
+   * @see path: /EXPERIMENTAL_light_client_execution_outcome_proof (method: post) — operationId: EXPERIMENTAL_light_client_execution_outcome_proof
+   *
+   * @param rpcLightClientExecutionOutcomeProofRequest Request parameters: `io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientExecutionOutcomeProofRequest` (required).
+   * @return Response: `RpcResponse<RpcLightClientExecutionOutcomeProofResponse>`.
+   */
+  public suspend fun experimentalLightClientExecutionOutcomeProof(rpcLightClientExecutionOutcomeProofRequest: RpcLightClientExecutionOutcomeProofRequest): RpcResponse<RpcLightClientExecutionOutcomeProofResponse> {
+    val request = JsonRpcRequestForExperimentalLightClientExecutionOutcomeProof(
+      id = nextId(),
+      jsonrpc = "2.0",
+      method = JsonRpcRequestForExperimentalLightClientExecutionOutcomeProof.Method.EXPERIMENTAL_LIGHT_CLIENT_EXECUTION_OUTCOME_PROOF,
+      params = rpcLightClientExecutionOutcomeProofRequest
+    )
+
+    return callRpc(
+        httpClient,
+        baseUrl,
+        request,
+        JsonRpcRequestForExperimentalLightClientExecutionOutcomeProof.serializer(),
+        JsonRpcResponseForRpcLightClientExecutionOutcomeProofResponseAndRpcLightClientProofError.serializer(),
+        ErrorWrapperForRpcLightClientProofError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcLightClientExecutionOutcomeProofResponseAndRpcLightClientProofError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcLightClientExecutionOutcomeProofResponseAndRpcLightClientProofError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
+        }
+    }
+  }
+
+  /**
    * Returns the proofs for a transaction execution.
    *
    * @see path: /EXPERIMENTAL_light_client_proof (method: post) — operationId: EXPERIMENTAL_light_client_proof
@@ -423,6 +462,37 @@ public class NearClient(
         when (decoded) {
             is JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.Result -> RpcResponse.Success(decoded.result)
             is JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
+        }
+    }
+  }
+
+  /**
+   * Returns a value from a shard's state together with its trie proof against the chunk's certified state root, verifiable against a trusted light client head.
+   *
+   * @see path: /EXPERIMENTAL_light_client_state_proof (method: post) — operationId: EXPERIMENTAL_light_client_state_proof
+   *
+   * @param rpcLightClientStateProofRequest Request parameters: `io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientStateProofRequest` (required).
+   * @return Response: `RpcResponse<RpcLightClientStateProofResponse>`.
+   */
+  public suspend fun experimentalLightClientStateProof(rpcLightClientStateProofRequest: RpcLightClientStateProofRequest): RpcResponse<RpcLightClientStateProofResponse> {
+    val request = JsonRpcRequestForExperimentalLightClientStateProof(
+      id = nextId(),
+      jsonrpc = "2.0",
+      method = JsonRpcRequestForExperimentalLightClientStateProof.Method.EXPERIMENTAL_LIGHT_CLIENT_STATE_PROOF,
+      params = rpcLightClientStateProofRequest
+    )
+
+    return callRpc(
+        httpClient,
+        baseUrl,
+        request,
+        JsonRpcRequestForExperimentalLightClientStateProof.serializer(),
+        JsonRpcResponseForRpcLightClientStateProofResponseAndRpcLightClientProofError.serializer(),
+        ErrorWrapperForRpcLightClientProofError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcLightClientStateProofResponseAndRpcLightClientProofError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcLightClientStateProofResponseAndRpcLightClientProofError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
     }
   }

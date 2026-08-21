@@ -143,6 +143,88 @@ public sealed class RpcLightClientProofError {
   }
 
   @Serializable
+  public data class ShardNotTracked(
+    @SerialName("info")
+    public val info: InfoPayload,
+    /**
+     *  * Possible values: SHARD_NOT_TRACKED
+     */
+    @SerialName("name")
+    public val name: Name,
+  ) : RpcLightClientProofError() {
+    @Serializable
+    public data class InfoPayload(
+      @SerialName("shard_id")
+      public val shardId: ShardId,
+    )
+
+    /**
+     *  * Possible values: SHARD_NOT_TRACKED
+     */
+    @Serializable
+    public enum class Name {
+      @SerialName("SHARD_NOT_TRACKED")
+      SHARD_NOT_TRACKED,
+    }
+  }
+
+  @Serializable
+  public data class TargetShardMismatch(
+    @SerialName("info")
+    public val info: InfoPayload,
+    /**
+     *  * Possible values: TARGET_SHARD_MISMATCH
+     */
+    @SerialName("name")
+    public val name: Name,
+  ) : RpcLightClientProofError() {
+    @Serializable
+    public data class InfoPayload(
+      @SerialName("account_id")
+      public val accountId: AccountId,
+      @SerialName("account_shard_id")
+      public val accountShardId: ShardId,
+      @SerialName("requested_shard_id")
+      public val requestedShardId: ShardId,
+    )
+
+    /**
+     *  * Possible values: TARGET_SHARD_MISMATCH
+     */
+    @Serializable
+    public enum class Name {
+      @SerialName("TARGET_SHARD_MISMATCH")
+      TARGET_SHARD_MISMATCH,
+    }
+  }
+
+  @Serializable
+  public data class StateNotAvailable(
+    @SerialName("info")
+    public val info: InfoPayload,
+    /**
+     *  * Possible values: STATE_NOT_AVAILABLE
+     */
+    @SerialName("name")
+    public val name: Name,
+  ) : RpcLightClientProofError() {
+    @Serializable
+    public data class InfoPayload(
+      @SerialName("chunk_id")
+      public val chunkId: SpiceChunkId,
+    )
+
+    /**
+     *  * Possible values: STATE_NOT_AVAILABLE
+     */
+    @Serializable
+    public enum class Name {
+      @SerialName("STATE_NOT_AVAILABLE")
+      STATE_NOT_AVAILABLE,
+    }
+  }
+
+  @Serializable
   public data class ChunkNotCertified(
     @SerialName("info")
     public val info: InfoPayload,
