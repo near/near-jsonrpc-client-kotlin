@@ -94,4 +94,10 @@ public sealed class NonDelegateAction {
     @SerialName("WithdrawFromGasKey")
     public val withdrawFromGasKey: WithdrawFromGasKeyAction,
   ) : NonDelegateAction()
+
+  @Serializable
+  public data class UniversalStateInit(
+    @SerialName("UniversalStateInit")
+    public val universalStateInit: UniversalStateInitAction,
+  ) : NonDelegateAction()
 }

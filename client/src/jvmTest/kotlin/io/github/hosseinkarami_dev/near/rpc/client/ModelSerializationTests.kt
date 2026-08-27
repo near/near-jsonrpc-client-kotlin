@@ -3450,6 +3450,22 @@ class ModelSerializationTests {
     }
 
     @Test
+    fun testRawStateInitEncodeDecode() {
+        val data = loadMockJson("RawStateInit.json")
+        assertNotNull(data, "Mock file RawStateInit.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RawStateInit.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RawStateInit.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RawStateInit.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for RawStateInit: ${e.message}")
+        }
+    }
+
+    @Test
     fun testReceiptEnumViewEncodeDecode() {
         val data = loadMockJson("ReceiptEnumView.json")
         assertNotNull(data, "Mock file ReceiptEnumView.json does not exist!")
@@ -5558,6 +5574,22 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for TxExecutionStatus: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testUniversalStateInitActionEncodeDecode() {
+        val data = loadMockJson("UniversalStateInitAction.json")
+        assertNotNull(data, "Mock file UniversalStateInitAction.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.UniversalStateInitAction.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.UniversalStateInitAction.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.UniversalStateInitAction.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for UniversalStateInitAction: ${e.message}")
         }
     }
 

@@ -406,4 +406,111 @@ public sealed class ActionsValidationError {
   @Serializable
   @SerialName("FunctionCallEmptyMethodName")
   public data object FunctionCallEmptyMethodName : ActionsValidationError()
+
+  /**
+   *  * The receiver id of a `UniversalStateInit` action does not match the id
+   * derived from its state init.
+   */
+  @Serializable
+  public data class InvalidUniversalStateInitReceiver(
+    @SerialName("InvalidUniversalStateInitReceiver")
+    public val invalidUniversalStateInitReceiver: InvalidUniversalStateInitReceiverPayload,
+  ) : ActionsValidationError() {
+    @Serializable
+    public data class InvalidUniversalStateInitReceiverPayload(
+      @SerialName("derived_id")
+      public val derivedId: AccountId,
+      @SerialName("receiver_id")
+      public val receiverId: AccountId,
+    )
+  }
+
+  /**
+   *  * A storage key in a `UniversalStateInit` state init exceeds the limit.
+   */
+  @Serializable
+  public data class UniversalStateInitKeyLengthExceeded(
+    @SerialName("UniversalStateInitKeyLengthExceeded")
+    public val universalStateInitKeyLengthExceeded: UniversalStateInitKeyLengthExceededPayload,
+  ) : ActionsValidationError() {
+    @Serializable
+    public data class UniversalStateInitKeyLengthExceededPayload(
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("length")
+      public val length: ULong,
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("limit")
+      public val limit: ULong,
+    )
+  }
+
+  /**
+   *  * A storage value in a `UniversalStateInit` state init exceeds the limit.
+   */
+  @Serializable
+  public data class UniversalStateInitValueLengthExceeded(
+    @SerialName("UniversalStateInitValueLengthExceeded")
+    public val universalStateInitValueLengthExceeded: UniversalStateInitValueLengthExceededPayload,
+  ) : ActionsValidationError() {
+    @Serializable
+    public data class UniversalStateInitValueLengthExceededPayload(
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("length")
+      public val length: ULong,
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("limit")
+      public val limit: ULong,
+    )
+  }
+
+  /**
+   *  * The bytes in `RawStateInit` do not decode into `UniversalStateInit`.
+   *  * Possible values: MalformedUniversalStateInit
+   */
+  @Serializable
+  @SerialName("MalformedUniversalStateInit")
+  public data object MalformedUniversalStateInit : ActionsValidationError()
+
+  /**
+   *  * The transaction includes a feature that was removed at or before the
+   * current protocol version. The counterpart of
+   * `UnsupportedProtocolFeature`, which covers features not yet available.
+   */
+  @Serializable
+  public data class RemovedProtocolFeature(
+    @SerialName("RemovedProtocolFeature")
+    public val removedProtocolFeature: RemovedProtocolFeaturePayload,
+  ) : ActionsValidationError() {
+    @Serializable
+    public data class RemovedProtocolFeaturePayload(
+      @SerialName("protocol_feature")
+      public val protocolFeature: String,
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint32
+       */
+      @SerialName("version")
+      public val version: UInt,
+    )
+  }
+
+  /**
+   *  * A `WithdrawFromGasKey` action must not be nested inside a delegate action.
+   *  * Possible values: WithdrawFromGasKeyNotAllowedInDelegate
+   */
+  @Serializable
+  @SerialName("WithdrawFromGasKeyNotAllowedInDelegate")
+  public data object WithdrawFromGasKeyNotAllowedInDelegate : ActionsValidationError()
 }

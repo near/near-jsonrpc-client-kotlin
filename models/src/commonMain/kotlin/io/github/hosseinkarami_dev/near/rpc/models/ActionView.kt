@@ -237,4 +237,18 @@ public sealed class ActionView {
       public val publicKey: PublicKey,
     )
   }
+
+  @Serializable
+  public data class UniversalStateInit(
+    @SerialName("UniversalStateInit")
+    public val universalStateInit: UniversalStateInitPayload,
+  ) : ActionView() {
+    @Serializable
+    public data class UniversalStateInitPayload(
+      @SerialName("deposit")
+      public val deposit: NearToken,
+      @SerialName("state_init")
+      public val stateInit: RawStateInit,
+    )
+  }
 }
