@@ -120,6 +120,11 @@ public data class VMConfigView(
   @SerialName("storage_get_mode")
   public val storageGetMode: StorageGetMode? = null,
   /**
+   *  * See [VMConfig::universal_accounts](crate::vm::Config::universal_accounts).
+   */
+  @SerialName("universal_accounts")
+  public val universalAccounts: Boolean? = null,
+  /**
    *  * See [VMConfig::vm_kind](crate::vm::Config::vm_kind).
    */
   @SerialName("vm_kind")

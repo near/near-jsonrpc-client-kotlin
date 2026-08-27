@@ -94,9 +94,9 @@ public sealed class InvalidAccessKeyError {
   public data object DepositWithFunctionCall : InvalidAccessKeyError()
 
   /**
-   *  * Gas keys track nonces per index in dedicated storage, which a plain
-   * access key nonce does not select, so a gas key must sign a `DelegateV2`
-   * with a gas key nonce instead.
+   *  * A plain access key nonce does not select one of the gas key's nonces.
+   * `DelegateV2` was intended to carry a gas key nonce, however gas key
+   * meta transactions are disabled. See `ProtocolFeature::RejectDelegateV2`.
    *  * Possible values: DelegateActionRequiresNonGasKey
    */
   @Serializable

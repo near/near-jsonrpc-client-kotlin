@@ -507,4 +507,14 @@ public sealed class ActionErrorKind {
       public val limit: ULong,
     )
   }
+
+  /**
+   *  * The bytes of a `UniversalStateInit` action do not decode into a state init.
+   * Action validation rejects such an action before it runs, so this only fires
+   * if that check was bypassed.
+   *  * Possible values: MalformedUniversalStateInit
+   */
+  @Serializable
+  @SerialName("MalformedUniversalStateInit")
+  public data object MalformedUniversalStateInit : ActionErrorKind()
 }
