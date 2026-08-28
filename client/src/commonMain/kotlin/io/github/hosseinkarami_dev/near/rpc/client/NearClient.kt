@@ -67,6 +67,7 @@ import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForQuery
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForSendTx
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForStatus
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForTx
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForTxStatus
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForValidators
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForArrayOfValidatorStakeViewAndRpcValidatorError
@@ -658,13 +659,17 @@ public class NearClient(
   }
 
   /**
-   * Queries status of a transaction by hash, returning the final transaction result and details of all receipts.
+   * [Deprecated] Queries status of a transaction by hash, returning the final transaction result and details of all receipts. Consider using `tx_status` instead.
    *
    * @see path: /EXPERIMENTAL_tx_status (method: post) — operationId: EXPERIMENTAL_tx_status
    *
    * @param rpcTransactionStatusRequest Request parameters: `io.github.hosseinkarami_dev.near.rpc.models.RpcTransactionStatusRequest` (required).
    * @return Response: `RpcResponse<RpcTransactionResponse>`.
    */
+  @Deprecated(
+    message = "[Deprecated] Queries status of a transaction by hash, returning the final transaction result and details of all receipts. Consider using `tx_status` instead. — deprecated.",
+    level = DeprecationLevel.WARNING,
+  )
   public suspend fun experimentalTxStatus(rpcTransactionStatusRequest: RpcTransactionStatusRequest): RpcResponse<RpcTransactionResponse> {
     val request = JsonRpcRequestForExperimentalTxStatus(
       id = nextId(),
@@ -1444,6 +1449,37 @@ public class NearClient(
         baseUrl,
         request,
         JsonRpcRequestForTx.serializer(),
+        JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.serializer(),
+        ErrorWrapperForRpcTransactionError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
+        }
+    }
+  }
+
+  /**
+   * Queries status of a transaction by hash, returning the final transaction result and details of all receipts.
+   *
+   * @see path: /tx_status (method: post) — operationId: tx_status
+   *
+   * @param rpcTransactionStatusRequest Request parameters: `io.github.hosseinkarami_dev.near.rpc.models.RpcTransactionStatusRequest` (required).
+   * @return Response: `RpcResponse<RpcTransactionResponse>`.
+   */
+  public suspend fun txStatus(rpcTransactionStatusRequest: RpcTransactionStatusRequest): RpcResponse<RpcTransactionResponse> {
+    val request = JsonRpcRequestForTxStatus(
+      id = nextId(),
+      jsonrpc = "2.0",
+      method = JsonRpcRequestForTxStatus.Method.TX_STATUS,
+      params = rpcTransactionStatusRequest
+    )
+
+    return callRpc(
+        httpClient,
+        baseUrl,
+        request,
+        JsonRpcRequestForTxStatus.serializer(),
         JsonRpcResponseForRpcTransactionResponseAndRpcTransactionError.serializer(),
         ErrorWrapperForRpcTransactionError.serializer()
     ) { decoded ->

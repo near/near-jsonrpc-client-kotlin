@@ -1106,6 +1106,33 @@ class NearClientUnitTests {
     }
 
     @Test
+    fun testTxStatus() = runTest {
+        val data = loadMockJson("JsonRpcRequestForTxStatus.json")
+        assertNotNull(data, "Mock file JsonRpcRequestForTxStatus.json does not exist!")
+
+
+        val mockEngine = MockEngine { req ->
+            when (req.url.fullPath) {
+                else -> respond(data, headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())))
+            }
+        }
+
+        val client = HttpClient(mockEngine) {
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+        }
+
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock")
+
+        try {
+            val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForTxStatus.serializer(), data)
+            val response = nearClient.txStatus(requestObj.params)
+            assertNotNull(response)
+        } catch (e: Exception) {
+            fail("Test for TxStatus failed: ${e.message}")
+        }
+    }
+
+    @Test
     fun testValidators() = runTest {
         val data = loadMockJson("JsonRpcRequestForValidators.json")
         assertNotNull(data, "Mock file JsonRpcRequestForValidators.json does not exist!")
