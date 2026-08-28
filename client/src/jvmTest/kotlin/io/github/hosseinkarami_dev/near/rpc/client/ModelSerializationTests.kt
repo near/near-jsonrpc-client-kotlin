@@ -2554,6 +2554,22 @@ class ModelSerializationTests {
     }
 
     @Test
+    fun testJsonRpcRequestForTxStatusEncodeDecode() {
+        val data = loadMockJson("JsonRpcRequestForTxStatus.json")
+        assertNotNull(data, "Mock file JsonRpcRequestForTxStatus.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForTxStatus.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForTxStatus.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForTxStatus.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for JsonRpcRequestForTxStatus: ${e.message}")
+        }
+    }
+
+    @Test
     fun testJsonRpcRequestForValidatorsEncodeDecode() {
         val data = loadMockJson("JsonRpcRequestForValidators.json")
         assertNotNull(data, "Mock file JsonRpcRequestForValidators.json does not exist!")
