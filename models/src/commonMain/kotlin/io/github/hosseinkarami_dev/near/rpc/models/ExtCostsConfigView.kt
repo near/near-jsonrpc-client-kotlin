@@ -365,6 +365,16 @@ public data class ExtCostsConfigView(
   @SerialName("touching_trie_node")
   public val touchingTrieNode: NearGas? = null,
   /**
+   *  * Base cost of deriving a `0u` account id from a raw state init.
+   */
+  @SerialName("universal_state_init_to_account_id_base")
+  public val universalStateInitToAccountIdBase: NearGas? = null,
+  /**
+   *  * Per byte of the raw state init.
+   */
+  @SerialName("universal_state_init_to_account_id_byte")
+  public val universalStateInitToAccountIdByte: NearGas? = null,
+  /**
    *  * Base cost of decoding utf16. It's used for `log_utf16`.
    */
   @SerialName("utf16_decoding_base")
