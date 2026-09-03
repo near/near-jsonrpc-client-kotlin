@@ -304,6 +304,14 @@ public data class LimitConfig(
   @SerialName("max_yield_payload_size")
   public val maxYieldPayloadSize: ULong? = null,
   /**
+   *  * If present, requires at least this many bytes of contract code per local.
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   *  * Nullable: true
+   */
+  @SerialName("min_contract_size_per_local")
+  public val minContractSizePerLocal: ULong? = null,
+  /**
    *  * Hard limit on the size of storage proof generated while executing a single receipt.
    *  * Minimum: 0.0
    *  * Format: uint

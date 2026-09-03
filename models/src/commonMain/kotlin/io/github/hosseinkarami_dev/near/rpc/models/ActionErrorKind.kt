@@ -517,4 +517,21 @@ public sealed class ActionErrorKind {
   @Serializable
   @SerialName("MalformedUniversalStateInit")
   public data object MalformedUniversalStateInit : ActionErrorKind()
+
+  /**
+   *  * The action needs a set-up account, but the receiver is an uninitialized
+   * universal account. Distinct from `AccountDoesNotExist`: the account is
+   * there, it just has no access keys, code or data yet.
+   */
+  @Serializable
+  public data class AccountNotInitialized(
+    @SerialName("AccountNotInitialized")
+    public val accountNotInitialized: AccountNotInitializedPayload,
+  ) : ActionErrorKind() {
+    @Serializable
+    public data class AccountNotInitializedPayload(
+      @SerialName("account_id")
+      public val accountId: AccountId,
+    )
+  }
 }
