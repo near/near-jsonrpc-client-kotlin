@@ -15,6 +15,17 @@ public data class AccountView(
   @SerialName("amount")
   public val amount: NearToken,
   /**
+   *  * The nonce an uninitialized account's own transactions must use, present
+   * only while it is uninitialized. A self-signed state init is the one
+   * transaction such an account can send, and this is the only way for a
+   * client to learn the nonce it must carry: there is no access key to query.
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   *  * Nullable: true
+   */
+  @SerialName("bootstrap_nonce")
+  public val bootstrapNonce: ULong? = null,
+  /**
    *  * Hash of the deployed contract code; the all-`1`s hash when no contract is deployed.
    */
   @SerialName("code_hash")
@@ -34,6 +45,13 @@ public data class AccountView(
    */
   @SerialName("locked")
   public val locked: NearToken,
+  /**
+   *  * Whether the account is initialized. Only a universal account can be
+   * uninitialized: it has no access keys, code or data until a
+   * `UniversalStateInit` arrives. Omitted for initialized accounts.
+   */
+  @SerialName("state")
+  public val state: AccountState? = null,
   /**
    *  * Deprecated and unused. TODO(2271): remove.
    *  * Minimum: 0.0
