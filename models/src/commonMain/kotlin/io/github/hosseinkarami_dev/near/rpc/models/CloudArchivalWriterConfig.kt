@@ -29,7 +29,7 @@ public data class CloudArchivalWriterConfig(
    */
   @SerialName("polling_interval")
   public val pollingInterval:
-      DurationAsStdSchemaProvider? = DurationAsStdSchemaProvider(nanos = 0.toInt(), secs = 1L),
+      DurationAsStdSchemaProvider? = DurationAsStdSchemaProvider(nanos = 0.toInt(), secs = 5L),
   /**
    *  * Cadence of state snapshots, in epochs. Higher values reduce bucket cost at
    * the expense of potentially longer delta replay during reader bootstrap.
