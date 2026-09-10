@@ -297,6 +297,19 @@ public data class LimitConfig(
   @SerialName("max_types_per_contract")
   public val maxTypesPerContract: ULong? = null,
   /**
+   *  * Max number of access keys a `UniversalStateInit` action may commit to.
+   *
+   * Each committed key is priced as a full `AddKey`, at the send rate, so the
+   * whole cost lands when a transaction is converted to a receipt. Without a
+   * cap one transaction converts for more gas than a chunk has, and since
+   * conversion happens before anything is charged, transaction selection
+   * admits it anyway.
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   */
+  @SerialName("max_universal_state_init_keys")
+  public val maxUniversalStateInitKeys: ULong? = null,
+  /**
    *  * Maximum number of bytes for payload passed over a yield resume.
    *  * Minimum: 0.0
    *  * Format: uint64
