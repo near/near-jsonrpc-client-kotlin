@@ -522,6 +522,22 @@ class ModelSerializationTests {
     }
 
     @Test
+    fun testBlockViewEncodeDecode() {
+        val data = loadMockJson("BlockView.json")
+        assertNotNull(data, "Mock file BlockView.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.BlockView.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.BlockView.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.BlockView.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for BlockView: ${e.message}")
+        }
+    }
+
+    @Test
     fun testCallResultEncodeDecode() {
         val data = loadMockJson("CallResult.json")
         assertNotNull(data, "Mock file CallResult.json does not exist!")
@@ -1190,6 +1206,22 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for ErrorWrapperForRpcGasPriceError: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testErrorWrapperForRpcIndexerBlockErrorEncodeDecode() {
+        val data = loadMockJson("ErrorWrapperForRpcIndexerBlockError.json")
+        assertNotNull(data, "Mock file ErrorWrapperForRpcIndexerBlockError.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcIndexerBlockError.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcIndexerBlockError.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcIndexerBlockError.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for ErrorWrapperForRpcIndexerBlockError: ${e.message}")
         }
     }
 
@@ -1882,6 +1914,86 @@ class ModelSerializationTests {
     }
 
     @Test
+    fun testIndexerChunkViewEncodeDecode() {
+        val data = loadMockJson("IndexerChunkView.json")
+        assertNotNull(data, "Mock file IndexerChunkView.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.IndexerChunkView.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.IndexerChunkView.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.IndexerChunkView.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for IndexerChunkView: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testIndexerExecutionOutcomeWithOptionalReceiptEncodeDecode() {
+        val data = loadMockJson("IndexerExecutionOutcomeWithOptionalReceipt.json")
+        assertNotNull(data, "Mock file IndexerExecutionOutcomeWithOptionalReceipt.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.IndexerExecutionOutcomeWithOptionalReceipt.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.IndexerExecutionOutcomeWithOptionalReceipt.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.IndexerExecutionOutcomeWithOptionalReceipt.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for IndexerExecutionOutcomeWithOptionalReceipt: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testIndexerExecutionOutcomeWithReceiptEncodeDecode() {
+        val data = loadMockJson("IndexerExecutionOutcomeWithReceipt.json")
+        assertNotNull(data, "Mock file IndexerExecutionOutcomeWithReceipt.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.IndexerExecutionOutcomeWithReceipt.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.IndexerExecutionOutcomeWithReceipt.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.IndexerExecutionOutcomeWithReceipt.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for IndexerExecutionOutcomeWithReceipt: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testIndexerShardEncodeDecode() {
+        val data = loadMockJson("IndexerShard.json")
+        assertNotNull(data, "Mock file IndexerShard.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.IndexerShard.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.IndexerShard.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.IndexerShard.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for IndexerShard: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testIndexerTransactionWithOutcomeEncodeDecode() {
+        val data = loadMockJson("IndexerTransactionWithOutcome.json")
+        assertNotNull(data, "Mock file IndexerTransactionWithOutcome.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.IndexerTransactionWithOutcome.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.IndexerTransactionWithOutcome.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.IndexerTransactionWithOutcome.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for IndexerTransactionWithOutcome: ${e.message}")
+        }
+    }
+
+    @Test
     fun testInternalErrorEncodeDecode() {
         val data = loadMockJson("InternalError.json")
         assertNotNull(data, "Mock file InternalError.json does not exist!")
@@ -2006,6 +2118,22 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for JsonRpcRequestForExperimentalGenesisConfig: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testJsonRpcRequestForExperimentalIndexerBlockEncodeDecode() {
+        val data = loadMockJson("JsonRpcRequestForExperimentalIndexerBlock.json")
+        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalIndexerBlock.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalIndexerBlock.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalIndexerBlock.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalIndexerBlock.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for JsonRpcRequestForExperimentalIndexerBlock: ${e.message}")
         }
     }
 
@@ -2774,6 +2902,22 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for JsonRpcResponseForRpcGasPriceResponseAndRpcGasPriceError: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testJsonRpcResponseForRpcIndexerBlockResponseAndRpcIndexerBlockErrorEncodeDecode() {
+        val data = loadMockJson("JsonRpcResponseForRpcIndexerBlockResponseAndRpcIndexerBlockError.json")
+        assertNotNull(data, "Mock file JsonRpcResponseForRpcIndexerBlockResponseAndRpcIndexerBlockError.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcIndexerBlockResponseAndRpcIndexerBlockError.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcIndexerBlockResponseAndRpcIndexerBlockError.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcIndexerBlockResponseAndRpcIndexerBlockError.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for JsonRpcResponseForRpcIndexerBlockResponseAndRpcIndexerBlockError: ${e.message}")
         }
     }
 
@@ -3846,6 +3990,54 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for RpcHealthResponse: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testRpcIndexerBlockErrorEncodeDecode() {
+        val data = loadMockJson("RpcIndexerBlockError.json")
+        assertNotNull(data, "Mock file RpcIndexerBlockError.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcIndexerBlockError.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcIndexerBlockError.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcIndexerBlockError.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for RpcIndexerBlockError: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testRpcIndexerBlockRequestEncodeDecode() {
+        val data = loadMockJson("RpcIndexerBlockRequest.json")
+        assertNotNull(data, "Mock file RpcIndexerBlockRequest.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcIndexerBlockRequest.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcIndexerBlockRequest.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcIndexerBlockRequest.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for RpcIndexerBlockRequest: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testRpcIndexerBlockResponseEncodeDecode() {
+        val data = loadMockJson("RpcIndexerBlockResponse.json")
+        assertNotNull(data, "Mock file RpcIndexerBlockResponse.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcIndexerBlockResponse.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcIndexerBlockResponse.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcIndexerBlockResponse.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for RpcIndexerBlockResponse: ${e.message}")
         }
     }
 

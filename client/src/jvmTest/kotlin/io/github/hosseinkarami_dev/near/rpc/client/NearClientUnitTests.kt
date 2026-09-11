@@ -161,6 +161,33 @@ class NearClientUnitTests {
     }
 
     @Test
+    fun testExperimentalIndexerBlock() = runTest {
+        val data = loadMockJson("JsonRpcRequestForExperimentalIndexerBlock.json")
+        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalIndexerBlock.json does not exist!")
+
+
+        val mockEngine = MockEngine { req ->
+            when (req.url.fullPath) {
+                else -> respond(data, headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())))
+            }
+        }
+
+        val client = HttpClient(mockEngine) {
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+        }
+
+        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock")
+
+        try {
+            val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalIndexerBlock.serializer(), data)
+            val response = nearClient.experimentalIndexerBlock(requestObj.params)
+            assertNotNull(response)
+        } catch (e: Exception) {
+            fail("Test for ExperimentalIndexerBlock failed: ${e.message}")
+        }
+    }
+
+    @Test
     fun testExperimentalLightClientBlockProof() = runTest {
         val data = loadMockJson("JsonRpcRequestForExperimentalLightClientBlockProof.json")
         assertNotNull(data, "Mock file JsonRpcRequestForExperimentalLightClientBlockProof.json does not exist!")

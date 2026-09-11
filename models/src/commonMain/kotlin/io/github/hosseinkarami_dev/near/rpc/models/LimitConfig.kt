@@ -261,6 +261,20 @@ public data class LimitConfig(
   @SerialName("max_stack_height")
   public val maxStackHeight: UInt? = null,
   /**
+   *  * Max number of storage entries a `DeterministicStateInit` or
+   * `UniversalStateInit` action may carry.
+   *
+   * Each entry costs `..._state_init_per_entry` to execute, which is counted
+   * into the receipt's congestion gas whether or not it is ever burnt. Without
+   * a cap one receipt reserves several times `max_congestion_outgoing_gas`,
+   * pinning the sending shard at full outgoing congestion, which stops it
+   * accepting transactions.
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   */
+  @SerialName("max_state_init_entries")
+  public val maxStateInitEntries: ULong? = null,
+  /**
    *  * If present, stores max number of tables declared globally in one contract
    *  * Minimum: 0.0
    *  * Format: uint32

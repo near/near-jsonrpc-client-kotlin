@@ -8,6 +8,7 @@ import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcCallFunctio
 import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcChunkError
 import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcClientConfigError
 import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcGasPriceError
+import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcIndexerBlockError
 import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcLightClientNextBlockError
 import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcLightClientProofError
 import io.github.hosseinkarami_dev.near.rpc.models.ErrorWrapperForRpcMaintenanceWindowsError
@@ -39,6 +40,7 @@ import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimental
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalChangesInBlock
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalCongestionLevel
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalGenesisConfig
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalIndexerBlock
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientBlockProof
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientChunkExecutionProof
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientExecutionOutcomeProof
@@ -80,6 +82,7 @@ import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcChunkRes
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcClientConfigResponseAndRpcClientConfigError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcCongestionLevelResponseAndRpcChunkError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcGasPriceResponseAndRpcGasPriceError
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcIndexerBlockResponseAndRpcIndexerBlockError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientBlockProofResponseAndRpcLightClientProofError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientChunkExecutionProofResponseAndRpcLightClientProofError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientExecutionOutcomeProofResponseAndRpcLightClientProofError
@@ -115,6 +118,8 @@ import io.github.hosseinkarami_dev.near.rpc.models.RpcCongestionLevelResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcGasPriceRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcGasPriceResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcHealthResponse
+import io.github.hosseinkarami_dev.near.rpc.models.RpcIndexerBlockRequest
+import io.github.hosseinkarami_dev.near.rpc.models.RpcIndexerBlockResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientBlockProofRequest
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientBlockProofResponse
 import io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientChunkExecutionProofRequest
@@ -339,6 +344,37 @@ public class NearClient(
         when (decoded) {
             is JsonRpcResponseForGenesisConfigAndGenesisConfigError.Result -> RpcResponse.Success(decoded.result)
             is JsonRpcResponseForGenesisConfigAndGenesisConfigError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
+        }
+    }
+  }
+
+  /**
+   * Returns an indexer streamer message and tracked shard coverage for a block hash. Requires enable_indexer_rpc and retained execution data.
+   *
+   * @see path: /EXPERIMENTAL_indexer_block (method: post) — operationId: EXPERIMENTAL_indexer_block
+   *
+   * @param rpcIndexerBlockRequest Request parameters: `io.github.hosseinkarami_dev.near.rpc.models.RpcIndexerBlockRequest` (required).
+   * @return Response: `RpcResponse<RpcIndexerBlockResponse>`.
+   */
+  public suspend fun experimentalIndexerBlock(rpcIndexerBlockRequest: RpcIndexerBlockRequest): RpcResponse<RpcIndexerBlockResponse> {
+    val request = JsonRpcRequestForExperimentalIndexerBlock(
+      id = nextId(),
+      jsonrpc = "2.0",
+      method = JsonRpcRequestForExperimentalIndexerBlock.Method.EXPERIMENTAL_INDEXER_BLOCK,
+      params = rpcIndexerBlockRequest
+    )
+
+    return callRpc(
+        httpClient,
+        baseUrl,
+        request,
+        JsonRpcRequestForExperimentalIndexerBlock.serializer(),
+        JsonRpcResponseForRpcIndexerBlockResponseAndRpcIndexerBlockError.serializer(),
+        ErrorWrapperForRpcIndexerBlockError.serializer()
+    ) { decoded ->
+        when (decoded) {
+            is JsonRpcResponseForRpcIndexerBlockResponseAndRpcIndexerBlockError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForRpcIndexerBlockResponseAndRpcIndexerBlockError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
     }
   }

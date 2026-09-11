@@ -538,4 +538,30 @@ public sealed class ActionsValidationError {
       public val numberOfKeys: ULong,
     )
   }
+
+  /**
+   *  * The state-init actions in one receipt carry more storage entries in total
+   * than allowed.
+   */
+  @Serializable
+  public data class TotalNumberOfStateInitEntriesExceeded(
+    @SerialName("TotalNumberOfStateInitEntriesExceeded")
+    public val totalNumberOfStateInitEntriesExceeded: TotalNumberOfStateInitEntriesExceededPayload,
+  ) : ActionsValidationError() {
+    @Serializable
+    public data class TotalNumberOfStateInitEntriesExceededPayload(
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("limit")
+      public val limit: ULong,
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("number_of_entries")
+      public val numberOfEntries: ULong,
+    )
+  }
 }
