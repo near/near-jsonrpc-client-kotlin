@@ -515,15 +515,16 @@ public sealed class ActionsValidationError {
   public data object WithdrawFromGasKeyNotAllowedInDelegate : ActionsValidationError()
 
   /**
-   *  * A `UniversalStateInit` state init commits to more access keys than allowed.
+   *  * The state-init actions in one receipt commit to more access keys in total
+   * than allowed.
    */
   @Serializable
-  public data class UniversalStateInitTooManyKeys(
-    @SerialName("UniversalStateInitTooManyKeys")
-    public val universalStateInitTooManyKeys: UniversalStateInitTooManyKeysPayload,
+  public data class TotalNumberOfStateInitKeysExceeded(
+    @SerialName("TotalNumberOfStateInitKeysExceeded")
+    public val totalNumberOfStateInitKeysExceeded: TotalNumberOfStateInitKeysExceededPayload,
   ) : ActionsValidationError() {
     @Serializable
-    public data class UniversalStateInitTooManyKeysPayload(
+    public data class TotalNumberOfStateInitKeysExceededPayload(
       /**
        *  * Minimum: 0.0
        *  * Format: uint64

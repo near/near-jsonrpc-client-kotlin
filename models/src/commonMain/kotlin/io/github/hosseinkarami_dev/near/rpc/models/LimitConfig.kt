@@ -261,8 +261,8 @@ public data class LimitConfig(
   @SerialName("max_stack_height")
   public val maxStackHeight: UInt? = null,
   /**
-   *  * Max number of storage entries a `DeterministicStateInit` or
-   * `UniversalStateInit` action may carry.
+   *  * Max number of storage entries the `DeterministicStateInit` and
+   * `UniversalStateInit` actions in one receipt may carry, in total.
    *
    * Each entry costs `..._state_init_per_entry` to execute, which is counted
    * into the receipt's congestion gas whether or not it is ever burnt. Without
@@ -311,13 +311,15 @@ public data class LimitConfig(
   @SerialName("max_types_per_contract")
   public val maxTypesPerContract: ULong? = null,
   /**
-   *  * Max number of access keys a `UniversalStateInit` action may commit to.
+   *  * Max number of access keys the `UniversalStateInit` actions in one receipt
+   * may commit to, in total.
    *
    * Each committed key is priced as a full `AddKey`, at the send rate, so the
    * whole cost lands when a transaction is converted to a receipt. Without a
    * cap one transaction converts for more gas than a chunk has, and since
    * conversion happens before anything is charged, transaction selection
-   * admits it anyway.
+   * admits it anyway. The bound is per receipt because a receipt can carry
+   * many byte-identical copies of a state init and pays for each of them.
    *  * Minimum: 0.0
    *  * Format: uint64
    */
