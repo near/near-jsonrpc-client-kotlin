@@ -115,7 +115,8 @@ public data class VMConfigView(
   @SerialName("sha3_host_fns")
   public val sha3HostFns: Boolean? = null,
   /**
-   *  * See [VMConfig::storage_get_mode](crate::vm::Config::storage_get_mode).
+   *  * Deprecated: contract storage is always read through flat storage, so this is
+   * always `FlatStorage`.
    */
   @SerialName("storage_get_mode")
   public val storageGetMode: StorageGetMode? = null,
