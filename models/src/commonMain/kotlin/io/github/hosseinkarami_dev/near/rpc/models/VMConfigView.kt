@@ -19,12 +19,12 @@ public data class VMConfigView(
   @SerialName("chain_id_host_fn")
   public val chainIdHostFn: Boolean? = null,
   /**
-   *  * See [VMConfig::discard_custom_sections](crate::vm::Config::discard_custom_sections).
+   *  * Deprecated: custom sections are always discarded, so this is always `true`.
    */
   @SerialName("discard_custom_sections")
   public val discardCustomSections: Boolean? = null,
   /**
-   *  * See [VMConfig::eth_implicit_accounts](crate::vm::Config::eth_implicit_accounts).
+   *  * Deprecated: ETH-implicit accounts are always enabled, so this is always `true`.
    */
   @SerialName("eth_implicit_accounts")
   public val ethImplicitAccounts: Boolean? = null,
@@ -44,7 +44,8 @@ public data class VMConfigView(
   @SerialName("gas_key_host_fns")
   public val gasKeyHostFns: Boolean? = null,
   /**
-   *  * See [VMConfig::global_contract_host_fns](crate::vm::Config::global_contract_host_fns).
+   *  * Deprecated: the global contract host functions are always enabled, so this is
+   * always `true`.
    */
   @SerialName("global_contract_host_fns")
   public val globalContractHostFns: Boolean? = null,
@@ -98,7 +99,8 @@ public data class VMConfigView(
   @SerialName("p256_verify_host_fn")
   public val p256VerifyHostFn: Boolean? = null,
   /**
-   *  * See [VMConfig::reftypes_bulk_memory](crate::vm::Config::reftypes_bulk_memory).
+   *  * Deprecated: reference types and bulk memory wasm extensions are always
+   * enabled, so this is always `true`.
    */
   @SerialName("reftypes_bulk_memory")
   public val reftypesBulkMemory: Boolean? = null,
