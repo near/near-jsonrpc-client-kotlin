@@ -202,22 +202,6 @@ class ModelSerializationRuntimeTest {
     }
 
     @Test
-    fun testAccountIdValidityRulesVersionEncodeDecode() {
-        val data = loadMockJson("AccountIdValidityRulesVersion.json")
-        assertNotNull(data, "Mock file AccountIdValidityRulesVersion.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.AccountIdValidityRulesVersion.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.AccountIdValidityRulesVersion.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.AccountIdValidityRulesVersion.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for AccountIdValidityRulesVersion: ${e.message}")
-        }
-    }
-
-    @Test
     fun testAccountInfoEncodeDecode() {
         val data = loadMockJson("AccountInfo.json")
         assertNotNull(data, "Mock file AccountInfo.json does not exist!")
