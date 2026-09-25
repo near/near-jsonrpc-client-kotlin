@@ -12,12 +12,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 public data class LimitConfig(
   /**
-   *  * Whether to enforce account_id well-formed-ness where it wasn't enforced
-   * historically.
+   *  * Deprecated: full account id validation is always enforced, so this is
+   * always `2`.
+   *  * Minimum: 0.0
+   *  * Format: uint64
    */
   @SerialName("account_id_validity_rules_version")
-  public val accountIdValidityRulesVersion:
-      AccountIdValidityRulesVersion? = AccountIdValidityRulesVersion(0.toUByte()),
+  public val accountIdValidityRulesVersion: ULong? = 2.toULong(),
   /**
    *  * The initial number of memory pages.
    * NOTE: It's not a limiter itself, but it's a value we use for initial_memory_pages.
