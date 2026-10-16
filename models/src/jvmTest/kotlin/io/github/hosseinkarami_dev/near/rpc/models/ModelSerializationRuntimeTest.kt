@@ -1066,6 +1066,22 @@ class ModelSerializationRuntimeTest {
     }
 
     @Test
+    fun testEccTransactionViewEncodeDecode() {
+        val data = loadMockJson("EccTransactionView.json")
+        assertNotNull(data, "Mock file EccTransactionView.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.EccTransactionView.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.EccTransactionView.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.EccTransactionView.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for EccTransactionView: ${e.message}")
+        }
+    }
+
+    @Test
     fun testEpochIdEncodeDecode() {
         val data = loadMockJson("EpochId.json")
         assertNotNull(data, "Mock file EpochId.json does not exist!")
@@ -5686,6 +5702,22 @@ class ModelSerializationRuntimeTest {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for TrackedShardsConfig: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testTransactionEnvelopeViewEncodeDecode() {
+        val data = loadMockJson("TransactionEnvelopeView.json")
+        assertNotNull(data, "Mock file TransactionEnvelopeView.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.TransactionEnvelopeView.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.TransactionEnvelopeView.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.TransactionEnvelopeView.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for TransactionEnvelopeView: ${e.message}")
         }
     }
 

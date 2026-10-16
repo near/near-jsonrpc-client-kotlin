@@ -13,5 +13,5 @@ public data class RpcChunkResponse(
   @SerialName("receipts")
   public val receipts: List<ReceiptView>,
   @SerialName("transactions")
-  public val transactions: List<SignedTransactionView>,
+  public val transactions: List<TransactionEnvelopeView>,
 )
