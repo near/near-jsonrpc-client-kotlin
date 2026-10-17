@@ -215,60 +215,6 @@ class NearClientUnitTests {
     }
 
     @Test
-    fun testExperimentalLightClientChunkExecutionProof() = runTest {
-        val data = loadMockJson("JsonRpcRequestForExperimentalLightClientChunkExecutionProof.json")
-        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalLightClientChunkExecutionProof.json does not exist!")
-
-
-        val mockEngine = MockEngine { req ->
-            when (req.url.fullPath) {
-                else -> respond(data, headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())))
-            }
-        }
-
-        val client = HttpClient(mockEngine) {
-            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
-        }
-
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock")
-
-        try {
-            val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientChunkExecutionProof.serializer(), data)
-            val response = nearClient.experimentalLightClientChunkExecutionProof(requestObj.params)
-            assertNotNull(response)
-        } catch (e: Exception) {
-            fail("Test for ExperimentalLightClientChunkExecutionProof failed: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testExperimentalLightClientExecutionOutcomeProof() = runTest {
-        val data = loadMockJson("JsonRpcRequestForExperimentalLightClientExecutionOutcomeProof.json")
-        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalLightClientExecutionOutcomeProof.json does not exist!")
-
-
-        val mockEngine = MockEngine { req ->
-            when (req.url.fullPath) {
-                else -> respond(data, headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())))
-            }
-        }
-
-        val client = HttpClient(mockEngine) {
-            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
-        }
-
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock")
-
-        try {
-            val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientExecutionOutcomeProof.serializer(), data)
-            val response = nearClient.experimentalLightClientExecutionOutcomeProof(requestObj.params)
-            assertNotNull(response)
-        } catch (e: Exception) {
-            fail("Test for ExperimentalLightClientExecutionOutcomeProof failed: ${e.message}")
-        }
-    }
-
-    @Test
     fun testExperimentalLightClientProof() = runTest {
         val data = loadMockJson("JsonRpcRequestForExperimentalLightClientProof.json")
         assertNotNull(data, "Mock file JsonRpcRequestForExperimentalLightClientProof.json does not exist!")
@@ -292,33 +238,6 @@ class NearClientUnitTests {
             assertNotNull(response)
         } catch (e: Exception) {
             fail("Test for ExperimentalLightClientProof failed: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testExperimentalLightClientStateProof() = runTest {
-        val data = loadMockJson("JsonRpcRequestForExperimentalLightClientStateProof.json")
-        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalLightClientStateProof.json does not exist!")
-
-
-        val mockEngine = MockEngine { req ->
-            when (req.url.fullPath) {
-                else -> respond(data, headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())))
-            }
-        }
-
-        val client = HttpClient(mockEngine) {
-            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
-        }
-
-        val nearClient = io.github.hosseinkarami_dev.near.rpc.client.NearClient(client, "http://mock")
-
-        try {
-            val requestObj = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientStateProof.serializer(), data)
-            val response = nearClient.experimentalLightClientStateProof(requestObj.params)
-            assertNotNull(response)
-        } catch (e: Exception) {
-            fail("Test for ExperimentalLightClientStateProof failed: ${e.message}")
         }
     }
 

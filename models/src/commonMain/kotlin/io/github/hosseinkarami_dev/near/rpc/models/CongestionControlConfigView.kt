@@ -81,24 +81,6 @@ public data class CongestionControlConfigView(
   @SerialName("min_tx_gas")
   public val minTxGas: NearGas? = null,
   /**
-   *  * Large size limit for outgoing receipts to a shard, used when it's safe
-   * to send a lot of receipts without making the state witness too large.
-   * It limits the total sum of outgoing receipts, not individual receipts.
-   *  * Minimum: 0.0
-   *  * Format: uint64
-   */
-  @SerialName("outgoing_receipts_big_size_limit")
-  public val outgoingReceiptsBigSizeLimit: ULong? = null,
-  /**
-   *  * The standard size limit for outgoing receipts aimed at a single shard.
-   * This limit is pretty small to keep the size of source_receipt_proofs under control.
-   * It limits the total sum of outgoing receipts, not individual receipts.
-   *  * Minimum: 0.0
-   *  * Format: uint64
-   */
-  @SerialName("outgoing_receipts_usual_size_limit")
-  public val outgoingReceiptsUsualSizeLimit: ULong? = null,
-  /**
    *  * How much congestion a shard can tolerate before it stops all shards from
    * accepting new transactions with the receiver set to the congested shard.
    *  * Format: double

@@ -586,54 +586,6 @@ class ModelSerializationTests {
     }
 
     @Test
-    fun testChunkExecutionProofViewEncodeDecode() {
-        val data = loadMockJson("ChunkExecutionProofView.json")
-        assertNotNull(data, "Mock file ChunkExecutionProofView.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ChunkExecutionProofView.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.ChunkExecutionProofView.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ChunkExecutionProofView.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for ChunkExecutionProofView: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testChunkExecutionRootsEncodeDecode() {
-        val data = loadMockJson("ChunkExecutionRoots.json")
-        assertNotNull(data, "Mock file ChunkExecutionRoots.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ChunkExecutionRoots.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.ChunkExecutionRoots.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ChunkExecutionRoots.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for ChunkExecutionRoots: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testChunkExecutionRootsV1EncodeDecode() {
-        val data = loadMockJson("ChunkExecutionRootsV1.json")
-        assertNotNull(data, "Mock file ChunkExecutionRootsV1.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ChunkExecutionRootsV1.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.ChunkExecutionRootsV1.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ChunkExecutionRootsV1.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for ChunkExecutionRootsV1: ${e.message}")
-        }
-    }
-
-    @Test
     fun testChunkHashEncodeDecode() {
         val data = loadMockJson("ChunkHash.json")
         assertNotNull(data, "Mock file ChunkHash.json does not exist!")
@@ -2154,38 +2106,6 @@ class ModelSerializationTests {
     }
 
     @Test
-    fun testJsonRpcRequestForExperimentalLightClientChunkExecutionProofEncodeDecode() {
-        val data = loadMockJson("JsonRpcRequestForExperimentalLightClientChunkExecutionProof.json")
-        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalLightClientChunkExecutionProof.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientChunkExecutionProof.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientChunkExecutionProof.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientChunkExecutionProof.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for JsonRpcRequestForExperimentalLightClientChunkExecutionProof: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testJsonRpcRequestForExperimentalLightClientExecutionOutcomeProofEncodeDecode() {
-        val data = loadMockJson("JsonRpcRequestForExperimentalLightClientExecutionOutcomeProof.json")
-        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalLightClientExecutionOutcomeProof.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientExecutionOutcomeProof.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientExecutionOutcomeProof.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientExecutionOutcomeProof.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for JsonRpcRequestForExperimentalLightClientExecutionOutcomeProof: ${e.message}")
-        }
-    }
-
-    @Test
     fun testJsonRpcRequestForExperimentalLightClientProofEncodeDecode() {
         val data = loadMockJson("JsonRpcRequestForExperimentalLightClientProof.json")
         assertNotNull(data, "Mock file JsonRpcRequestForExperimentalLightClientProof.json does not exist!")
@@ -2198,22 +2118,6 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for JsonRpcRequestForExperimentalLightClientProof: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testJsonRpcRequestForExperimentalLightClientStateProofEncodeDecode() {
-        val data = loadMockJson("JsonRpcRequestForExperimentalLightClientStateProof.json")
-        assertNotNull(data, "Mock file JsonRpcRequestForExperimentalLightClientStateProof.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientStateProof.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientStateProof.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForExperimentalLightClientStateProof.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for JsonRpcRequestForExperimentalLightClientStateProof: ${e.message}")
         }
     }
 
@@ -2938,38 +2842,6 @@ class ModelSerializationTests {
     }
 
     @Test
-    fun testJsonRpcResponseForRpcLightClientChunkExecutionProofResponseAndRpcLightClientProofErrorEncodeDecode() {
-        val data = loadMockJson("JsonRpcResponseForRpcLightClientChunkExecutionProofResponseAndRpcLightClientProofError.json")
-        assertNotNull(data, "Mock file JsonRpcResponseForRpcLightClientChunkExecutionProofResponseAndRpcLightClientProofError.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientChunkExecutionProofResponseAndRpcLightClientProofError.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientChunkExecutionProofResponseAndRpcLightClientProofError.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientChunkExecutionProofResponseAndRpcLightClientProofError.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for JsonRpcResponseForRpcLightClientChunkExecutionProofResponseAndRpcLightClientProofError: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testJsonRpcResponseForRpcLightClientExecutionOutcomeProofResponseAndRpcLightClientProofErrorEncodeDecode() {
-        val data = loadMockJson("JsonRpcResponseForRpcLightClientExecutionOutcomeProofResponseAndRpcLightClientProofError.json")
-        assertNotNull(data, "Mock file JsonRpcResponseForRpcLightClientExecutionOutcomeProofResponseAndRpcLightClientProofError.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientExecutionOutcomeProofResponseAndRpcLightClientProofError.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientExecutionOutcomeProofResponseAndRpcLightClientProofError.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientExecutionOutcomeProofResponseAndRpcLightClientProofError.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for JsonRpcResponseForRpcLightClientExecutionOutcomeProofResponseAndRpcLightClientProofError: ${e.message}")
-        }
-    }
-
-    @Test
     fun testJsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofErrorEncodeDecode() {
         val data = loadMockJson("JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.json")
         assertNotNull(data, "Mock file JsonRpcResponseForRpcLightClientExecutionProofResponseAndRpcLightClientProofError.json does not exist!")
@@ -2998,22 +2870,6 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for JsonRpcResponseForRpcLightClientNextBlockResponseAndRpcLightClientNextBlockError: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testJsonRpcResponseForRpcLightClientStateProofResponseAndRpcLightClientProofErrorEncodeDecode() {
-        val data = loadMockJson("JsonRpcResponseForRpcLightClientStateProofResponseAndRpcLightClientProofError.json")
-        assertNotNull(data, "Mock file JsonRpcResponseForRpcLightClientStateProofResponseAndRpcLightClientProofError.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientStateProofResponseAndRpcLightClientProofError.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientStateProofResponseAndRpcLightClientProofError.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcLightClientStateProofResponseAndRpcLightClientProofError.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for JsonRpcResponseForRpcLightClientStateProofResponseAndRpcLightClientProofError: ${e.message}")
         }
     }
 
@@ -4090,70 +3946,6 @@ class ModelSerializationTests {
     }
 
     @Test
-    fun testRpcLightClientChunkExecutionProofRequestEncodeDecode() {
-        val data = loadMockJson("RpcLightClientChunkExecutionProofRequest.json")
-        assertNotNull(data, "Mock file RpcLightClientChunkExecutionProofRequest.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientChunkExecutionProofRequest.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientChunkExecutionProofRequest.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientChunkExecutionProofRequest.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for RpcLightClientChunkExecutionProofRequest: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testRpcLightClientChunkExecutionProofResponseEncodeDecode() {
-        val data = loadMockJson("RpcLightClientChunkExecutionProofResponse.json")
-        assertNotNull(data, "Mock file RpcLightClientChunkExecutionProofResponse.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientChunkExecutionProofResponse.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientChunkExecutionProofResponse.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientChunkExecutionProofResponse.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for RpcLightClientChunkExecutionProofResponse: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testRpcLightClientExecutionOutcomeProofRequestEncodeDecode() {
-        val data = loadMockJson("RpcLightClientExecutionOutcomeProofRequest.json")
-        assertNotNull(data, "Mock file RpcLightClientExecutionOutcomeProofRequest.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientExecutionOutcomeProofRequest.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientExecutionOutcomeProofRequest.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientExecutionOutcomeProofRequest.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for RpcLightClientExecutionOutcomeProofRequest: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testRpcLightClientExecutionOutcomeProofResponseEncodeDecode() {
-        val data = loadMockJson("RpcLightClientExecutionOutcomeProofResponse.json")
-        assertNotNull(data, "Mock file RpcLightClientExecutionOutcomeProofResponse.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientExecutionOutcomeProofResponse.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientExecutionOutcomeProofResponse.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientExecutionOutcomeProofResponse.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for RpcLightClientExecutionOutcomeProofResponse: ${e.message}")
-        }
-    }
-
-    @Test
     fun testRpcLightClientExecutionProofRequestEncodeDecode() {
         val data = loadMockJson("RpcLightClientExecutionProofRequest.json")
         assertNotNull(data, "Mock file RpcLightClientExecutionProofRequest.json does not exist!")
@@ -4246,38 +4038,6 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for RpcLightClientProofError: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testRpcLightClientStateProofRequestEncodeDecode() {
-        val data = loadMockJson("RpcLightClientStateProofRequest.json")
-        assertNotNull(data, "Mock file RpcLightClientStateProofRequest.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientStateProofRequest.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientStateProofRequest.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientStateProofRequest.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for RpcLightClientStateProofRequest: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testRpcLightClientStateProofResponseEncodeDecode() {
-        val data = loadMockJson("RpcLightClientStateProofResponse.json")
-        assertNotNull(data, "Mock file RpcLightClientStateProofResponse.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientStateProofResponse.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientStateProofResponse.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.RpcLightClientStateProofResponse.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for RpcLightClientStateProofResponse: ${e.message}")
         }
     }
 
@@ -5462,38 +5222,6 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for StateItem: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testStateProofTargetEncodeDecode() {
-        val data = loadMockJson("StateProofTarget.json")
-        assertNotNull(data, "Mock file StateProofTarget.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.StateProofTarget.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.StateProofTarget.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.StateProofTarget.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for StateProofTarget: ${e.message}")
-        }
-    }
-
-    @Test
-    fun testStateProofViewEncodeDecode() {
-        val data = loadMockJson("StateProofView.json")
-        assertNotNull(data, "Mock file StateProofView.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.StateProofView.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.StateProofView.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.StateProofView.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for StateProofView: ${e.message}")
         }
     }
 
