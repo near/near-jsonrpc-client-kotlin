@@ -546,4 +546,27 @@ public sealed class HostError {
       public val msg: String,
     )
   }
+
+  /**
+   *  * `method_name` is not allowed in external contract calls
+   */
+  @Serializable
+  public data class ProhibitedInExternalCall(
+    @SerialName("ProhibitedInExternalCall")
+    public val prohibitedInExternalCall: ProhibitedInExternalCallPayload,
+  ) : HostError() {
+    @Serializable
+    public data class ProhibitedInExternalCallPayload(
+      @SerialName("method_name")
+      public val methodName: String,
+    )
+  }
+
+  /**
+   *  * An external contract call has an attached deposit, which it cannot have
+   *  * Possible values: DepositInExternalCall
+   */
+  @Serializable
+  @SerialName("DepositInExternalCall")
+  public data object DepositInExternalCall : HostError()
 }

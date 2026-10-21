@@ -459,13 +459,6 @@ public data class RpcClientConfigResponse(
   @SerialName("trie_viewer_state_size_limit")
   public val trieViewerStateSizeLimit: ULong? = null,
   /**
-   *  * Time to persist Accounts Id in the router without removing them.
-   *  * Min Items: 2
-   *  * Max Items: 2
-   */
-  @SerialName("ttl_account_id_router")
-  public val ttlAccountIdRouter: List<ULong>? = null,
-  /**
    *  * If the node is not a chunk producer within that many blocks, then route
    * to upcoming chunk producers.
    *  * Minimum: 0.0
@@ -542,8 +535,4 @@ public data class RpcClientConfigResponse(
     require((syncStepPeriod?.size ?: 0) >= 2) { "RpcClientConfigResponse.syncStepPeriod must contain at least 2 items (minItems = 2)" }}
   init {
     require((syncStepPeriod?.size ?: 0) <= 2) { "RpcClientConfigResponse.syncStepPeriod must contain no more than 2 items (maxItems = 2)" }}
-  init {
-    require((ttlAccountIdRouter?.size ?: 0) >= 2) { "RpcClientConfigResponse.ttlAccountIdRouter must contain at least 2 items (minItems = 2)" }}
-  init {
-    require((ttlAccountIdRouter?.size ?: 0) <= 2) { "RpcClientConfigResponse.ttlAccountIdRouter must contain no more than 2 items (maxItems = 2)" }}
 }
