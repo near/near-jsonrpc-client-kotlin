@@ -104,6 +104,12 @@ public data class LimitConfig(
   @SerialName("max_gas_burnt")
   public val maxGasBurnt: NearGas? = null,
   /**
+   *  * Max amount of gas that can be burnt by an external contract call,
+   * excluding gas attached to promises.
+   */
+  @SerialName("max_gas_burnt_external")
+  public val maxGasBurntExternal: NearGas? = null,
+  /**
    *  * If present, stores max number of globals (entries in the wasm global
    * section) a contract may declare.
    *  * Minimum: 0.0
