@@ -476,7 +476,8 @@ public sealed class ActionsValidationError {
   }
 
   /**
-   *  * The bytes in `RawStateInit` do not decode into `UniversalStateInit`.
+   *  * The bytes in `RawStateInit` do not decode into `UniversalStateInit`, or they are not the
+   * canonical representation of the struct.
    *  * Possible values: MalformedUniversalStateInit
    */
   @Serializable
@@ -563,6 +564,21 @@ public sealed class ActionsValidationError {
        */
       @SerialName("number_of_entries")
       public val numberOfEntries: ULong,
+    )
+  }
+
+  /**
+   *  * A transfer to a universal account while transfers to them are banned.
+   */
+  @Serializable
+  public data class TransferToUniversalAccountNotAllowed(
+    @SerialName("TransferToUniversalAccountNotAllowed")
+    public val transferToUniversalAccountNotAllowed: TransferToUniversalAccountNotAllowedPayload,
+  ) : ActionsValidationError() {
+    @Serializable
+    public data class TransferToUniversalAccountNotAllowedPayload(
+      @SerialName("account_id")
+      public val accountId: AccountId,
     )
   }
 }

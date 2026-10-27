@@ -10,10 +10,9 @@ import kotlinx.serialization.Serializable
  * This is the protocol's view of a state init, not a mere transport wrapper: the
  * account ID is SHA3-256 over exactly these bytes. The typed form is a decoded
  * *view* of them, used to install the state and to price the action, and it is
- * never re-serialized to derive an ID. Two encodings of the same logical value
- * are two different accounts, which is deliberate: canonical encoding cannot be
- * enforced end to end anyway, since contracts serialize their own nested state
- * inside the opaque storage values.
+ * never re-serialized to derive an ID. From `CanonicalUniversalStateInit` on, only
+ * the canonical encoding is accepted (see `UniversalStateInit::from_raw_strict`), so
+ * each logical value has one ID.
  *
  * It also lets an immutable contract pass through a `UniversalStateInit` version it
  * predates: the bytes travel verbatim, so a version added after the contract was
