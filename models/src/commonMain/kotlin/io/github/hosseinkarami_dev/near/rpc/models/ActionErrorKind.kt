@@ -1,6 +1,7 @@
 package io.github.hosseinkarami_dev.near.rpc.models
 
 import io.github.hosseinkarami_dev.near.rpc.serializers.ActionErrorKindSerializer
+import kotlin.String
 import kotlin.ULong
 import kotlin.UShort
 import kotlinx.serialization.SerialName
@@ -532,6 +533,22 @@ public sealed class ActionErrorKind {
     public data class AccountNotInitializedPayload(
       @SerialName("account_id")
       public val accountId: AccountId,
+    )
+  }
+
+  /**
+   *  * A `FunctionCall` action called the method reserved for external contract calls.
+   * That method only runs in an external call or a view call.
+   */
+  @Serializable
+  public data class ReservedMethodName(
+    @SerialName("ReservedMethodName")
+    public val reservedMethodName: ReservedMethodNamePayload,
+  ) : ActionErrorKind() {
+    @Serializable
+    public data class ReservedMethodNamePayload(
+      @SerialName("method_name")
+      public val methodName: String,
     )
   }
 }
