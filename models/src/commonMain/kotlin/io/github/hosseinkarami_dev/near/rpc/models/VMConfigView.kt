@@ -14,11 +14,6 @@ public data class VMConfigView(
   @SerialName("bls12381_not_in_group_fix")
   public val bls12381NotInGroupFix: Boolean? = null,
   /**
-   *  * See [VMConfig::chain_id_host_fn](crate::vm::Config::chain_id_host_fn).
-   */
-  @SerialName("chain_id_host_fn")
-  public val chainIdHostFn: Boolean? = null,
-  /**
    *  * Deprecated: custom sections are always discarded, so this is always `true`.
    */
   @SerialName("discard_custom_sections")
@@ -38,11 +33,6 @@ public data class VMConfigView(
    */
   @SerialName("fix_contract_loading_cost")
   public val fixContractLoadingCost: Boolean? = null,
-  /**
-   *  * See [VMConfig::gas_key_host_fns](crate::vm::Config::gas_key_host_fns).
-   */
-  @SerialName("gas_key_host_fns")
-  public val gasKeyHostFns: Boolean? = null,
   /**
    *  * Deprecated: the global contract host functions are always enabled, so this is
    * always `true`.
@@ -89,16 +79,6 @@ public data class VMConfigView(
   @SerialName("ml_dsa_verify_host_fn")
   public val mlDsaVerifyHostFn: Boolean? = null,
   /**
-   *  * See [VMConfig::one_yocto_on_promise](crate::vm::Config::one_yocto_on_promise).
-   */
-  @SerialName("one_yocto_on_promise")
-  public val oneYoctoOnPromise: Boolean? = null,
-  /**
-   *  * See [VMConfig::p256_verify_host_fn](crate::vm::Config::p256_verify_host_fn).
-   */
-  @SerialName("p256_verify_host_fn")
-  public val p256VerifyHostFn: Boolean? = null,
-  /**
    *  * Deprecated: reference types and bulk memory wasm extensions are always
    * enabled, so this is always `true`.
    */
@@ -132,9 +112,4 @@ public data class VMConfigView(
    */
   @SerialName("vm_kind")
   public val vmKind: VMKind? = null,
-  /**
-   *  * See [VMConfig::yield_with_id_host_fns](crate::vm::Config::yield_with_id_host_fns).
-   */
-  @SerialName("yield_with_id_host_fns")
-  public val yieldWithIdHostFns: Boolean? = null,
 )
