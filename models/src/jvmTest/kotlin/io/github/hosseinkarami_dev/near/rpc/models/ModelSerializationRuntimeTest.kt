@@ -5274,22 +5274,6 @@ class ModelSerializationRuntimeTest {
     }
 
     @Test
-    fun testStorageGetModeEncodeDecode() {
-        val data = loadMockJson("StorageGetMode.json")
-        assertNotNull(data, "Mock file StorageGetMode.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.StorageGetMode.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.StorageGetMode.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.StorageGetMode.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for StorageGetMode: ${e.message}")
-        }
-    }
-
-    @Test
     fun testStorageUsageConfigViewEncodeDecode() {
         val data = loadMockJson("StorageUsageConfigView.json")
         assertNotNull(data, "Mock file StorageUsageConfigView.json does not exist!")
