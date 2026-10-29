@@ -14,16 +14,6 @@ public data class VMConfigView(
   @SerialName("bls12381_not_in_group_fix")
   public val bls12381NotInGroupFix: Boolean? = null,
   /**
-   *  * Deprecated: custom sections are always discarded, so this is always `true`.
-   */
-  @SerialName("discard_custom_sections")
-  public val discardCustomSections: Boolean? = null,
-  /**
-   *  * Deprecated: ETH-implicit accounts are always enabled, so this is always `true`.
-   */
-  @SerialName("eth_implicit_accounts")
-  public val ethImplicitAccounts: Boolean? = null,
-  /**
    *  * Costs for runtime externals
    */
   @SerialName("ext_costs")
@@ -34,23 +24,12 @@ public data class VMConfigView(
   @SerialName("fix_contract_loading_cost")
   public val fixContractLoadingCost: Boolean? = null,
   /**
-   *  * Deprecated: the global contract host functions are always enabled, so this is
-   * always `true`.
-   */
-  @SerialName("global_contract_host_fns")
-  public val globalContractHostFns: Boolean? = null,
-  /**
    *  * Gas cost of a growing memory by single page.
    *  * Minimum: 0.0
    *  * Format: uint32
    */
   @SerialName("grow_mem_cost")
   public val growMemCost: UInt? = null,
-  /**
-   *  * Deprecated
-   */
-  @SerialName("implicit_account_creation")
-  public val implicitAccountCreation: Boolean? = null,
   /**
    *  * Describes limits for VM and Runtime.
    *
@@ -79,12 +58,6 @@ public data class VMConfigView(
   @SerialName("ml_dsa_verify_host_fn")
   public val mlDsaVerifyHostFn: Boolean? = null,
   /**
-   *  * Deprecated: reference types and bulk memory wasm extensions are always
-   * enabled, so this is always `true`.
-   */
-  @SerialName("reftypes_bulk_memory")
-  public val reftypesBulkMemory: Boolean? = null,
-  /**
    *  * Gas cost of a regular operation.
    *  * Minimum: 0.0
    *  * Format: uint32
@@ -96,12 +69,6 @@ public data class VMConfigView(
    */
   @SerialName("sha3_host_fns")
   public val sha3HostFns: Boolean? = null,
-  /**
-   *  * Deprecated: contract storage is always read through flat storage, so this is
-   * always `FlatStorage`.
-   */
-  @SerialName("storage_get_mode")
-  public val storageGetMode: StorageGetMode? = null,
   /**
    *  * See [VMConfig::universal_accounts](crate::vm::Config::universal_accounts).
    */

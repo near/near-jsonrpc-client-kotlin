@@ -80,10 +80,6 @@ public data class ExtCostsConfigView(
   public val bls12381PairingBase: NearGas? = null,
   @SerialName("bls12381_pairing_element")
   public val bls12381PairingElement: NearGas? = null,
-  @SerialName("contract_compile_base")
-  public val contractCompileBase: NearGas? = null,
-  @SerialName("contract_compile_bytes")
-  public val contractCompileBytes: NearGas? = null,
   /**
    *  * Base cost of loading a pre-compiled contract
    */
