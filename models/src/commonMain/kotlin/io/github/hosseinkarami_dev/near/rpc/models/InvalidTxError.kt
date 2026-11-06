@@ -367,4 +367,19 @@ public sealed class InvalidTxError {
       public val signerId: AccountId,
     )
   }
+
+  /**
+   *  * The target of an external contract call has no contract, or no account.
+   */
+  @Serializable
+  public data class ContractNotFound(
+    @SerialName("ContractNotFound")
+    public val contractNotFound: ContractNotFoundPayload,
+  ) : InvalidTxError() {
+    @Serializable
+    public data class ContractNotFoundPayload(
+      @SerialName("contract_id")
+      public val contractId: AccountId,
+    )
+  }
 }
