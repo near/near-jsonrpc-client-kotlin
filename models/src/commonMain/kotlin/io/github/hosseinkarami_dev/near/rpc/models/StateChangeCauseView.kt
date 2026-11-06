@@ -216,4 +216,22 @@ public sealed class StateChangeCauseView {
       BANDWIDTH_SCHEDULER_STATE_UPDATE,
     }
   }
+
+  @Serializable
+  public data class ContractCompilationStatusUpdate(
+    /**
+     *  * Possible values: contract_compilation_status_update
+     */
+    @SerialName("type")
+    public val type: Type,
+  ) : StateChangeCauseView() {
+    /**
+     *  * Possible values: contract_compilation_status_update
+     */
+    @Serializable
+    public enum class Type {
+      @SerialName("contract_compilation_status_update")
+      CONTRACT_COMPILATION_STATUS_UPDATE,
+    }
+  }
 }

@@ -1018,6 +1018,22 @@ class ModelSerializationTests {
     }
 
     @Test
+    fun testEccTransactionEncodeDecode() {
+        val data = loadMockJson("EccTransaction.json")
+        assertNotNull(data, "Mock file EccTransaction.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.EccTransaction.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.EccTransaction.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.EccTransaction.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for EccTransaction: ${e.message}")
+        }
+    }
+
+    @Test
     fun testEccTransactionViewEncodeDecode() {
         val data = loadMockJson("EccTransactionView.json")
         assertNotNull(data, "Mock file EccTransactionView.json does not exist!")
