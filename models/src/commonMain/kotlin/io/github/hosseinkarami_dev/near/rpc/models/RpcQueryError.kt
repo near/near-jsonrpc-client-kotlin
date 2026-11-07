@@ -180,6 +180,40 @@ public sealed class RpcQueryError {
   }
 
   @Serializable
+  public data class UninitializedAccount(
+    @SerialName("info")
+    public val info: InfoPayload,
+    /**
+     *  * Possible values: UNINITIALIZED_ACCOUNT
+     */
+    @SerialName("name")
+    public val name: Name,
+  ) : RpcQueryError() {
+    @Serializable
+    public data class InfoPayload(
+      @SerialName("block_hash")
+      public val blockHash: CryptoHash,
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("block_height")
+      public val blockHeight: ULong,
+      @SerialName("requested_account_id")
+      public val requestedAccountId: AccountId,
+    )
+
+    /**
+     *  * Possible values: UNINITIALIZED_ACCOUNT
+     */
+    @Serializable
+    public enum class Name {
+      @SerialName("UNINITIALIZED_ACCOUNT")
+      UNINITIALIZED_ACCOUNT,
+    }
+  }
+
+  @Serializable
   public data class NoContractCode(
     @SerialName("info")
     public val info: InfoPayload,
