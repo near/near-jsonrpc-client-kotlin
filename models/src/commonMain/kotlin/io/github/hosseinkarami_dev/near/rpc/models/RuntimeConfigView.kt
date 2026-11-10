@@ -25,6 +25,12 @@ public data class RuntimeConfigView(
   @SerialName("congestion_control_config")
   public val congestionControlConfig: CongestionControlConfigView? = null,
   /**
+   *  * Limits on external contract calls, per call and per chunk.
+   */
+  @SerialName("external_calls_config")
+  public val externalCallsConfig:
+      ExternalCallsConfigView? = ExternalCallsConfigView(chunkComputeShare = listOf(0, 1), chunkStorageProofShare = listOf(0, 1), chunkTransactionsSizeShare = listOf(0, 1), maxCallRecordedSize = 0.toUInt(), maxCallSize = 0.toULong(), maxCallsPerChunk = 0.toULong()),
+  /**
    *  * Minimum price at which the gas attached to a receipt is purchased. The price at which it is
    * burned might be lower, in which case the difference is refunded after execution.
    */

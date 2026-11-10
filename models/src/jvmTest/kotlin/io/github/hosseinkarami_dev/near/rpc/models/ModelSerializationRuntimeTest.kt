@@ -1562,6 +1562,38 @@ class ModelSerializationRuntimeTest {
     }
 
     @Test
+    fun testExternalCallChunkLimitEncodeDecode() {
+        val data = loadMockJson("ExternalCallChunkLimit.json")
+        assertNotNull(data, "Mock file ExternalCallChunkLimit.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ExternalCallChunkLimit.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.ExternalCallChunkLimit.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ExternalCallChunkLimit.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for ExternalCallChunkLimit: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testExternalCallsConfigViewEncodeDecode() {
+        val data = loadMockJson("ExternalCallsConfigView.json")
+        assertNotNull(data, "Mock file ExternalCallsConfigView.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ExternalCallsConfigView.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.ExternalCallsConfigView.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ExternalCallsConfigView.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for ExternalCallsConfigView: ${e.message}")
+        }
+    }
+
+    @Test
     fun testExternalStorageLocationEncodeDecode() {
         val data = loadMockJson("ExternalStorageLocation.json")
         assertNotNull(data, "Mock file ExternalStorageLocation.json does not exist!")
