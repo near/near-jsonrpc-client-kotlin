@@ -2,6 +2,7 @@ package io.github.hosseinkarami_dev.near.rpc.models
 
 import io.github.hosseinkarami_dev.near.rpc.serializers.StorageErrorSerializer
 import kotlin.String
+import kotlin.ULong
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -70,4 +71,25 @@ public sealed class StorageError {
     @SerialName("MemTrieLoadingError")
     public val memTrieLoadingError: String,
   ) : StorageError()
+
+  /**
+   *  * A read would record more of the trie than the recording budget set on it allows.
+   * See `TrieUpdate::with_recording_budget`.
+   */
+  @Serializable
+  public data class RecordingBudgetExceeded(
+    @SerialName("RecordingBudgetExceeded")
+    public val recordingBudgetExceeded: RecordingBudgetExceededPayload,
+  ) : StorageError() {
+    @Serializable
+    public data class RecordingBudgetExceededPayload(
+      /**
+       *  * The budget, in bytes of recorded storage proof.
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("limit")
+      public val limit: ULong,
+    )
+  }
 }
