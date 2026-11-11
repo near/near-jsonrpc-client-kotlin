@@ -1,6 +1,7 @@
 package io.github.hosseinkarami_dev.near.rpc.models
 
 import kotlin.Boolean
+import kotlin.Int
 import kotlin.String
 import kotlin.UInt
 import kotlin.ULong
@@ -108,6 +109,22 @@ public data class RpcClientConfigResponse(
    */
   @SerialName("doomslug_step_period")
   public val doomslugStepPeriod: MutableConfigValue? = null,
+  /**
+   *  * The share of the size limit of the transaction pool that ECCs may fill. Zero keeps ECCs out
+   * of the pool.
+   *  * Min Items: 2
+   *  * Max Items: 2
+   */
+  @SerialName("ecc_pool_size_share")
+  public val eccPoolSizeShare: List<Int>? = null,
+  /**
+   *  * The share of `produce_chunk_add_transactions_time_limit` that ECCs may take when a chunk is
+   * produced. Signed transactions go first, and ECCs get what they leave of the limit, but no
+   * more than this share of it. If there is no time limit, the share is of the default one.
+   * Zero keeps ECCs out of chunks.
+   */
+  @SerialName("ecc_time_share")
+  public val eccTimeShare: MutableConfigValue? = null,
   /**
    *  * If true, transactions for the next chunk will be prepared early, right after the previous chunk's
    * post-state is ready. This can help produce chunks faster, for high-throughput chains.
@@ -499,6 +516,10 @@ public data class RpcClientConfigResponse(
     require((chunkRequestRetryPeriod?.size ?: 0) >= 2) { "RpcClientConfigResponse.chunkRequestRetryPeriod must contain at least 2 items (minItems = 2)" }}
   init {
     require((chunkRequestRetryPeriod?.size ?: 0) <= 2) { "RpcClientConfigResponse.chunkRequestRetryPeriod must contain no more than 2 items (maxItems = 2)" }}
+  init {
+    require((eccPoolSizeShare?.size ?: 0) >= 2) { "RpcClientConfigResponse.eccPoolSizeShare must contain at least 2 items (minItems = 2)" }}
+  init {
+    require((eccPoolSizeShare?.size ?: 0) <= 2) { "RpcClientConfigResponse.eccPoolSizeShare must contain no more than 2 items (maxItems = 2)" }}
   init {
     require((headerSyncInitialTimeout?.size ?: 0) >= 2) { "RpcClientConfigResponse.headerSyncInitialTimeout must contain at least 2 items (minItems = 2)" }}
   init {

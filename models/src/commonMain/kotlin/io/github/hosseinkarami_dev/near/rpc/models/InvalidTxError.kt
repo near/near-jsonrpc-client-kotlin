@@ -382,4 +382,24 @@ public sealed class InvalidTxError {
       public val contractId: AccountId,
     )
   }
+
+  /**
+   *  * An external contract call didn't run because the chunk's external calls reached one of
+   * their shares of the chunk's limits.
+   */
+  @Serializable
+  public data class ExternalCallChunkShareReached(
+    @SerialName("ExternalCallChunkShareReached")
+    public val externalCallChunkShareReached: ExternalCallChunkShareReachedPayload,
+  ) : InvalidTxError() {
+    @Serializable
+    public data class ExternalCallChunkShareReachedPayload(
+      /**
+       *  * The share that was reached: what the chunk's earlier external calls used, and the
+       * share.
+       */
+      @SerialName("share")
+      public val share: ExternalCallChunkLimit,
+    )
+  }
 }
