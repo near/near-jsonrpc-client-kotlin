@@ -137,6 +137,40 @@ public sealed class RpcCallFunctionError {
   }
 
   @Serializable
+  public data class InvalidStateInit(
+    @SerialName("info")
+    public val info: InfoPayload,
+    /**
+     *  * Possible values: INVALID_STATE_INIT
+     */
+    @SerialName("name")
+    public val name: Name,
+  ) : RpcCallFunctionError() {
+    @Serializable
+    public data class InfoPayload(
+      @SerialName("block_hash")
+      public val blockHash: CryptoHash,
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("block_height")
+      public val blockHeight: ULong,
+      @SerialName("error")
+      public val error: ActionsValidationError,
+    )
+
+    /**
+     *  * Possible values: INVALID_STATE_INIT
+     */
+    @Serializable
+    public enum class Name {
+      @SerialName("INVALID_STATE_INIT")
+      INVALID_STATE_INIT,
+    }
+  }
+
+  @Serializable
   public data class NoContractCode(
     @SerialName("info")
     public val info: InfoPayload,
@@ -167,6 +201,40 @@ public sealed class RpcCallFunctionError {
     public enum class Name {
       @SerialName("NO_CONTRACT_CODE")
       NO_CONTRACT_CODE,
+    }
+  }
+
+  @Serializable
+  public data class NoGlobalContractCode(
+    @SerialName("info")
+    public val info: InfoPayload,
+    /**
+     *  * Possible values: NO_GLOBAL_CONTRACT_CODE
+     */
+    @SerialName("name")
+    public val name: Name,
+  ) : RpcCallFunctionError() {
+    @Serializable
+    public data class InfoPayload(
+      @SerialName("block_hash")
+      public val blockHash: CryptoHash,
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("block_height")
+      public val blockHeight: ULong,
+      @SerialName("identifier")
+      public val identifier: GlobalContractIdentifier,
+    )
+
+    /**
+     *  * Possible values: NO_GLOBAL_CONTRACT_CODE
+     */
+    @Serializable
+    public enum class Name {
+      @SerialName("NO_GLOBAL_CONTRACT_CODE")
+      NO_GLOBAL_CONTRACT_CODE,
     }
   }
 

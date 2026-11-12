@@ -19,6 +19,11 @@ public sealed class ReceiptEnumView {
     public data class ActionPayload(
       @SerialName("actions")
       public val actions: List<ActionView>,
+      /**
+       *  * What authorized the chain, absent in views written before external calls
+       */
+      @SerialName("authorization_context")
+      public val authorizationContext: AuthorizationContext? = null,
       @SerialName("gas_price")
       public val gasPrice: NearToken,
       @SerialName("input_data_ids")
@@ -31,8 +36,11 @@ public sealed class ReceiptEnumView {
       public val refundTo: AccountId? = null,
       @SerialName("signer_id")
       public val signerId: AccountId,
+      /**
+       *  * The key of the transaction that started the chain, absent in an external call's chain
+       */
       @SerialName("signer_public_key")
-      public val signerPublicKey: PublicKey,
+      public val signerPublicKey: PublicKey? = null,
     )
   }
 

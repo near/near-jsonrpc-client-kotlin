@@ -182,6 +182,11 @@ public sealed class RpcQueryRequest {
      */
     @SerialName("request_type")
     public val requestType: RequestType,
+    /**
+     *  * Runs the call as if this were installed, unless the account already has its state.
+     */
+    @SerialName("state_init")
+    public val stateInit: StateInitView? = null,
   ) : RpcQueryRequest() {
     /**
      *  * Possible values: call_function
@@ -410,6 +415,11 @@ public sealed class RpcQueryRequest {
      */
     @SerialName("request_type")
     public val requestType: RequestType,
+    /**
+     *  * Runs the call as if this were installed, unless the account already has its state.
+     */
+    @SerialName("state_init")
+    public val stateInit: StateInitView? = null,
   ) : RpcQueryRequest() {
     /**
      *  * Possible values: call_function
@@ -638,6 +648,11 @@ public sealed class RpcQueryRequest {
      */
     @SerialName("request_type")
     public val requestType: RequestType,
+    /**
+     *  * Runs the call as if this were installed, unless the account already has its state.
+     */
+    @SerialName("state_init")
+    public val stateInit: StateInitView? = null,
   ) : RpcQueryRequest() {
     /**
      *  * Possible values: call_function
