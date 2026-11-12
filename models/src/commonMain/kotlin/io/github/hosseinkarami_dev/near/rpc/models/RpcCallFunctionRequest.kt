@@ -17,6 +17,11 @@ public sealed class RpcCallFunctionRequest {
     public val argsBase64: FunctionArgs,
     @SerialName("method_name")
     public val methodName: String,
+    /**
+     *  * Runs the call as if this were installed, unless the account already has its state.
+     */
+    @SerialName("state_init")
+    public val stateInit: StateInitView? = null,
   ) : RpcCallFunctionRequest()
 
   @Serializable
@@ -29,6 +34,11 @@ public sealed class RpcCallFunctionRequest {
     public val argsBase64: FunctionArgs,
     @SerialName("method_name")
     public val methodName: String,
+    /**
+     *  * Runs the call as if this were installed, unless the account already has its state.
+     */
+    @SerialName("state_init")
+    public val stateInit: StateInitView? = null,
   ) : RpcCallFunctionRequest()
 
   @Serializable
@@ -41,5 +51,10 @@ public sealed class RpcCallFunctionRequest {
     public val argsBase64: FunctionArgs,
     @SerialName("method_name")
     public val methodName: String,
+    /**
+     *  * Runs the call as if this were installed, unless the account already has its state.
+     */
+    @SerialName("state_init")
+    public val stateInit: StateInitView? = null,
   ) : RpcCallFunctionRequest()
 }

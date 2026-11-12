@@ -362,6 +362,22 @@ class ModelSerializationTests {
     }
 
     @Test
+    fun testAuthorizationContextEncodeDecode() {
+        val data = loadMockJson("AuthorizationContext.json")
+        assertNotNull(data, "Mock file AuthorizationContext.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.AuthorizationContext.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.AuthorizationContext.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.AuthorizationContext.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for AuthorizationContext: ${e.message}")
+        }
+    }
+
+    @Test
     fun testBandwidthRequestEncodeDecode() {
         val data = loadMockJson("BandwidthRequest.json")
         assertNotNull(data, "Mock file BandwidthRequest.json does not exist!")
@@ -5254,6 +5270,22 @@ class ModelSerializationTests {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for StateChangeWithCauseView: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testStateInitViewEncodeDecode() {
+        val data = loadMockJson("StateInitView.json")
+        assertNotNull(data, "Mock file StateInitView.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.StateInitView.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.StateInitView.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.StateInitView.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for StateInitView: ${e.message}")
         }
     }
 
