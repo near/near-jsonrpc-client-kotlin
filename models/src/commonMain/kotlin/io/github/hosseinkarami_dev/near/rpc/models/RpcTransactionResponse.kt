@@ -29,12 +29,12 @@ public sealed class RpcTransactionResponse {
     @SerialName("status")
     public val status: io.github.hosseinkarami_dev.near.rpc.models.FinalExecutionStatus,
     /**
-     *  * Signed Transaction
+     *  * The transaction, signed or an external call.
      */
     @SerialName("transaction")
-    public val transaction: SignedTransactionView,
+    public val transaction: TransactionEnvelopeView,
     /**
-     *  * The execution outcome of the signed transaction.
+     *  * The execution outcome of the transaction.
      */
     @SerialName("transaction_outcome")
     public val transactionOutcome: ExecutionOutcomeWithIdView,
@@ -59,12 +59,12 @@ public sealed class RpcTransactionResponse {
     @SerialName("status")
     public val status: io.github.hosseinkarami_dev.near.rpc.models.FinalExecutionStatus,
     /**
-     *  * Signed Transaction
+     *  * The transaction, signed or an external call.
      */
     @SerialName("transaction")
-    public val transaction: SignedTransactionView,
+    public val transaction: TransactionEnvelopeView,
     /**
-     *  * The execution outcome of the signed transaction.
+     *  * The execution outcome of the transaction.
      */
     @SerialName("transaction_outcome")
     public val transactionOutcome: ExecutionOutcomeWithIdView,

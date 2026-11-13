@@ -70,8 +70,8 @@ import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForTxStatus
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcRequestForValidators
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForArrayOfRangeOfUint64AndRpcMaintenanceWindowsError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForArrayOfValidatorStakeViewAndRpcValidatorError
-import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForCryptoHashAndRpcTransactionError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForGenesisConfigAndGenesisConfigError
+import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForNullableCryptoHashAndRpcTransactionError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForNullableRpcHealthResponseAndRpcStatusError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcBlockResponseAndRpcBlockError
 import io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForRpcCallFunctionResponseAndRpcCallFunctionError
@@ -873,19 +873,19 @@ public class NearClient(
   }
 
   /**
-   * [Deprecated] Sends a transaction and immediately returns transaction hash. Consider using send_tx instead.
+   * [Deprecated] Sends a transaction and immediately returns transaction hash, or null for an external call, whose id depends on the block that includes it. Consider using send_tx instead.
    *
    * @see path: /broadcast_tx_async (method: post) — operationId: broadcast_tx_async
    *
    * @param rpcSendTransactionRequest Request parameters: `io.github.hosseinkarami_dev.near.rpc.models.RpcSendTransactionRequest` (required).
-   * @return Response: `RpcResponse<CryptoHash>`.
+   * @return Response: `RpcResponse<CryptoHash?>`.
    */
   @Deprecated(
-    message = "[Deprecated] Sends a transaction and immediately returns transaction hash. Consider using send_tx instead. — deprecated.",
+    message = "[Deprecated] Sends a transaction and immediately returns transaction hash, or null for an external call, whose id depends on the block that includes it. Consider using send_tx instead. — deprecated.",
     replaceWith = ReplaceWith("sendTx(rpcSendTransactionRequest)"),
     level = DeprecationLevel.WARNING,
   )
-  public suspend fun broadcastTxAsync(rpcSendTransactionRequest: RpcSendTransactionRequest): RpcResponse<CryptoHash> {
+  public suspend fun broadcastTxAsync(rpcSendTransactionRequest: RpcSendTransactionRequest): RpcResponse<CryptoHash?> {
     val request = JsonRpcRequestForBroadcastTxAsync(
       id = nextId(),
       jsonrpc = "2.0",
@@ -898,12 +898,12 @@ public class NearClient(
         baseUrl,
         request,
         JsonRpcRequestForBroadcastTxAsync.serializer(),
-        JsonRpcResponseForCryptoHashAndRpcTransactionError.serializer(),
+        JsonRpcResponseForNullableCryptoHashAndRpcTransactionError.serializer(),
         ErrorWrapperForRpcTransactionError.serializer()
     ) { decoded ->
         when (decoded) {
-            is JsonRpcResponseForCryptoHashAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
-            is JsonRpcResponseForCryptoHashAndRpcTransactionError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
+            is JsonRpcResponseForNullableCryptoHashAndRpcTransactionError.Result -> RpcResponse.Success(decoded.result)
+            is JsonRpcResponseForNullableCryptoHashAndRpcTransactionError.Error -> RpcResponse.Failure(ErrorResult.Rpc(error = decoded.error))
         }
     }
   }

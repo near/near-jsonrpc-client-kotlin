@@ -581,4 +581,31 @@ public sealed class ActionsValidationError {
       public val accountId: AccountId,
     )
   }
+
+  /**
+   *  * The `AddKey` actions in one receipt add more gas key nonces in total than
+   * allowed.
+   */
+  @Serializable
+  public data class TotalNumberOfGasKeyNoncesAddedExceeded(
+    @SerialName("TotalNumberOfGasKeyNoncesAddedExceeded")
+    public val totalNumberOfGasKeyNoncesAddedExceeded:
+        TotalNumberOfGasKeyNoncesAddedExceededPayload,
+  ) : ActionsValidationError() {
+    @Serializable
+    public data class TotalNumberOfGasKeyNoncesAddedExceededPayload(
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("limit")
+      public val limit: ULong,
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("number_of_nonces")
+      public val numberOfNonces: ULong,
+    )
+  }
 }

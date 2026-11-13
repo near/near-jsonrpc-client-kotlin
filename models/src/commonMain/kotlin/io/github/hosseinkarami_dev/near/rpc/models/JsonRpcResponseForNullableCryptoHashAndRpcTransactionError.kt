@@ -1,21 +1,21 @@
 package io.github.hosseinkarami_dev.near.rpc.models
 
-import io.github.hosseinkarami_dev.near.rpc.serializers.JsonRpcResponseForCryptoHashAndRpcTransactionErrorSerializer
+import io.github.hosseinkarami_dev.near.rpc.serializers.JsonRpcResponseForNullableCryptoHashAndRpcTransactionErrorSerializer
 import kotlin.String
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable(with = JsonRpcResponseForCryptoHashAndRpcTransactionErrorSerializer::class)
-public sealed class JsonRpcResponseForCryptoHashAndRpcTransactionError {
+@Serializable(with = JsonRpcResponseForNullableCryptoHashAndRpcTransactionErrorSerializer::class)
+public sealed class JsonRpcResponseForNullableCryptoHashAndRpcTransactionError {
   @Serializable
   public data class Result(
     @SerialName("result")
-    public val result: CryptoHash,
+    public val result: CryptoHash? = null,
     @SerialName("id")
     public val id: String,
     @SerialName("jsonrpc")
     public val jsonrpc: String,
-  ) : JsonRpcResponseForCryptoHashAndRpcTransactionError()
+  ) : JsonRpcResponseForNullableCryptoHashAndRpcTransactionError()
 
   @Serializable
   public data class Error(
@@ -25,5 +25,5 @@ public sealed class JsonRpcResponseForCryptoHashAndRpcTransactionError {
     public val id: String,
     @SerialName("jsonrpc")
     public val jsonrpc: String,
-  ) : JsonRpcResponseForCryptoHashAndRpcTransactionError()
+  ) : JsonRpcResponseForNullableCryptoHashAndRpcTransactionError()
 }

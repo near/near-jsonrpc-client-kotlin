@@ -30,12 +30,12 @@ public data class FinalExecutionOutcomeWithReceiptView(
   @SerialName("status")
   public val status: FinalExecutionStatus,
   /**
-   *  * Signed Transaction
+   *  * The transaction, signed or an external call.
    */
   @SerialName("transaction")
-  public val transaction: SignedTransactionView,
+  public val transaction: TransactionEnvelopeView,
   /**
-   *  * The execution outcome of the signed transaction.
+   *  * The execution outcome of the transaction.
    */
   @SerialName("transaction_outcome")
   public val transactionOutcome: ExecutionOutcomeWithIdView,
