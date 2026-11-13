@@ -551,4 +551,31 @@ public sealed class ActionErrorKind {
       public val methodName: String,
     )
   }
+
+  /**
+   *  * The actions in the receipt removed more gas key nonces than
+   * `max_gas_key_nonces_removed_per_receipt` allows.
+   */
+  @Serializable
+  public data class TotalNumberOfGasKeyNoncesRemovedExceeded(
+    @SerialName("TotalNumberOfGasKeyNoncesRemovedExceeded")
+    public val totalNumberOfGasKeyNoncesRemovedExceeded:
+        TotalNumberOfGasKeyNoncesRemovedExceededPayload,
+  ) : ActionErrorKind() {
+    @Serializable
+    public data class TotalNumberOfGasKeyNoncesRemovedExceededPayload(
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("limit")
+      public val limit: ULong,
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("number_of_nonces")
+      public val numberOfNonces: ULong,
+    )
+  }
 }

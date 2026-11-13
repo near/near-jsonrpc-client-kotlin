@@ -4,18 +4,18 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- *  * On the wire, a signed transaction goes in `signed_tx_base64` and an ECC in `ecc_base64`, so
- * requests with a signed transaction look as they did before ECCs.
+ *  * On the wire, a signed transaction goes in `signed_tx_base64` and an ECC in
+ * `external_call_base64`, so requests with a signed transaction look as they did before ECCs.
  */
 @Serializable
 public data class RpcSendTransactionRequest(
   /**
    *  * An external contract call (ECC). Exactly one of this and `signed_tx_base64` is expected.
    */
-  @SerialName("ecc_base64")
-  public val eccBase64: EccTransaction? = null,
+  @SerialName("external_call_base64")
+  public val externalCallBase64: EccTransaction? = null,
   /**
-   *  * A signed transaction. Exactly one of this and `ecc_base64` is expected.
+   *  * A signed transaction. Exactly one of this and `external_call_base64` is expected.
    */
   @SerialName("signed_tx_base64")
   public val signedTxBase64: SignedTransaction? = null,

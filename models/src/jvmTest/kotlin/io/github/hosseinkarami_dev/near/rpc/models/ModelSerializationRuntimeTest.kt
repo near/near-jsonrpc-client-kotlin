@@ -602,6 +602,22 @@ class ModelSerializationRuntimeTest {
     }
 
     @Test
+    fun testChunkEccTransactionViewEncodeDecode() {
+        val data = loadMockJson("ChunkEccTransactionView.json")
+        assertNotNull(data, "Mock file ChunkEccTransactionView.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ChunkEccTransactionView.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.ChunkEccTransactionView.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ChunkEccTransactionView.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for ChunkEccTransactionView: ${e.message}")
+        }
+    }
+
+    @Test
     fun testChunkHashEncodeDecode() {
         val data = loadMockJson("ChunkHash.json")
         assertNotNull(data, "Mock file ChunkHash.json does not exist!")
@@ -630,6 +646,22 @@ class ModelSerializationRuntimeTest {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for ChunkHeaderView: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testChunkTransactionViewEncodeDecode() {
+        val data = loadMockJson("ChunkTransactionView.json")
+        assertNotNull(data, "Mock file ChunkTransactionView.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ChunkTransactionView.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.ChunkTransactionView.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.ChunkTransactionView.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for ChunkTransactionView: ${e.message}")
         }
     }
 
@@ -2730,22 +2762,6 @@ class ModelSerializationRuntimeTest {
     }
 
     @Test
-    fun testJsonRpcResponseForCryptoHashAndRpcTransactionErrorEncodeDecode() {
-        val data = loadMockJson("JsonRpcResponseForCryptoHashAndRpcTransactionError.json")
-        assertNotNull(data, "Mock file JsonRpcResponseForCryptoHashAndRpcTransactionError.json does not exist!")
-
-        try {
-            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForCryptoHashAndRpcTransactionError.serializer(), data)
-            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForCryptoHashAndRpcTransactionError.serializer(), decoded)
-            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForCryptoHashAndRpcTransactionError.serializer(), encoded)
-            assertEquals(decoded, decoded2)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail("Serialization test failed for JsonRpcResponseForCryptoHashAndRpcTransactionError: ${e.message}")
-        }
-    }
-
-    @Test
     fun testJsonRpcResponseForGenesisConfigAndGenesisConfigErrorEncodeDecode() {
         val data = loadMockJson("JsonRpcResponseForGenesisConfigAndGenesisConfigError.json")
         assertNotNull(data, "Mock file JsonRpcResponseForGenesisConfigAndGenesisConfigError.json does not exist!")
@@ -2758,6 +2774,22 @@ class ModelSerializationRuntimeTest {
         } catch (e: Exception) {
             e.printStackTrace()
             fail("Serialization test failed for JsonRpcResponseForGenesisConfigAndGenesisConfigError: ${e.message}")
+        }
+    }
+
+    @Test
+    fun testJsonRpcResponseForNullableCryptoHashAndRpcTransactionErrorEncodeDecode() {
+        val data = loadMockJson("JsonRpcResponseForNullableCryptoHashAndRpcTransactionError.json")
+        assertNotNull(data, "Mock file JsonRpcResponseForNullableCryptoHashAndRpcTransactionError.json does not exist!")
+
+        try {
+            val decoded = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForNullableCryptoHashAndRpcTransactionError.serializer(), data)
+            val encoded = json.encodeToString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForNullableCryptoHashAndRpcTransactionError.serializer(), decoded)
+            val decoded2 = json.decodeFromString(io.github.hosseinkarami_dev.near.rpc.models.JsonRpcResponseForNullableCryptoHashAndRpcTransactionError.serializer(), encoded)
+            assertEquals(decoded, decoded2)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            fail("Serialization test failed for JsonRpcResponseForNullableCryptoHashAndRpcTransactionError: ${e.message}")
         }
     }
 

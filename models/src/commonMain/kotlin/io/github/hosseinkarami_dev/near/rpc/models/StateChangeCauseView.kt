@@ -234,4 +234,24 @@ public sealed class StateChangeCauseView {
       CONTRACT_COMPILATION_STATUS_UPDATE,
     }
   }
+
+  @Serializable
+  public data class ExternalCallProcessing(
+    @SerialName("transaction_id")
+    public val transactionId: CryptoHash,
+    /**
+     *  * Possible values: external_call_processing
+     */
+    @SerialName("type")
+    public val type: Type,
+  ) : StateChangeCauseView() {
+    /**
+     *  * Possible values: external_call_processing
+     */
+    @Serializable
+    public enum class Type {
+      @SerialName("external_call_processing")
+      EXTERNAL_CALL_PROCESSING,
+    }
+  }
 }

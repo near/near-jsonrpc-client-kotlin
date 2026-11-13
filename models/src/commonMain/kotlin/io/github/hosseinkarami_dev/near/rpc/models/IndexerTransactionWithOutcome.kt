@@ -8,5 +8,5 @@ public data class IndexerTransactionWithOutcome(
   @SerialName("outcome")
   public val outcome: IndexerExecutionOutcomeWithOptionalReceipt,
   @SerialName("transaction")
-  public val transaction: SignedTransactionView,
+  public val transaction: TransactionEnvelopeView,
 )
