@@ -3,6 +3,7 @@ package io.github.hosseinkarami_dev.near.rpc.models
 import io.github.hosseinkarami_dev.near.rpc.serializers.ReceiptEnumViewSerializer
 import kotlin.Boolean
 import kotlin.String
+import kotlin.UInt
 import kotlin.ULong
 import kotlin.collections.List
 import kotlinx.serialization.SerialName
@@ -20,10 +21,18 @@ public sealed class ReceiptEnumView {
       @SerialName("actions")
       public val actions: List<ActionView>,
       /**
-       *  * What authorized the chain, absent in views written before external calls
+       *  * What authorized the chain, absent if the receipt doesn't record it
        */
       @SerialName("authorization_context")
       public val authorizationContext: AuthorizationContext? = null,
+      /**
+       *  * The protocol version the receipt was created at, absent if the receipt doesn't record it
+       *  * Minimum: 0.0
+       *  * Format: uint32
+       *  * Nullable: true
+       */
+      @SerialName("creation_protocol_version")
+      public val creationProtocolVersion: UInt? = null,
       @SerialName("gas_price")
       public val gasPrice: NearToken,
       @SerialName("input_data_ids")

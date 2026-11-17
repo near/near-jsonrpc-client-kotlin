@@ -18,10 +18,10 @@ public sealed class RpcQueryResponse {
     @SerialName("amount")
     public val amount: NearToken,
     /**
-     *  * The nonce an uninitialized account's own transactions must use, present
-     * only while it is uninitialized. A self-signed state init is the one
-     * transaction such an account can send, and this is the only way for a
-     * client to learn the nonce it must carry: there is no access key to query.
+     *  * The account's current bootstrap nonce, present only while it is
+     * uninitialized. A self-signed state init, the one transaction such an
+     * account can send, must use exactly `bootstrap_nonce + 1`. This is the
+     * only way for a client to learn it: there is no access key to query.
      *  * Minimum: 0.0
      *  * Format: uint64
      *  * Nullable: true
