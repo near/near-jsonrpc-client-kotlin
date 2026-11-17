@@ -169,4 +169,38 @@ public sealed class ReceiptValidationError {
       public val accountId: String,
     )
   }
+
+  /**
+   *  * A `PromiseYield` receipt must have exactly one input data dependency.
+   */
+  @Serializable
+  public data class InvalidPromiseYieldInputDataCount(
+    @SerialName("InvalidPromiseYieldInputDataCount")
+    public val invalidPromiseYieldInputDataCount: InvalidPromiseYieldInputDataCountPayload,
+  ) : ReceiptValidationError() {
+    @Serializable
+    public data class InvalidPromiseYieldInputDataCountPayload(
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("number_of_input_data_dependencies")
+      public val numberOfInputDataDependencies: ULong,
+    )
+  }
+
+  /**
+   *  * The same input data id is listed more than once in an ActionReceipt.
+   */
+  @Serializable
+  public data class DuplicateInputDataId(
+    @SerialName("DuplicateInputDataId")
+    public val duplicateInputDataId: DuplicateInputDataIdPayload,
+  ) : ReceiptValidationError() {
+    @Serializable
+    public data class DuplicateInputDataIdPayload(
+      @SerialName("data_id")
+      public val dataId: CryptoHash,
+    )
+  }
 }

@@ -4,6 +4,7 @@ import io.github.hosseinkarami_dev.near.rpc.serializers.RpcQueryErrorSerializer
 import kotlin.String
 import kotlin.UInt
 import kotlin.ULong
+import kotlin.collections.List
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -456,6 +457,45 @@ public sealed class RpcQueryError {
     public enum class Name {
       @SerialName("CONTRACT_EXECUTION_ERROR")
       CONTRACT_EXECUTION_ERROR,
+    }
+  }
+
+  @Serializable
+  public data class ExternalCallRefused(
+    @SerialName("info")
+    public val info: InfoPayload,
+    /**
+     *  * Possible values: EXTERNAL_CALL_REFUSED
+     */
+    @SerialName("name")
+    public val name: Name,
+  ) : RpcQueryError() {
+    @Serializable
+    public data class InfoPayload(
+      @SerialName("block_hash")
+      public val blockHash: CryptoHash,
+      /**
+       *  * Minimum: 0.0
+       *  * Format: uint64
+       */
+      @SerialName("block_height")
+      public val blockHeight: ULong,
+      @SerialName("error")
+      public val error: TxExecutionError,
+      /**
+       *  * The logs of the contract's run. Empty for a call refused before its run.
+       */
+      @SerialName("logs")
+      public val logs: List<String>,
+    )
+
+    /**
+     *  * Possible values: EXTERNAL_CALL_REFUSED
+     */
+    @Serializable
+    public enum class Name {
+      @SerialName("EXTERNAL_CALL_REFUSED")
+      EXTERNAL_CALL_REFUSED,
     }
   }
 
