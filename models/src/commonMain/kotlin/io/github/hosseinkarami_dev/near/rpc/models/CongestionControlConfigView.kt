@@ -73,6 +73,15 @@ public data class CongestionControlConfigView(
   @SerialName("min_outgoing_gas")
   public val minOutgoingGas: NearGas? = null,
   /**
+   *  * The smallest size a receipt counts for bandwidth and congestion.
+   *
+   * See [`CongestionControlConfig`] for more details.
+   *  * Minimum: 0.0
+   *  * Format: uint64
+   */
+  @SerialName("min_receipt_congestion_size")
+  public val minReceiptCongestionSize: ULong? = 0.toULong(),
+  /**
    *  * The minimum amount of gas in a chunk spent on converting new transactions
    * to receipts, as long as the receiving shard is not congested.
    *
